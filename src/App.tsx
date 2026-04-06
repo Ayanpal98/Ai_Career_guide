@@ -1,4 +1,5 @@
 import React from 'react';
+import LandingPage from './components/LandingPage';
 import Onboarding from './components/Onboarding';
 import Dashboard from './components/Dashboard';
 import { UserProfile, CareerRoadmap } from './types';
@@ -7,6 +8,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Loader2 } from 'lucide-react';
 
 export default function App() {
+  const [showLanding, setShowLanding] = React.useState(true);
   const [profile, setProfile] = React.useState<UserProfile | null>(null);
   const [roadmap, setRoadmap] = React.useState<CareerRoadmap | null>(null);
   const [loading, setLoading] = React.useState(false);
@@ -74,7 +76,16 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#020617]">
       <AnimatePresence mode="wait">
-        {!roadmap ? (
+        {showLanding ? (
+          <motion.div
+            key="landing"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <LandingPage onStart={() => setShowLanding(false)} />
+          </motion.div>
+        ) : !roadmap ? (
           <motion.div
             key="onboarding"
             initial={{ opacity: 0 }}
