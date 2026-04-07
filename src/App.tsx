@@ -59,7 +59,7 @@ export default function App() {
   if (error) {
     return (
       <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center p-6 text-center">
-        <div className="p-8 glass rounded-[3rem] border-red-500/20 max-w-md">
+        <div className="p-8 glass-card rounded-[3rem] border-red-500/20 max-w-md">
           <h2 className="text-2xl font-black text-white mb-4">Something went wrong</h2>
           <p className="text-slate-400 mb-8">{error}</p>
           <button
@@ -92,7 +92,10 @@ export default function App() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <Onboarding onComplete={handleOnboardingComplete} />
+            <Onboarding 
+              onComplete={handleOnboardingComplete} 
+              onBack={() => setShowLanding(true)}
+            />
           </motion.div>
         ) : (
           <motion.div
@@ -105,6 +108,12 @@ export default function App() {
               roadmap={roadmap} 
               profile={profile!} 
               onUpdateRoadmap={(updated) => setRoadmap(prev => ({ ...prev!, ...updated }))} 
+              onBackToLanding={() => {
+                setRoadmap(null);
+                setProfile(null);
+                setShowLanding(true);
+              }}
+              onEditProfile={() => setRoadmap(null)}
             />
           </motion.div>
         )}

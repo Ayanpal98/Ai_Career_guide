@@ -14,7 +14,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
   return (
     <div className="min-h-screen bg-[#020617] text-slate-200 font-sans selection:bg-indigo-500/30 overflow-x-hidden">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#020617]/80 backdrop-blur-xl">
+      <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#020617]/40 backdrop-blur-2xl">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2 text-white font-black text-xl tracking-tighter">
             <div className="p-1.5 rounded-lg bg-indigo-500">
@@ -26,10 +26,11 @@ export default function LandingPage({ onStart }: LandingPageProps) {
             <a href="#features" className="hover:text-white transition-colors">Features</a>
             <a href="#how-it-works" className="hover:text-white transition-colors">How it works</a>
             <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
+            <a href="#consultation" className="hover:text-white transition-colors">Consultation</a>
           </div>
           <button 
             onClick={onStart}
-            className="px-6 py-2.5 bg-white text-slate-950 font-black rounded-xl text-sm hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/10"
+            className="px-6 py-2.5 bg-white text-slate-950 font-black rounded-xl text-sm hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/10 animate-glow"
           >
             Get Started
           </button>
@@ -83,7 +84,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
           >
             <button 
               onClick={onStart}
-              className="group flex items-center gap-3 px-10 py-5 bg-white text-slate-950 font-black rounded-2xl text-lg hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-white/10"
+              className="group flex items-center gap-3 px-10 py-5 bg-white text-slate-950 font-black rounded-2xl text-lg hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-white/20 animate-glow"
             >
               Get Your Roadmap
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
@@ -179,7 +180,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                 desc: "The constant 'What's Next?' keeps you paralyzed while others move forward with precision." 
               }
             ].map((item, i) => (
-              <div key={i} className="glass p-10 rounded-[3rem] border-white/5 hover:border-white/10 transition-all">
+              <div key={i} className="glass-card p-10 rounded-[3rem] border-white/5">
                 <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center text-indigo-400 mb-8">
                   <item.icon size={28} />
                 </div>
@@ -225,24 +226,24 @@ export default function LandingPage({ onStart }: LandingPageProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="space-y-6">
-                <div className="glass p-8 rounded-[2.5rem] border-indigo-500/20">
+                <div className="glass-card p-8 rounded-[2.5rem] border-indigo-500/20">
                   <BarChart3 size={32} className="text-indigo-400 mb-6" />
                   <h4 className="text-xl font-bold text-white mb-2">Progress Tracking</h4>
                   <p className="text-sm text-slate-400">Visualize every step of your journey with deep analytics.</p>
                 </div>
-                <div className="glass p-8 rounded-[2.5rem] border-purple-500/20">
+                <div className="glass-card p-8 rounded-[2.5rem] border-purple-500/20">
                   <MessageSquare size={32} className="text-purple-400 mb-6" />
                   <h4 className="text-xl font-bold text-white mb-2">AI Coach</h4>
                   <p className="text-sm text-slate-400">Get instant answers to your career dilemmas, anytime.</p>
                 </div>
               </div>
               <div className="space-y-6 mt-12">
-                <div className="glass p-8 rounded-[2.5rem] border-emerald-500/20">
+                <div className="glass-card p-8 rounded-[2.5rem] border-emerald-500/20">
                   <Target size={32} className="text-emerald-400 mb-6" />
                   <h4 className="text-xl font-bold text-white mb-2">Next Step Focus</h4>
                   <p className="text-sm text-slate-400">Never feel overwhelmed. We show you exactly what to do next.</p>
                 </div>
-                <div className="glass p-8 rounded-[2.5rem] border-amber-500/20">
+                <div className="glass-card p-8 rounded-[2.5rem] border-amber-500/20">
                   <Zap size={32} className="text-amber-400 mb-6" />
                   <h4 className="text-xl font-bold text-white mb-2">Project Lab</h4>
                   <p className="text-sm text-slate-400">Build real-world projects that prove your expertise.</p>
@@ -288,7 +289,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Basic */}
-            <div className="glass p-12 rounded-[3rem] border-white/5 flex flex-col">
+            <div className="glass-card p-12 rounded-[3rem] border-white/5 flex flex-col">
               <div className="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">Basic</div>
               <div className="text-5xl font-black text-white mb-8">₹0<span className="text-lg text-slate-500">/mo</span></div>
               <ul className="space-y-4 mb-12 flex-1">
@@ -308,7 +309,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
             </div>
 
             {/* Pro */}
-            <div className="premium-border p-12 rounded-[3rem] bg-slate-900/50 backdrop-blur-3xl flex flex-col relative scale-105 z-10 shadow-2xl shadow-indigo-500/10">
+            <div className="premium-border p-12 rounded-[3rem] glass-dark flex flex-col relative scale-105 z-10 shadow-2xl shadow-indigo-500/10">
               <div className="absolute top-0 right-12 -translate-y-1/2 px-4 py-1 bg-indigo-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full">
                 Most Popular
               </div>
@@ -337,7 +338,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
             </div>
 
             {/* Premium */}
-            <div className="glass p-12 rounded-[3rem] border-purple-500/20 flex flex-col">
+            <div className="glass-card p-12 rounded-[3rem] border-purple-500/20 flex flex-col">
               <div className="text-xs font-black text-purple-400 uppercase tracking-widest mb-4">Premium</div>
               <div className="text-5xl font-black text-white mb-8">₹2,499<span className="text-lg text-slate-500">/mo</span></div>
               <ul className="space-y-4 mb-12 flex-1">
@@ -367,33 +368,163 @@ export default function LandingPage({ onStart }: LandingPageProps) {
       </section>
 
       {/* Consultation Section */}
-      <section className="py-32 px-6">
-        <div className="max-w-7xl mx-auto glass p-12 md:p-20 rounded-[4rem] relative overflow-hidden border-indigo-500/10">
-          <div className="absolute -right-20 -bottom-20 w-96 h-96 bg-indigo-500/10 blur-[100px] rounded-full" />
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-black text-white mb-6">Need 1:1 Human Guidance?</h2>
-              <p className="text-slate-400 text-lg leading-relaxed mb-8">
-                Sometimes you need a veteran's perspective. Book a session with industry experts from top tech companies.
+      <section id="consultation" className="py-32 px-6 relative overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none">
+          <div className="absolute top-[20%] left-[-10%] w-[50%] h-[50%] bg-amber-500/10 blur-[150px] rounded-full" />
+          <div className="absolute bottom-[20%] right-[-10%] w-[50%] h-[50%] bg-indigo-500/10 blur-[150px] rounded-full" />
+        </div>
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="flex flex-col lg:flex-row items-end justify-between gap-12 mb-24">
+            <div className="max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs font-black uppercase tracking-widest mb-8">
+                <ShieldCheck size={14} />
+                Premium Experience
+              </div>
+              <h2 className="text-4xl md:text-7xl font-black text-white mb-8 leading-[1.1] tracking-tighter">
+                Accelerate with <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">1:1 Mastery.</span>
+              </h2>
+              <p className="text-slate-400 text-xl leading-relaxed">
+                AI gives you the map. Our mentors give you the <span className="text-white font-bold">keys to the room.</span> Direct access to leaders from Google, Meta, and top-tier startups.
               </p>
-              <div className="flex flex-wrap gap-4 mb-12">
-                <div className="px-6 py-3 bg-white/5 rounded-2xl border border-white/5 text-sm font-bold text-white">₹999 / Quick Sync</div>
-                <div className="px-6 py-3 bg-white/5 rounded-2xl border border-white/5 text-sm font-bold text-white">₹1,999 / Deep Dive</div>
-              </div>
-              <button className="flex items-center gap-3 px-8 py-4 bg-white text-slate-950 font-black rounded-2xl hover:scale-105 active:scale-95 transition-all">
-                Book a Session
-                <ArrowUpRight size={20} />
-              </button>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-4">
-                <img src="https://picsum.photos/seed/expert1/400/500" alt="Expert" className="rounded-3xl w-full h-64 object-cover grayscale hover:grayscale-0 transition-all" referrerPolicy="no-referrer" />
-                <img src="https://picsum.photos/seed/expert2/400/400" alt="Expert" className="rounded-3xl w-full h-48 object-cover grayscale hover:grayscale-0 transition-all" referrerPolicy="no-referrer" />
+            <div className="flex flex-col items-end gap-4">
+              <div className="flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-2xl">
+                <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                <span className="text-sm font-bold text-slate-300 uppercase tracking-widest">Only 4 spots left this month</span>
               </div>
-              <div className="space-y-4 mt-8">
-                <img src="https://picsum.photos/seed/expert3/400/400" alt="Expert" className="rounded-3xl w-full h-48 object-cover grayscale hover:grayscale-0 transition-all" referrerPolicy="no-referrer" />
-                <img src="https://picsum.photos/seed/expert4/400/500" alt="Expert" className="rounded-3xl w-full h-64 object-cover grayscale hover:grayscale-0 transition-all" referrerPolicy="no-referrer" />
+              <p className="text-xs text-slate-500 font-medium uppercase tracking-widest">Next availability: April 12th</p>
+            </div>
+          </div>
+
+          {/* Why 1:1 Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
+            {[
+              { icon: Target, title: "Custom Strategy", desc: "No generic advice. We analyze your specific situation and build a plan that works for you." },
+              { icon: Lock, title: "Insider Secrets", desc: "Learn the unwritten rules of hiring, networking, and promotion that aren't on the internet." },
+              { icon: MessageSquare, title: "Direct Feedback", desc: "Get brutal honesty on your resume, portfolio, and interview style from people who hire." }
+            ].map((item, i) => (
+              <div key={i} className="glass-card p-8 rounded-[2.5rem] border-white/5 group">
+                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-amber-500 mb-6 group-hover:scale-110 transition-transform">
+                  <item.icon size={24} />
+                </div>
+                <h4 className="text-xl font-black text-white mb-4">{item.title}</h4>
+                <p className="text-slate-400 text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Pricing Tiers */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-32">
+            {[
+              { 
+                title: "Quick Sync", 
+                price: "₹999", 
+                duration: "30 Minutes",
+                desc: "Laser-focused session for specific roadblocks or resume audits.",
+                features: ["Resume/Portfolio Audit", "Specific Career Q&A", "Session Recording", "Actionable Next Steps"],
+                color: "indigo"
+              },
+              { 
+                title: "Deep Dive", 
+                price: "₹1,999", 
+                duration: "60 Minutes",
+                desc: "Comprehensive strategy session to unlock your full potential.",
+                features: ["Full Roadmap Review", "Mock Interview (1 Round)", "Networking Strategy", "Custom Resource List", "Action Plan PDF"],
+                color: "purple",
+                popular: true
+              },
+              { 
+                title: "Elite Package", 
+                price: "₹4,999+", 
+                duration: "Full Mentorship",
+                desc: "High-touch guidance for those aiming for the top 1% of their field.",
+                features: ["3-5 Strategy Sessions", "Direct WhatsApp Access", "Placement Support", "Priority Booking", "Lifetime Community Access"],
+                color: "amber"
+              }
+            ].map((pkg, i) => (
+              <div key={i} className={`glass-card p-10 rounded-[3rem] border-white/5 flex flex-col relative ${pkg.popular ? 'border-amber-500/30 bg-amber-500/[0.02]' : ''}`}>
+                {pkg.popular && (
+                  <div className="absolute top-0 right-12 -translate-y-1/2 px-4 py-1 bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg shadow-amber-500/20">
+                    Most Popular
+                  </div>
+                )}
+                <div className={`text-xs font-black text-${pkg.color}-400 uppercase tracking-widest mb-4`}>{pkg.title}</div>
+                <div className="text-5xl font-black text-white mb-2 tracking-tighter">{pkg.price}</div>
+                <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-8">{pkg.duration}</div>
+                
+                <p className="text-slate-400 text-sm leading-relaxed mb-8">{pkg.desc}</p>
+                
+                <ul className="space-y-4 mb-12 flex-1">
+                  {pkg.features.map((f, j) => (
+                    <li key={j} className="flex items-center gap-3 text-xs text-slate-300">
+                      <CheckCircle2 size={14} className={`text-${pkg.color}-400`} />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                
+                <button className={`w-full py-5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${
+                  pkg.color === 'indigo' ? 'bg-white/5 text-white border border-white/10 hover:bg-white/10' :
+                  pkg.color === 'purple' ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20 hover:scale-105 animate-glow-purple' :
+                  'bg-amber-500 text-white shadow-lg shadow-amber-500/20 hover:scale-105 animate-glow-amber'
+                }`}>
+                  Book Your Session
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Social Proof Footer */}
+          <div className="glass p-12 md:p-20 rounded-[4rem] relative overflow-hidden border-white/5">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+              <div>
+                <h3 className="text-3xl font-black text-white mb-6">Trusted by 10,000+ Professionals.</h3>
+                <p className="text-slate-400 text-lg leading-relaxed mb-8">
+                  Our mentors are leaders from top-tier companies. They don't just teach; they lead the industry.
+                </p>
+                <div className="flex items-center gap-8">
+                  <div className="flex -space-x-4">
+                    {[1, 2, 3, 4].map(i => (
+                      <img 
+                        key={i} 
+                        src={`https://picsum.photos/seed/mentor${i}/100/100`} 
+                        className="w-12 h-12 rounded-full border-4 border-[#020617] grayscale hover:grayscale-0 transition-all cursor-pointer" 
+                        alt="Mentor"
+                        referrerPolicy="no-referrer"
+                      />
+                    ))}
+                  </div>
+                  <div className="h-12 w-px bg-white/10" />
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-1 text-amber-500">
+                      {[1, 2, 3, 4, 5].map(i => <Star key={i} size={14} fill="currentColor" />)}
+                    </div>
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">4.9/5 Avg. Rating</span>
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-6">
+                  <div className="p-6 bg-white/5 rounded-3xl border border-white/5">
+                    <div className="text-3xl font-black text-white mb-1">98%</div>
+                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Success Rate</div>
+                  </div>
+                  <div className="p-6 bg-white/5 rounded-3xl border border-white/5">
+                    <div className="text-3xl font-black text-white mb-1">45%</div>
+                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Avg. Salary Hike</div>
+                  </div>
+                </div>
+                <div className="space-y-6 mt-12">
+                  <div className="p-6 bg-white/5 rounded-3xl border border-white/5">
+                    <div className="text-3xl font-black text-white mb-1">24h</div>
+                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Response Time</div>
+                  </div>
+                  <div className="p-6 bg-white/5 rounded-3xl border border-white/5">
+                    <div className="text-3xl font-black text-white mb-1">10k+</div>
+                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Sessions Done</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -482,7 +613,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <button 
               onClick={onStart}
-              className="px-12 py-6 bg-white text-slate-950 font-black rounded-2xl text-xl hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-white/10"
+              className="px-12 py-6 bg-white text-slate-950 font-black rounded-2xl text-xl hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-white/20 animate-glow"
             >
               Get Started Now
             </button>

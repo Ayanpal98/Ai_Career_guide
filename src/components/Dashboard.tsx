@@ -12,9 +12,11 @@ interface DashboardProps {
   roadmap: CareerRoadmap;
   profile: UserProfile;
   onUpdateRoadmap: (updated: Partial<CareerRoadmap>) => void;
+  onBackToLanding: () => void;
+  onEditProfile: () => void;
 }
 
-export default function Dashboard({ roadmap, profile, onUpdateRoadmap }: DashboardProps) {
+export default function Dashboard({ roadmap, profile, onUpdateRoadmap, onBackToLanding, onEditProfile }: DashboardProps) {
   const [activeTab, setActiveTab] = React.useState<'overview' | 'roadmap' | 'tasks' | 'progress' | 'coach'>('overview');
   const [completedTasks, setCompletedTasks] = React.useState<Record<string, boolean>>({});
   const [messages, setMessages] = React.useState<ChatMessage[]>([]);
@@ -66,7 +68,7 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap }: Dashboa
   const isPremium = roadmap.plan === 'Premium';
 
   const renderSidebar = () => (
-    <nav className="fixed left-0 top-0 bottom-0 w-72 bg-[#020617] border-r border-slate-800/50 p-8 flex flex-col gap-8 z-50">
+    <nav className="fixed left-0 top-0 bottom-0 w-72 glass-dark border-r border-white/5 p-8 flex flex-col gap-8 z-50">
       <div className="flex items-center gap-3 text-white font-black text-2xl tracking-tighter mb-8">
         <div className="p-2 rounded-xl bg-indigo-500 shadow-lg shadow-indigo-500/20">
           <Zap size={24} />
@@ -104,6 +106,23 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap }: Dashboa
         ))}
       </div>
 
+      <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-white/5">
+        <button
+          onClick={onEditProfile}
+          className="flex items-center gap-4 px-5 py-3 rounded-2xl text-slate-500 hover:text-slate-300 hover:bg-white/5 transition-all"
+        >
+          <Settings size={20} />
+          <span className="text-sm">Edit Profile</span>
+        </button>
+        <button
+          onClick={onBackToLanding}
+          className="flex items-center gap-4 px-5 py-3 rounded-2xl text-slate-500 hover:text-slate-300 hover:bg-white/5 transition-all"
+        >
+          <ExternalLink size={20} />
+          <span className="text-sm">Exit to Home</span>
+        </button>
+      </div>
+
       <div className="mt-auto">
         <div className="p-6 rounded-3xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white relative overflow-hidden group">
           <div className="absolute -right-4 -top-4 opacity-10 group-hover:scale-110 transition-transform">
@@ -128,7 +147,7 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap }: Dashboa
         <p className="text-slate-400 text-lg max-w-2xl font-medium leading-relaxed">{roadmap.summary}</p>
       </div>
       
-      <div className="glass p-6 rounded-3xl min-w-[300px] relative overflow-hidden">
+      <div className="glass-card p-6 rounded-3xl min-w-[300px] relative overflow-hidden">
         <div className="flex items-center justify-between mb-4">
           <span className="text-sm font-bold text-slate-400 uppercase tracking-widest">Total Progress</span>
           <span className="text-2xl font-black text-white">{progress}%</span>
@@ -177,7 +196,7 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap }: Dashboa
         </section>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <section className="glass p-8 rounded-[2rem]">
+          <section className="glass-card p-8 rounded-[2rem]">
             <div className="flex items-center gap-3 mb-6 text-amber-500 font-bold uppercase tracking-widest text-xs">
               <AlertTriangle size={18} />
               Skill Gap Analysis
@@ -192,7 +211,7 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap }: Dashboa
             </ul>
           </section>
 
-          <section className="glass p-8 rounded-[2rem]">
+          <section className="glass-card p-8 rounded-[2rem]">
             <div className="flex items-center gap-3 mb-6 text-emerald-500 font-bold uppercase tracking-widest text-xs">
               <Award size={18} />
               Your Strengths
@@ -211,7 +230,7 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap }: Dashboa
 
       {/* AI Coach Insights */}
       <div className="space-y-8">
-        <section className="glass p-8 rounded-[2rem] border-indigo-500/20">
+        <section className="glass-card p-8 rounded-[2rem] border-indigo-500/20">
           <div className="flex items-center gap-3 mb-6 text-indigo-400 font-bold uppercase tracking-widest text-xs">
             <MessageSquare size={18} />
             AI Coach Insights
@@ -231,7 +250,7 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap }: Dashboa
         </section>
 
         {isPro && roadmap.projects && (
-          <section className="glass p-8 rounded-[2rem]">
+          <section className="glass-card p-8 rounded-[2rem]">
             <div className="flex items-center gap-3 mb-6 text-blue-400 font-bold uppercase tracking-widest text-xs">
               <Zap size={18} />
               Project Lab
@@ -261,7 +280,7 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap }: Dashboa
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.1 }}
-          className="glass p-10 rounded-[3rem] relative group"
+          className="glass-card p-10 rounded-[3rem] relative group"
         >
           <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-1 h-12 bg-indigo-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-12">
@@ -311,7 +330,7 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap }: Dashboa
           Daily Rituals
         </div>
         {roadmap.actionPlan.daily.map((task, i) => (
-          <div key={i} className="p-8 glass rounded-[2.5rem] space-y-4 relative overflow-hidden group">
+          <div key={i} className="p-8 glass-card rounded-[2.5rem] space-y-4 relative overflow-hidden group">
             <div className={`absolute top-0 right-0 px-4 py-1 text-[10px] font-black uppercase tracking-widest rounded-bl-xl ${
               task.difficulty === 'Hard' ? 'bg-red-500/20 text-red-400' : 
               task.difficulty === 'Medium' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'
@@ -333,7 +352,7 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap }: Dashboa
           Weekly Sprints
         </div>
         {roadmap.actionPlan.weekly.map((task, i) => (
-          <div key={i} className="p-8 glass rounded-[2.5rem] space-y-4 relative overflow-hidden group">
+          <div key={i} className="p-8 glass-card rounded-[2.5rem] space-y-4 relative overflow-hidden group">
             <div className={`absolute top-0 right-0 px-4 py-1 text-[10px] font-black uppercase tracking-widest rounded-bl-xl ${
               task.difficulty === 'Hard' ? 'bg-red-500/20 text-red-400' : 
               task.difficulty === 'Medium' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'
@@ -355,7 +374,7 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap }: Dashboa
           Monthly Milestones
         </div>
         {roadmap.actionPlan.monthly.map((task, i) => (
-          <div key={i} className="p-8 glass rounded-[2.5rem] space-y-4 relative overflow-hidden group">
+          <div key={i} className="p-8 glass-card rounded-[2.5rem] space-y-4 relative overflow-hidden group">
             <div className={`absolute top-0 right-0 px-4 py-1 text-[10px] font-black uppercase tracking-widest rounded-bl-xl ${
               task.difficulty === 'Hard' ? 'bg-red-500/20 text-red-400' : 
               task.difficulty === 'Medium' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'
@@ -388,7 +407,7 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap }: Dashboa
           { title: 'Deep Dive', duration: '60 min', price: '₹1,999', features: ['Mock interview', 'Detailed roadmap review', 'Networking strategy', 'Portfolio audit'], color: 'purple' },
           { title: 'Premium Package', duration: '3 Sessions', price: '₹4,999', features: ['End-to-end guidance', 'Placement support', 'Direct WhatsApp access', 'Priority booking'], color: 'emerald' },
         ].map(pkg => (
-          <div key={pkg.title} className="glass p-10 rounded-[3rem] border-white/5 hover:border-white/10 transition-all group">
+          <div key={pkg.title} className="glass-card p-10 rounded-[3rem] border-white/5 group">
             <div className={`w-12 h-12 rounded-2xl bg-${pkg.color}-500/20 flex items-center justify-center text-${pkg.color}-400 mb-6 group-hover:scale-110 transition-transform`}>
               <Calendar size={24} />
             </div>
@@ -414,7 +433,7 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap }: Dashboa
         ))}
       </div>
 
-      <div className="glass p-12 rounded-[3rem] flex flex-col md:flex-row items-center justify-between gap-8">
+      <div className="glass-card p-12 rounded-[3rem] flex flex-col md:flex-row items-center justify-between gap-8">
         <div className="space-y-2">
           <h3 className="text-2xl font-black text-white">Need a custom plan?</h3>
           <p className="text-slate-400">Contact our enterprise team for bulk bookings and corporate training.</p>
@@ -465,7 +484,7 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap }: Dashboa
                 )}
                 {activeTab === 'coach' && isPremium && (
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 h-[calc(100vh-300px)]">
-                    <div className="lg:col-span-2 flex flex-col glass rounded-[3rem] overflow-hidden border-indigo-500/20">
+                    <div className="lg:col-span-2 flex flex-col glass-card rounded-[3rem] overflow-hidden border-indigo-500/20">
                       <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/5">
                         <div className="flex items-center gap-4">
                           <div className="w-12 h-12 rounded-2xl bg-indigo-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
@@ -551,7 +570,7 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap }: Dashboa
                     </div>
 
                     <div className="space-y-8">
-                      <section className="glass p-8 rounded-[3rem] border-purple-500/20 relative overflow-hidden">
+                      <section className="glass-card p-8 rounded-[3rem] border-purple-500/20 relative overflow-hidden">
                         <div className="absolute -right-4 -top-4 opacity-5">
                           <Award size={120} />
                         </div>
@@ -568,7 +587,7 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap }: Dashboa
                         </div>
                       </section>
 
-                      <section className="glass p-8 rounded-[3rem] border-emerald-500/20">
+                      <section className="glass-card p-8 rounded-[3rem] border-emerald-500/20">
                         <h4 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
                           <Target size={22} className="text-emerald-400" /> Dynamic Updates
                         </h4>

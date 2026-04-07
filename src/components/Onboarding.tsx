@@ -5,6 +5,7 @@ import { ChevronRight, ChevronLeft, Sparkles, Target, Briefcase, GraduationCap, 
 
 interface OnboardingProps {
   onComplete: (profile: UserProfile) => void;
+  onBack: () => void;
 }
 
 const steps = [
@@ -18,7 +19,7 @@ const steps = [
   { id: 'plan', title: 'Choose your plan', icon: Sparkles, description: 'Select a tier to unlock your personalized roadmap.' },
 ];
 
-export default function Onboarding({ onComplete }: OnboardingProps) {
+export default function Onboarding({ onComplete, onBack }: OnboardingProps) {
   const [currentStep, setCurrentStep] = React.useState(0);
   const [formData, setFormData] = React.useState<Partial<UserProfile>>({
     level: 'Beginner',
@@ -37,6 +38,8 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
   const handleBack = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
+    } else {
+      onBack();
     }
   };
 
@@ -194,8 +197,12 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center p-6">
-      <div className="max-w-4xl w-full">
+    <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      {/* Background Glows */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/10 blur-[120px] rounded-full" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 blur-[120px] rounded-full" />
+
+      <div className="max-w-4xl w-full glass p-12 md:p-16 rounded-[3rem] border-white/5 relative z-10">
         {/* Progress Bar */}
         <div className="mb-12 flex gap-2">
           {steps.map((_, i) => (
@@ -236,12 +243,10 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
             <div className="flex items-center justify-between pt-8 border-t border-slate-800/50">
               <button
                 onClick={handleBack}
-                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${
-                  currentStep === 0 ? 'opacity-0 pointer-events-none' : 'text-slate-400 hover:text-white hover:bg-white/5'
-                }`}
+                className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all text-slate-400 hover:text-white hover:bg-white/5"
               >
                 <ChevronLeft size={20} />
-                Back
+                {currentStep === 0 ? 'Back to Home' : 'Back'}
               </button>
               <button
                 disabled={!canContinue()}
