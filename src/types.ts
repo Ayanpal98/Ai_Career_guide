@@ -9,6 +9,7 @@ export interface UserProfile {
   hoursPerDay: string;
   timeline: '3 months' | '6 months' | '1 year';
   constraints: string;
+  avatar?: string;
 }
 
 export interface RoadmapPhase {
@@ -65,4 +66,15 @@ export interface CareerRoadmap {
   personalBranding?: string;
   incomeRoadmap?: string;
   accountabilityPrompts?: string[];
+}
+
+export interface ConsultationPackage {
+  title: string;
+  price: string;
+  duration: string;
+  desc: string;
+  features: string[];
+  color: string;
+  popular?: boolean;
+  upiId?: string;
 }

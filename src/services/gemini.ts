@@ -6,7 +6,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 const roadmapSchema = {
   type: Type.OBJECT,
   properties: {
-    plan: { type: Type.STRING },
+    plan: { type: Type.STRING, enum: ["Basic", "Pro", "Premium"] },
     summary: { type: Type.STRING },
     skillGapAnalysis: { type: Type.ARRAY, items: { type: Type.STRING } },
     strengths: { type: Type.ARRAY, items: { type: Type.STRING } },
@@ -22,7 +22,8 @@ const roadmapSchema = {
           projects: { type: Type.ARRAY, items: { type: Type.STRING } },
           timeEstimate: { type: Type.STRING },
           status: { type: Type.STRING, enum: ["pending", "in-progress", "completed"] }
-        }
+        },
+        required: ["title", "description", "skills", "tasks", "projects", "timeEstimate", "status"]
       }
     },
     actionPlan: {
@@ -39,7 +40,8 @@ const roadmapSchema = {
               timeRequired: { type: Type.STRING },
               outcome: { type: Type.STRING },
               completed: { type: Type.BOOLEAN }
-            }
+            },
+            required: ["id", "task", "difficulty", "timeRequired", "outcome", "completed"]
           }
         },
         weekly: {
@@ -53,7 +55,8 @@ const roadmapSchema = {
               timeRequired: { type: Type.STRING },
               outcome: { type: Type.STRING },
               completed: { type: Type.BOOLEAN }
-            }
+            },
+            required: ["id", "task", "difficulty", "timeRequired", "outcome", "completed"]
           }
         },
         monthly: {
@@ -67,10 +70,12 @@ const roadmapSchema = {
               timeRequired: { type: Type.STRING },
               outcome: { type: Type.STRING },
               completed: { type: Type.BOOLEAN }
-            }
+            },
+            required: ["id", "task", "difficulty", "timeRequired", "outcome", "completed"]
           }
         }
-      }
+      },
+      required: ["daily", "weekly", "monthly"]
     },
     resources: {
       type: Type.ARRAY,
@@ -80,7 +85,8 @@ const roadmapSchema = {
           title: { type: Type.STRING },
           link: { type: Type.STRING },
           type: { type: Type.STRING }
-        }
+        },
+        required: ["title", "link", "type"]
       }
     },
     realityCheck: { type: Type.STRING },
@@ -99,10 +105,16 @@ const roadmapSchema = {
     personalBranding: { type: Type.STRING },
     incomeRoadmap: { type: Type.STRING },
     accountabilityPrompts: { type: Type.ARRAY, items: { type: Type.STRING } }
-  }
+  },
+  required: ["plan", "summary", "skillGapAnalysis", "strengths", "phases", "actionPlan", "resources", "realityCheck", "nextStep"]
 };
 
 export async function generateCareerRoadmap(profile: UserProfile): Promise<CareerRoadmap> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey || apiKey === "undefined") {
+    throw new Error("GEMINI_API_KEY is not configured. Please add it to your environment variables.");
+  }
+
   const prompt = `
     You are an expert Career Strategist and AI Career Coach.
     Generate a highly personalized career roadmap for a user on the ${profile.plan.toUpperCase()} plan.
@@ -122,19 +134,33 @@ export async function generateCareerRoadmap(profile: UserProfile): Promise<Caree
     3. PREMIUM: 5 phases, deep personalization, salary/market strategy, industry insights, networking, interview prep (mock questions), 30-60-90 day plan, personal branding, income roadmap, accountability prompts, 24-hour action plan.
 
     Provide the output in JSON format matching the structure of the CareerRoadmap interface.
-    Omit fields that are not applicable to the selected plan (e.g., omit resumeGuidance for Basic).
+    Ensure all required fields in the schema are populated.
+    For the plan field, use exactly one of: "Basic", "Pro", "Premium".
   `;
 
-  const response = await ai.models.generateContent({
-    model: "gemini-3.1-pro-preview",
-    contents: prompt,
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: roadmapSchema
-    }
-  });
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: roadmapSchema,
+        temperature: 0.7,
+      }
+    });
 
-  return JSON.parse(response.text);
+    const text = response.text;
+    if (!text) {
+      throw new Error("AI returned an empty response.");
+    }
+
+    // Clean potential markdown formatting if any (though responseMimeType should handle it)
+    const cleanJson = text.replace(/^```json\n?/, "").replace(/\n?```$/, "").trim();
+    return JSON.parse(cleanJson);
+  } catch (error) {
+    console.error("Error generating roadmap:", error);
+    throw error;
+  }
 }
 
 export async function chatWithCoach(
@@ -143,6 +169,11 @@ export async function chatWithCoach(
   profile: UserProfile,
   currentRoadmap: CareerRoadmap
 ): Promise<{ message: string, updatedRoadmap?: Partial<CareerRoadmap> }> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey || apiKey === "undefined") {
+    throw new Error("GEMINI_API_KEY is not configured.");
+  }
+
   const prompt = `
     You are the user's AI Career Coach. 
     The user is on the ${profile.plan.toUpperCase()} plan.
@@ -166,7 +197,7 @@ export async function chatWithCoach(
   `;
 
   const response = await ai.models.generateContent({
-    model: "gemini-3.1-pro-preview",
+    model: "gemini-3-flash-preview",
     contents: [
       ...history.map(h => ({ role: h.role, parts: [{ text: h.text }] })),
       { role: 'user', parts: [{ text: prompt }] }
@@ -184,5 +215,11 @@ export async function chatWithCoach(
     }
   });
 
-  return JSON.parse(response.text);
+  const text = response.text;
+  if (!text) {
+    throw new Error("AI returned an empty response.");
+  }
+
+  const cleanJson = text.replace(/^```json\n?/, "").replace(/\n?```$/, "").trim();
+  return JSON.parse(cleanJson);
 }

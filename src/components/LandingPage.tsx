@@ -1,18 +1,22 @@
 import React from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   Zap, Sparkles, CheckCircle2, ArrowRight, Play, Users, 
   Target, BarChart3, MessageSquare, ShieldCheck, Star,
-  ChevronRight, ArrowUpRight, Globe, Lock, AlertTriangle
+  ChevronRight, ArrowUpRight, Globe, Lock, AlertTriangle, X
 } from 'lucide-react';
 
+import { SubscriptionPlan, ConsultationPackage } from '../types';
+
 interface LandingPageProps {
-  onStart: () => void;
+  onStart: (plan: SubscriptionPlan) => void;
+  onBook: (pkg: ConsultationPackage) => void;
 }
 
-export default function LandingPage({ onStart }: LandingPageProps) {
+export default function LandingPage({ onStart, onBook }: LandingPageProps) {
   return (
     <div className="min-h-screen bg-[#020617] text-slate-200 font-sans selection:bg-indigo-500/30 overflow-x-hidden">
+
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#020617]/40 backdrop-blur-2xl">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -29,7 +33,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
             <a href="#consultation" className="hover:text-white transition-colors">Consultation</a>
           </div>
           <button 
-            onClick={onStart}
+            onClick={() => onStart('Basic')}
             className="px-6 py-2.5 bg-white text-slate-950 font-black rounded-xl text-sm hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/10 animate-glow"
           >
             Get Started
@@ -42,6 +46,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none">
           <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/20 blur-[120px] rounded-full" />
           <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/20 blur-[120px] rounded-full" />
+          <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-blue-500/10 blur-[100px] rounded-full" />
         </div>
 
         <div className="max-w-7xl mx-auto text-center relative z-10">
@@ -80,19 +85,39 @@ export default function LandingPage({ onStart }: LandingPageProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-6"
+            className="flex flex-col items-center justify-center gap-12"
           >
             <button 
-              onClick={onStart}
+              onClick={() => onStart('Basic')}
               className="group flex items-center gap-3 px-10 py-5 bg-white text-slate-950 font-black rounded-2xl text-lg hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-white/20 animate-glow"
             >
               Get Your Roadmap
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </button>
-            <button className="flex items-center gap-3 px-10 py-5 bg-white/5 text-white font-black rounded-2xl text-lg border border-white/10 hover:bg-white/10 transition-all">
-              <Play size={20} fill="currentColor" />
-              Watch Demo
-            </button>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-4xl">
+              <div className="glass p-6 rounded-3xl border-white/10 text-center group hover:border-indigo-500/30 transition-colors">
+                <div className="w-12 h-12 bg-indigo-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <Zap className="text-indigo-400" size={24} />
+                </div>
+                <h4 className="text-white font-black mb-2">AI Roadmap</h4>
+                <p className="text-sm text-slate-400">Personalized step-by-step career execution plans.</p>
+              </div>
+              <div className="glass p-6 rounded-3xl border-white/10 text-center group hover:border-purple-500/30 transition-colors">
+                <div className="w-12 h-12 bg-purple-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <Sparkles className="text-purple-400" size={24} />
+                </div>
+                <h4 className="text-white font-black mb-2">Real-time Coaching</h4>
+                <p className="text-sm text-slate-400">24/7 AI guidance for every career decision.</p>
+              </div>
+              <div className="glass p-6 rounded-3xl border-white/10 text-center group hover:border-pink-500/30 transition-colors">
+                <div className="w-12 h-12 bg-pink-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <Target className="text-pink-400" size={24} />
+                </div>
+                <h4 className="text-white font-black mb-2">Skill Analysis</h4>
+                <p className="text-sm text-slate-400">Identify and bridge gaps with targeted learning.</p>
+              </div>
+            </div>
           </motion.div>
 
           {/* Dashboard Preview */}
@@ -141,13 +166,19 @@ export default function LandingPage({ onStart }: LandingPageProps) {
       {/* Social Proof */}
       <section className="py-20 border-y border-white/5 bg-white/[0.02]">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-40 grayscale">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+            className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-40 grayscale"
+          >
             <div className="flex items-center gap-2 font-black text-2xl tracking-tighter">Google</div>
             <div className="flex items-center gap-2 font-black text-2xl tracking-tighter">Meta</div>
             <div className="flex items-center gap-2 font-black text-2xl tracking-tighter">Amazon</div>
             <div className="flex items-center gap-2 font-black text-2xl tracking-tighter">Stripe</div>
             <div className="flex items-center gap-2 font-black text-2xl tracking-tighter">Netflix</div>
-          </div>
+          </motion.div>
           <div className="mt-12 text-center">
             <p className="text-sm font-bold text-slate-500 uppercase tracking-[0.3em]">Trusted by professionals at world-class companies</p>
           </div>
@@ -156,7 +187,11 @@ export default function LandingPage({ onStart }: LandingPageProps) {
 
       {/* Problem Section */}
       <section className="py-32 px-6 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none">
+          <div className="absolute top-[30%] left-[-5%] w-[35%] h-[35%] bg-indigo-500/10 blur-[120px] rounded-full" />
+          <div className="absolute bottom-[20%] right-[-5%] w-[35%] h-[35%] bg-purple-500/10 blur-[120px] rounded-full" />
+        </div>
+        <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-24">
             <h2 className="text-4xl md:text-6xl font-black text-white mb-6">The Career Fog is Real.</h2>
             <p className="text-slate-400 text-xl max-w-2xl mx-auto">Most people don't lack ambition. They lack a sequence.</p>
@@ -180,13 +215,21 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                 desc: "The constant 'What's Next?' keeps you paralyzed while others move forward with precision." 
               }
             ].map((item, i) => (
-              <div key={i} className="glass-card p-10 rounded-[3rem] border-white/5">
+              <motion.div 
+                key={i} 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ y: -10, scale: 1.02 }}
+                className="glass-card p-10 rounded-[3rem] border-white/5 cursor-default"
+              >
                 <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center text-indigo-400 mb-8">
                   <item.icon size={28} />
                 </div>
                 <h3 className="text-2xl font-black text-white mb-4">{item.title}</h3>
                 <p className="text-slate-400 leading-relaxed">{item.desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -196,7 +239,12 @@ export default function LandingPage({ onStart }: LandingPageProps) {
       <section id="features" className="py-32 px-6 bg-white/[0.01]">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-black uppercase tracking-widest mb-8">
                 The Solution
               </div>
@@ -214,40 +262,74 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                   "24/7 AI Career Coaching",
                   "Verified Industry Milestones"
                 ].map((feature, i) => (
-                  <div key={i} className="flex items-center gap-4 text-white font-bold">
+                  <motion.div 
+                    key={i} 
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.4 + i * 0.1 }}
+                    className="flex items-center gap-4 text-white font-bold"
+                  >
                     <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-white">
                       <CheckCircle2 size={14} />
                     </div>
                     {feature}
-                  </div>
+                  </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="space-y-6">
-                <div className="glass-card p-8 rounded-[2.5rem] border-indigo-500/20">
+                <motion.div 
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.05 }}
+                  className="glass-card p-8 rounded-[2.5rem] border-indigo-500/20"
+                >
                   <BarChart3 size={32} className="text-indigo-400 mb-6" />
                   <h4 className="text-xl font-bold text-white mb-2">Progress Tracking</h4>
                   <p className="text-sm text-slate-400">Visualize every step of your journey with deep analytics.</p>
-                </div>
-                <div className="glass-card p-8 rounded-[2.5rem] border-purple-500/20">
+                </motion.div>
+                <motion.div 
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 }}
+                  whileHover={{ scale: 1.05 }}
+                  className="glass-card p-8 rounded-[2.5rem] border-purple-500/20"
+                >
                   <MessageSquare size={32} className="text-purple-400 mb-6" />
                   <h4 className="text-xl font-bold text-white mb-2">AI Coach</h4>
                   <p className="text-sm text-slate-400">Get instant answers to your career dilemmas, anytime.</p>
-                </div>
+                </motion.div>
               </div>
               <div className="space-y-6 mt-12">
-                <div className="glass-card p-8 rounded-[2.5rem] border-emerald-500/20">
+                <motion.div 
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.2 }}
+                  whileHover={{ scale: 1.05 }}
+                  className="glass-card p-8 rounded-[2.5rem] border-emerald-500/20"
+                >
                   <Target size={32} className="text-emerald-400 mb-6" />
                   <h4 className="text-xl font-bold text-white mb-2">Next Step Focus</h4>
                   <p className="text-sm text-slate-400">Never feel overwhelmed. We show you exactly what to do next.</p>
-                </div>
-                <div className="glass-card p-8 rounded-[2.5rem] border-amber-500/20">
+                </motion.div>
+                <motion.div 
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 }}
+                  whileHover={{ scale: 1.05 }}
+                  className="glass-card p-8 rounded-[2.5rem] border-amber-500/20"
+                >
                   <Zap size={32} className="text-amber-400 mb-6" />
                   <h4 className="text-xl font-bold text-white mb-2">Project Lab</h4>
                   <p className="text-sm text-slate-400">Build real-world projects that prove your expertise.</p>
-                </div>
+                </motion.div>
               </div>
             </div>
           </div>
@@ -267,21 +349,32 @@ export default function LandingPage({ onStart }: LandingPageProps) {
               { step: "02", title: "Get Your Roadmap", desc: "Receive a custom-built, phase-by-phase plan with specific tasks and resources." },
               { step: "03", title: "Execute & Grow", desc: "Follow the daily rituals, complete tasks, and track your progress to the top." }
             ].map((item, i) => (
-              <div key={i} className="relative z-10 space-y-6">
+              <motion.div 
+                key={i} 
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.2, type: "spring", stiffness: 100 }}
+                className="relative z-10 space-y-6"
+              >
                 <div className="w-20 h-20 rounded-full bg-indigo-500 text-white font-black text-2xl flex items-center justify-center mx-auto shadow-2xl shadow-indigo-500/20">
                   {item.step}
                 </div>
                 <h3 className="text-2xl font-black text-white">{item.title}</h3>
                 <p className="text-slate-400 max-w-xs mx-auto">{item.desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-32 px-6 bg-white/[0.01]">
-        <div className="max-w-7xl mx-auto">
+      <section id="pricing" className="py-32 px-6 bg-white/[0.01] relative overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none">
+          <div className="absolute top-[10%] left-[10%] w-[30%] h-[30%] bg-indigo-500/10 blur-[120px] rounded-full" />
+          <div className="absolute bottom-[10%] right-[10%] w-[30%] h-[30%] bg-purple-500/10 blur-[120px] rounded-full" />
+        </div>
+        <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-24">
             <h2 className="text-4xl md:text-6xl font-black text-white mb-6">Invest in Your Future.</h2>
             <p className="text-slate-400 text-xl">Plans designed to take you from beginner to industry leader.</p>
@@ -289,9 +382,20 @@ export default function LandingPage({ onStart }: LandingPageProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Basic */}
-            <div className="glass-card p-12 rounded-[3rem] border-white/5 flex flex-col">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              whileHover="hover"
+              className="glass-card p-12 rounded-[3rem] border-white/5 flex flex-col"
+            >
               <div className="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">Basic</div>
-              <div className="text-5xl font-black text-white mb-8">₹0<span className="text-lg text-slate-500">/mo</span></div>
+              <motion.div 
+                variants={{ hover: { scale: 1.05, color: "#818cf8" } }}
+                className="text-5xl font-black text-white mb-8"
+              >
+                ₹0<span className="text-lg text-slate-500">/mo</span>
+              </motion.div>
               <ul className="space-y-4 mb-12 flex-1">
                 {["1 Career Roadmap", "Basic Progress Tracking", "Community Access", "Public Resources"].map((f, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm text-slate-400">
@@ -301,20 +405,32 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                 ))}
               </ul>
               <button 
-                onClick={onStart}
+                onClick={() => onStart('Basic')}
                 className="w-full py-4 bg-white/5 text-white font-black rounded-2xl border border-white/10 hover:bg-white/10 transition-all"
               >
                 Start Free
               </button>
-            </div>
+            </motion.div>
 
             {/* Pro */}
-            <div className="premium-border p-12 rounded-[3rem] glass-dark flex flex-col relative scale-105 z-10 shadow-2xl shadow-indigo-500/10">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              whileHover="hover"
+              className="premium-border p-12 rounded-[3rem] glass-dark flex flex-col relative scale-105 z-10 shadow-2xl shadow-indigo-500/10"
+            >
               <div className="absolute top-0 right-12 -translate-y-1/2 px-4 py-1 bg-indigo-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full">
                 Most Popular
               </div>
               <div className="text-xs font-black text-indigo-400 uppercase tracking-widest mb-4">Pro</div>
-              <div className="text-5xl font-black text-white mb-8">₹999<span className="text-lg text-slate-500">/mo</span></div>
+              <motion.div 
+                variants={{ hover: { scale: 1.05, color: "#818cf8" } }}
+                className="text-5xl font-black text-white mb-8"
+              >
+                ₹999<span className="text-lg text-slate-500">/mo</span>
+              </motion.div>
               <ul className="space-y-4 mb-12 flex-1">
                 {[
                   "Unlimited Roadmaps",
@@ -330,17 +446,35 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                 ))}
               </ul>
               <button 
-                onClick={onStart}
+                onClick={() => onStart('Pro')}
                 className="w-full py-4 bg-indigo-500 text-white font-black rounded-2xl shadow-xl shadow-indigo-500/20 hover:scale-105 active:scale-95 transition-all"
               >
                 Get Pro Access
               </button>
-            </div>
+              <div className="mt-6 p-4 rounded-2xl bg-white/5 border border-white/5 text-center">
+                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Pay via UPI</div>
+                <div className="text-xs font-mono text-indigo-400 select-all cursor-pointer hover:text-indigo-300 transition-colors">
+                  ayanpal0698@okaxis
+                </div>
+              </div>
+            </motion.div>
 
             {/* Premium */}
-            <div className="glass-card p-12 rounded-[3rem] border-purple-500/20 flex flex-col">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              whileHover="hover"
+              className="glass-card p-12 rounded-[3rem] border-purple-500/20 flex flex-col"
+            >
               <div className="text-xs font-black text-purple-400 uppercase tracking-widest mb-4">Premium</div>
-              <div className="text-5xl font-black text-white mb-8">₹2,499<span className="text-lg text-slate-500">/mo</span></div>
+              <motion.div 
+                variants={{ hover: { scale: 1.05, color: "#a855f7" } }}
+                className="text-5xl font-black text-white mb-8"
+              >
+                ₹2,499<span className="text-lg text-slate-500">/mo</span>
+              </motion.div>
               <ul className="space-y-4 mb-12 flex-1">
                 {[
                   "Everything in Pro",
@@ -357,12 +491,18 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                 ))}
               </ul>
               <button 
-                onClick={onStart}
+                onClick={() => onStart('Premium')}
                 className="w-full py-4 bg-purple-500 text-white font-black rounded-2xl shadow-xl shadow-purple-500/20 hover:scale-105 active:scale-95 transition-all"
               >
                 Go Premium
               </button>
-            </div>
+              <div className="mt-6 p-4 rounded-2xl bg-white/5 border border-white/5 text-center">
+                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Pay via UPI</div>
+                <div className="text-xs font-mono text-purple-400 select-all cursor-pointer hover:text-purple-300 transition-colors">
+                  ayanpal0698@okaxis
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -404,13 +544,21 @@ export default function LandingPage({ onStart }: LandingPageProps) {
               { icon: Lock, title: "Insider Secrets", desc: "Learn the unwritten rules of hiring, networking, and promotion that aren't on the internet." },
               { icon: MessageSquare, title: "Direct Feedback", desc: "Get brutal honesty on your resume, portfolio, and interview style from people who hire." }
             ].map((item, i) => (
-              <div key={i} className="glass-card p-8 rounded-[2.5rem] border-white/5 group">
+              <motion.div 
+                key={i} 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ y: -10, scale: 1.02 }}
+                className="glass-card p-8 rounded-[2.5rem] border-white/5 group"
+              >
                 <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-amber-500 mb-6 group-hover:scale-110 transition-transform">
                   <item.icon size={24} />
                 </div>
                 <h4 className="text-xl font-black text-white mb-4">{item.title}</h4>
                 <p className="text-slate-400 text-sm leading-relaxed">{item.desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
 
@@ -423,7 +571,8 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                 duration: "30 Minutes",
                 desc: "Laser-focused session for specific roadblocks or resume audits.",
                 features: ["Resume/Portfolio Audit", "Specific Career Q&A", "Session Recording", "Actionable Next Steps"],
-                color: "indigo"
+                color: "indigo",
+                upiId: "ayanpal0698@okaxis"
               },
               { 
                 title: "Deep Dive", 
@@ -432,7 +581,8 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                 desc: "Comprehensive strategy session to unlock your full potential.",
                 features: ["Full Roadmap Review", "Mock Interview (1 Round)", "Networking Strategy", "Custom Resource List", "Action Plan PDF"],
                 color: "purple",
-                popular: true
+                popular: true,
+                upiId: "ayanpal0698@okaxis"
               },
               { 
                 title: "Elite Package", 
@@ -440,17 +590,31 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                 duration: "Full Mentorship",
                 desc: "High-touch guidance for those aiming for the top 1% of their field.",
                 features: ["3-5 Strategy Sessions", "Direct WhatsApp Access", "Placement Support", "Priority Booking", "Lifetime Community Access"],
-                color: "amber"
+                color: "amber",
+                upiId: "ayanpal0698@okaxis"
               }
             ].map((pkg, i) => (
-              <div key={i} className={`glass-card p-10 rounded-[3rem] border-white/5 flex flex-col relative ${pkg.popular ? 'border-amber-500/30 bg-amber-500/[0.02]' : ''}`}>
+              <motion.div 
+                key={i} 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover="hover"
+                className={`glass-card p-10 rounded-[3rem] border-white/5 flex flex-col relative ${pkg.popular ? 'border-amber-500/30 bg-amber-500/[0.02]' : ''}`}
+              >
                 {pkg.popular && (
                   <div className="absolute top-0 right-12 -translate-y-1/2 px-4 py-1 bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg shadow-amber-500/20">
                     Most Popular
                   </div>
                 )}
                 <div className={`text-xs font-black text-${pkg.color}-400 uppercase tracking-widest mb-4`}>{pkg.title}</div>
-                <div className="text-5xl font-black text-white mb-2 tracking-tighter">{pkg.price}</div>
+                <motion.div 
+                  variants={{ hover: { scale: 1.1, color: pkg.color === 'amber' ? '#f59e0b' : pkg.color === 'purple' ? '#a855f7' : '#818cf8' } }}
+                  className="text-5xl font-black text-white mb-2 tracking-tighter"
+                >
+                  {pkg.price}
+                </motion.div>
                 <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-8">{pkg.duration}</div>
                 
                 <p className="text-slate-400 text-sm leading-relaxed mb-8">{pkg.desc}</p>
@@ -464,14 +628,25 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                   ))}
                 </ul>
                 
-                <button className={`w-full py-5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${
+                <button 
+                  onClick={() => onBook(pkg)}
+                  className={`w-full py-5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${
                   pkg.color === 'indigo' ? 'bg-white/5 text-white border border-white/10 hover:bg-white/10' :
                   pkg.color === 'purple' ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20 hover:scale-105 animate-glow-purple' :
                   'bg-amber-500 text-white shadow-lg shadow-amber-500/20 hover:scale-105 animate-glow-amber'
                 }`}>
                   Book Your Session
                 </button>
-              </div>
+
+                {pkg.upiId && (
+                  <div className="mt-6 p-4 rounded-2xl bg-white/5 border border-white/5 text-center">
+                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Pay via UPI</div>
+                    <div className="text-xs font-mono text-indigo-400 select-all cursor-pointer hover:text-indigo-300 transition-colors">
+                      {pkg.upiId}
+                    </div>
+                  </div>
+                )}
+              </motion.div>
             ))}
           </div>
 
@@ -560,7 +735,15 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                 avatar: "https://picsum.photos/seed/user3/100/100"
               }
             ].map((t, i) => (
-              <div key={i} className="glass p-10 rounded-[3rem] border-white/5 relative">
+              <motion.div 
+                key={i} 
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ scale: 1.02 }}
+                className="glass p-10 rounded-[3rem] border-white/5 relative"
+              >
                 <div className="flex items-center gap-4 mb-8">
                   <img src={t.avatar} alt={t.name} className="w-12 h-12 rounded-full grayscale" referrerPolicy="no-referrer" />
                   <div>
@@ -572,7 +755,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                 <div className="absolute top-10 right-10 text-indigo-500/20">
                   <Star size={40} fill="currentColor" />
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -581,29 +764,36 @@ export default function LandingPage({ onStart }: LandingPageProps) {
       {/* Social Proof Stats */}
       <section className="py-32 px-6 border-y border-white/5">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
-          <div>
-            <div className="text-5xl font-black text-white mb-2">94%</div>
-            <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">Goal Completion Rate</div>
-          </div>
-          <div>
-            <div className="text-5xl font-black text-white mb-2">50k+</div>
-            <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">Active Professionals</div>
-          </div>
-          <div>
-            <div className="text-5xl font-black text-white mb-2">₹12L</div>
-            <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">Avg. Salary Hike</div>
-          </div>
-          <div>
-            <div className="text-5xl font-black text-white mb-2">4.9/5</div>
-            <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">User Satisfaction</div>
-          </div>
+          {[
+            { val: "94%", label: "Goal Completion Rate" },
+            { val: "50k+", label: "Active Professionals" },
+            { val: "₹12L", label: "Avg. Salary Hike" },
+            { val: "4.9/5", label: "User Satisfaction" }
+          ].map((stat, i) => (
+            <motion.div 
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+            >
+              <div className="text-5xl font-black text-white mb-2">{stat.val}</div>
+              <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">{stat.label}</div>
+            </motion.div>
+          ))}
         </div>
       </section>
 
       {/* Final CTA */}
       <section className="py-40 px-6 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-indigo-500/5 to-transparent" />
-        <div className="max-w-4xl mx-auto text-center relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="max-w-4xl mx-auto text-center relative z-10"
+        >
           <h2 className="text-5xl md:text-7xl font-black text-white mb-8 leading-tight">
             Start building your career today.
           </h2>
@@ -612,7 +802,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <button 
-              onClick={onStart}
+              onClick={() => onStart('Basic')}
               className="px-12 py-6 bg-white text-slate-950 font-black rounded-2xl text-xl hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-white/20 animate-glow"
             >
               Get Started Now
@@ -622,7 +812,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
               No credit card required
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Footer */}

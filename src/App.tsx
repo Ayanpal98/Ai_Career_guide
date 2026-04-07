@@ -2,13 +2,18 @@ import React from 'react';
 import LandingPage from './components/LandingPage';
 import Onboarding from './components/Onboarding';
 import Dashboard from './components/Dashboard';
-import { UserProfile, CareerRoadmap } from './types';
+import BookingPage from './components/BookingPage';
+import SubscriptionPayment from './components/SubscriptionPayment';
+import { UserProfile, CareerRoadmap, SubscriptionPlan, ConsultationPackage } from './types';
 import { generateCareerRoadmap } from './services/gemini';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Loader2 } from 'lucide-react';
 
 export default function App() {
   const [showLanding, setShowLanding] = React.useState(true);
+  const [selectedPlan, setSelectedPlan] = React.useState<SubscriptionPlan>('Basic');
+  const [showPayment, setShowPayment] = React.useState(false);
+  const [selectedPackage, setSelectedPackage] = React.useState<ConsultationPackage | null>(null);
   const [profile, setProfile] = React.useState<UserProfile | null>(null);
   const [roadmap, setRoadmap] = React.useState<CareerRoadmap | null>(null);
   const [loading, setLoading] = React.useState(false);
@@ -19,11 +24,34 @@ export default function App() {
     setLoading(true);
     setError(null);
     try {
+      const apiKey = (process.env as any).GEMINI_API_KEY;
+      if (!apiKey || apiKey === "undefined") {
+        throw new Error("GEMINI_API_KEY is not configured. Please add it to your environment variables in the Settings menu.");
+      }
       const generatedRoadmap = await generateCareerRoadmap(userProfile);
       setRoadmap(generatedRoadmap);
     } catch (err) {
       console.error('Failed to generate roadmap:', err);
-      setError('Failed to generate your roadmap. Please check your API key and try again.');
+      setError(err instanceof Error ? err.message : 'Failed to generate your roadmap. Please check your API key and try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleProfileUpdate = async (updatedProfile: UserProfile) => {
+    setProfile(updatedProfile);
+    setLoading(true);
+    setError(null);
+    try {
+      const apiKey = (process.env as any).GEMINI_API_KEY;
+      if (!apiKey || apiKey === "undefined") {
+        throw new Error("GEMINI_API_KEY is not configured. Please add it to your environment variables in the Settings menu.");
+      }
+      const generatedRoadmap = await generateCareerRoadmap(updatedProfile);
+      setRoadmap(generatedRoadmap);
+    } catch (err) {
+      console.error('Failed to regenerate roadmap:', err);
+      setError(err instanceof Error ? err.message : 'Failed to update your roadmap. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -31,7 +59,11 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center p-6 text-center">
+      <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+        {/* Background Glows */}
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/10 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 blur-[120px] rounded-full" />
+        
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
@@ -76,14 +108,53 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#020617]">
       <AnimatePresence mode="wait">
-        {showLanding ? (
+        {selectedPackage ? (
+          <motion.div
+            key="booking"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <BookingPage 
+              pkg={selectedPackage} 
+              onBack={() => setSelectedPackage(null)} 
+              onComplete={() => setSelectedPackage(null)} 
+            />
+          </motion.div>
+        ) : showLanding ? (
           <motion.div
             key="landing"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <LandingPage onStart={() => setShowLanding(false)} />
+            <LandingPage 
+              onStart={(plan) => {
+                setSelectedPlan(plan);
+                if (plan === 'Basic') {
+                  setShowLanding(false);
+                } else {
+                  setShowPayment(true);
+                }
+              }} 
+              onBook={(pkg) => setSelectedPackage(pkg)}
+            />
+          </motion.div>
+        ) : showPayment ? (
+          <motion.div
+            key="payment"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <SubscriptionPayment 
+              plan={selectedPlan} 
+              onBack={() => setShowPayment(false)} 
+              onConfirm={() => {
+                setShowPayment(false);
+                setShowLanding(false);
+              }} 
+            />
           </motion.div>
         ) : !roadmap ? (
           <motion.div
@@ -95,6 +166,7 @@ export default function App() {
             <Onboarding 
               onComplete={handleOnboardingComplete} 
               onBack={() => setShowLanding(true)}
+              initialPlan={selectedPlan}
             />
           </motion.div>
         ) : (
@@ -108,12 +180,14 @@ export default function App() {
               roadmap={roadmap} 
               profile={profile!} 
               onUpdateRoadmap={(updated) => setRoadmap(prev => ({ ...prev!, ...updated }))} 
+              onUpdateProfile={handleProfileUpdate}
               onBackToLanding={() => {
                 setRoadmap(null);
                 setProfile(null);
                 setShowLanding(true);
               }}
               onEditProfile={() => setRoadmap(null)}
+              onBook={(pkg) => setSelectedPackage(pkg)}
             />
           </motion.div>
         )}

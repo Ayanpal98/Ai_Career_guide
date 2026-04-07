@@ -6,6 +6,7 @@ import { ChevronRight, ChevronLeft, Sparkles, Target, Briefcase, GraduationCap, 
 interface OnboardingProps {
   onComplete: (profile: UserProfile) => void;
   onBack: () => void;
+  initialPlan?: SubscriptionPlan;
 }
 
 const steps = [
@@ -16,16 +17,22 @@ const steps = [
   { id: 'availability', title: 'Daily time availability?', icon: Clock, description: 'How many hours can you dedicate per day?' },
   { id: 'timeline', title: 'What is your target timeline?', icon: Calendar, description: 'When do you want to achieve your goal?' },
   { id: 'constraints', title: 'Any constraints?', icon: AlertCircle, description: 'Financial, time, or location constraints.' },
-  { id: 'plan', title: 'Choose your plan', icon: Sparkles, description: 'Select a tier to unlock your personalized roadmap.' },
+  { id: 'plan', title: 'Confirm your plan', icon: Sparkles, description: 'Review your selected tier to unlock your personalized roadmap.' },
 ];
 
-export default function Onboarding({ onComplete, onBack }: OnboardingProps) {
+export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }: OnboardingProps) {
   const [currentStep, setCurrentStep] = React.useState(0);
   const [formData, setFormData] = React.useState<Partial<UserProfile>>({
     level: 'Beginner',
     timeline: '6 months',
-    plan: 'Basic',
+    plan: initialPlan,
   });
+
+  React.useEffect(() => {
+    if (initialPlan) {
+      setFormData(prev => ({ ...prev, plan: initialPlan }));
+    }
+  }, [initialPlan]);
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
