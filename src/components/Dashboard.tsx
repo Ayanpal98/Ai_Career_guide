@@ -83,7 +83,7 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap, onUpdateP
         <div className="p-2 rounded-xl bg-indigo-500 shadow-lg shadow-indigo-500/20">
           <Zap size={24} />
         </div>
-        CareerPath
+        Career Path builder
       </div>
 
       <div className="flex items-center gap-4 p-4 rounded-3xl bg-white/5 border border-white/5 mb-4">

@@ -24,7 +24,7 @@ export default function LandingPage({ onStart, onBook }: LandingPageProps) {
             <div className="p-1.5 rounded-lg bg-indigo-500">
               <Zap size={18} />
             </div>
-            CareerPath
+            Career Path builder
           </div>
           <div className="hidden md:flex items-center gap-8 text-sm font-bold text-slate-400 uppercase tracking-widest">
             <a href="#features" className="hover:text-white transition-colors">Features</a>
@@ -719,7 +719,7 @@ export default function LandingPage({ onStart, onBook }: LandingPageProps) {
               {
                 name: "Rahul Sharma",
                 role: "SDE at Amazon",
-                text: "I was stuck in a mid-level role for 3 years. CareerPath's roadmap showed me exactly which system design skills I was missing. 4 months later, I landed my dream role.",
+                text: "I was stuck in a mid-level role for 3 years. Career Path builder's roadmap showed me exactly which system design skills I was missing. 4 months later, I landed my dream role.",
                 avatar: "https://picsum.photos/seed/user1/100/100"
               },
               {
@@ -822,7 +822,7 @@ export default function LandingPage({ onStart, onBook }: LandingPageProps) {
             <div className="p-1.5 rounded-lg bg-indigo-500">
               <Zap size={20} />
             </div>
-            CareerPath
+            Career Path builder
           </div>
           <div className="flex gap-12 text-sm font-bold text-slate-500 uppercase tracking-widest">
             <a href="#" className="hover:text-white transition-colors">Privacy</a>
@@ -831,7 +831,7 @@ export default function LandingPage({ onStart, onBook }: LandingPageProps) {
             <a href="#" className="hover:text-white transition-colors">LinkedIn</a>
           </div>
           <div className="text-sm font-bold text-slate-600 uppercase tracking-widest">
-            © 2026 CareerPath AI. All rights reserved.
+            © 2026 Career Path builder. All rights reserved.
           </div>
         </div>
       </footer>
