@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Map as MapIcon, ListTodo, BarChart3, MessageSquare, Settings, 
   CheckCircle2, Circle, ChevronRight, Lock, Sparkles, Zap, Award, Target, TrendingUp,
   AlertTriangle, Calendar, ExternalLink, ArrowUpRight, Play, Clock, Send, Loader2, User,
-  Briefcase, Globe, Camera, HelpCircle, X
+  Briefcase, Globe, Camera, HelpCircle, X, LogOut
 } from 'lucide-react';
 
 interface DashboardProps {
@@ -17,18 +17,23 @@ interface DashboardProps {
   onBackToLanding: () => void;
   onEditProfile: () => void;
   onBook: (pkg: ConsultationPackage) => void;
+  onSignOut: () => void;
 }
 
-export default function Dashboard({ roadmap, profile, onUpdateRoadmap, onUpdateProfile, onBackToLanding, onEditProfile, onBook }: DashboardProps) {
+export default function Dashboard({ 
+  roadmap, 
+  profile, 
+  onUpdateRoadmap, 
+  onUpdateProfile, 
+  onBackToLanding, 
+  onEditProfile, 
+  onBook,
+  onSignOut
+}: DashboardProps) {
   const [activeTab, setActiveTab] = React.useState<'overview' | 'roadmap' | 'tasks' | 'progress' | 'coach' | 'strategy'>('overview');
   const [completedTasks, setCompletedTasks] = React.useState<Record<string, boolean>>({});
-  const [isProfileModalOpen, setIsProfileModalOpen] = React.useState(false);
   const [isHelpModalOpen, setIsHelpModalOpen] = React.useState(false);
-  const [editedProfile, setEditedProfile] = React.useState<UserProfile>(profile);
 
-  React.useEffect(() => {
-    setEditedProfile(profile);
-  }, [profile]);
   const [messages, setMessages] = React.useState<ChatMessage[]>([]);
   const [input, setInput] = React.useState('');
   const [isTyping, setIsTyping] = React.useState(false);
@@ -95,8 +100,8 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap, onUpdateP
           )}
         </div>
         <div className="min-w-0">
-          <div className="text-sm font-black text-white truncate">User Profile</div>
-          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest truncate">{profile.level}</div>
+          <div className="text-sm font-black text-white truncate">{profile.fullName || 'User Profile'}</div>
+          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest truncate">{profile.email || profile.level}</div>
         </div>
       </div>
 
@@ -133,11 +138,18 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap, onUpdateP
 
       <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-white/5">
         <button
-          onClick={() => setIsProfileModalOpen(true)}
+          onClick={onEditProfile}
           className="flex items-center gap-4 px-5 py-3 rounded-2xl text-slate-500 hover:text-slate-300 hover:bg-white/5 transition-all"
         >
           <Settings size={20} />
           <span className="text-sm">Edit Profile</span>
+        </button>
+        <button
+          onClick={onSignOut}
+          className="flex items-center gap-4 px-5 py-3 rounded-2xl text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all group"
+        >
+          <LogOut size={20} className="group-hover:scale-110 transition-transform" />
+          <span className="text-sm">Sign Out</span>
         </button>
         <button
           onClick={onBackToLanding}
@@ -163,7 +175,10 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap, onUpdateP
               View Plans
             </button>
             <div className="mt-4 text-[10px] font-bold text-white/60 text-center">
-              UPI: <span className="text-white select-all cursor-pointer">ayanpal0698@okaxis</span>
+              UPI: <span className="text-white select-all cursor-pointer">8798610548@ybl</span>
+            </div>
+            <div className="mt-6 pt-6 border-t border-white/10 text-[8px] font-bold text-white/40 text-center uppercase tracking-widest">
+              Built BY ATSFY Technologies
             </div>
           </div>
         </div>
@@ -503,170 +518,6 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap, onUpdateP
 
   const [showConsultation, setShowConsultation] = React.useState(false);
 
-  const renderProfileModal = () => (
-    <AnimatePresence>
-      {isProfileModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setIsProfileModalOpen(false)}
-            className="absolute inset-0 bg-[#020617]/80 backdrop-blur-md"
-          />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="w-full max-w-2xl glass-card p-10 rounded-[3rem] relative z-10 max-h-[90vh] overflow-y-auto custom-scrollbar"
-          >
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-3xl font-black text-white">Edit Profile</h2>
-              <button 
-                onClick={() => setIsProfileModalOpen(false)}
-                className="p-2 hover:bg-white/5 rounded-xl transition-colors"
-              >
-                <Lock size={20} className="text-slate-500" />
-              </button>
-            </div>
-
-            <div className="space-y-8">
-              <div className="flex flex-col items-center gap-4 mb-4">
-                <div className="relative group">
-                  <div className="w-24 h-24 rounded-[2rem] overflow-hidden bg-white/5 border-2 border-white/10 flex items-center justify-center relative">
-                    {editedProfile.avatar ? (
-                      <img src={editedProfile.avatar} alt="Avatar Preview" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                    ) : (
-                      <User size={40} className="text-slate-600" />
-                    )}
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <Camera size={24} className="text-white" />
-                    </div>
-                  </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        const reader = new FileReader();
-                        reader.onloadend = () => {
-                          setEditedProfile({ ...editedProfile, avatar: reader.result as string });
-                        };
-                        reader.readAsDataURL(file);
-                      }
-                    }}
-                    className="absolute inset-0 opacity-0 cursor-pointer"
-                  />
-                </div>
-                <div className="text-center">
-                  <div className="text-sm font-bold text-white">Profile Picture</div>
-                  <div className="text-[10px] text-slate-500 uppercase tracking-widest mt-1">Click to upload</div>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Career Goal</label>
-                <input
-                  type="text"
-                  value={editedProfile.careerGoal}
-                  onChange={e => setEditedProfile({ ...editedProfile, careerGoal: e.target.value })}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-3">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Current Level</label>
-                  <select
-                    value={editedProfile.level}
-                    onChange={e => setEditedProfile({ ...editedProfile, level: e.target.value as any })}
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all appearance-none"
-                  >
-                    <option value="Beginner">Beginner</option>
-                    <option value="Intermediate">Intermediate</option>
-                    <option value="Advanced">Advanced</option>
-                  </select>
-                </div>
-                <div className="space-y-3">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Target Timeline</label>
-                  <select
-                    value={editedProfile.timeline}
-                    onChange={e => setEditedProfile({ ...editedProfile, timeline: e.target.value as any })}
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all appearance-none"
-                  >
-                    <option value="3 months">3 months</option>
-                    <option value="6 months">6 months</option>
-                    <option value="1 year">1 year</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Skills (comma separated)</label>
-                <textarea
-                  value={editedProfile.currentSkills}
-                  onChange={e => setEditedProfile({ ...editedProfile, currentSkills: e.target.value })}
-                  rows={3}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all resize-none"
-                />
-              </div>
-
-              <div className="space-y-3">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Education</label>
-                <input
-                  type="text"
-                  value={editedProfile.education}
-                  onChange={e => setEditedProfile({ ...editedProfile, education: e.target.value })}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-3">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Daily Availability</label>
-                  <input
-                    type="text"
-                    value={editedProfile.hoursPerDay}
-                    onChange={e => setEditedProfile({ ...editedProfile, hoursPerDay: e.target.value })}
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-                  />
-                </div>
-                <div className="space-y-3">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Constraints</label>
-                  <input
-                    type="text"
-                    value={editedProfile.constraints}
-                    onChange={e => setEditedProfile({ ...editedProfile, constraints: e.target.value })}
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-                  />
-                </div>
-              </div>
-
-              <div className="pt-8 border-t border-white/5 flex gap-4">
-                <button
-                  onClick={() => setIsProfileModalOpen(false)}
-                  className="flex-1 py-4 bg-white/5 text-white font-bold rounded-2xl hover:bg-white/10 transition-all"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => {
-                    onUpdateProfile(editedProfile);
-                    setIsProfileModalOpen(false);
-                  }}
-                  className="flex-1 py-4 bg-indigo-500 text-white font-black rounded-2xl shadow-lg shadow-indigo-500/20 hover:scale-105 active:scale-95 transition-all"
-                >
-                  Save Changes
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
-  );
-
   const renderHelpModal = () => (
     <AnimatePresence>
       {isHelpModalOpen && (
@@ -744,9 +595,9 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap, onUpdateP
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {[
-          { title: 'Quick Sync', duration: '30 min', price: '₹999', desc: 'Laser-focused session for specific roadblocks or resume audits.', features: ['Career path review', 'Resume feedback', 'Q&A session'], color: 'indigo', upiId: 'ayanpal0698@okaxis' },
-          { title: 'Deep Dive', duration: '60 min', price: '₹1,999', desc: 'Comprehensive strategy session to unlock your full potential.', features: ['Mock interview', 'Detailed roadmap review', 'Networking strategy', 'Portfolio audit'], color: 'purple', upiId: 'ayanpal0698@okaxis' },
-          { title: 'Premium Package', duration: '3 Sessions', price: '₹4,999', desc: 'High-touch guidance for those aiming for the top 1% of their field.', features: ['End-to-end guidance', 'Placement support', 'Direct WhatsApp access', 'Priority booking'], color: 'emerald', upiId: 'ayanpal0698@okaxis' },
+          { title: 'Quick Sync', duration: '30 min', price: '₹999', desc: 'Laser-focused session for specific roadblocks or resume audits.', features: ['Career path review', 'Resume feedback', 'Q&A session'], color: 'indigo', upiId: '8798610548@ybl' },
+          { title: 'Deep Dive', duration: '60 min', price: '₹1,999', desc: 'Comprehensive strategy session to unlock your full potential.', features: ['Mock interview', 'Detailed roadmap review', 'Networking strategy', 'Portfolio audit'], color: 'purple', upiId: '8798610548@ybl' },
+          { title: 'Premium Package', duration: '3 Sessions', price: '₹4,999', desc: 'High-touch guidance for those aiming for the top 1% of their field.', features: ['End-to-end guidance', 'Placement support', 'Direct WhatsApp access', 'Priority booking'], color: 'emerald', upiId: '8798610548@ybl' },
         ].map(pkg => (
           <div key={pkg.title} className="glass-card p-10 rounded-[3rem] border-white/5 group">
             <div className={`w-12 h-12 rounded-2xl bg-${pkg.color}-500/20 flex items-center justify-center text-${pkg.color}-400 mb-6 group-hover:scale-110 transition-transform`}>
@@ -804,7 +655,6 @@ export default function Dashboard({ roadmap, profile, onUpdateRoadmap, onUpdateP
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/5 blur-[120px] rounded-full pointer-events-none" />
       
       {renderSidebar()}
-      {renderProfileModal()}
       {renderHelpModal()}
 
       {/* Floating Help Button */}

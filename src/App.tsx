@@ -4,27 +4,93 @@ import Onboarding from './components/Onboarding';
 import Dashboard from './components/Dashboard';
 import BookingPage from './components/BookingPage';
 import SubscriptionPayment from './components/SubscriptionPayment';
+import BasicFeatures from './components/BasicFeatures';
 import ProFeatures from './components/ProFeatures';
 import PremiumFeatures from './components/PremiumFeatures';
+import ProfilePage from './components/ProfilePage';
 import { UserProfile, CareerRoadmap, SubscriptionPlan, ConsultationPackage } from './types';
 import { generateCareerRoadmap } from './services/gemini';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Loader2 } from 'lucide-react';
+import { Sparkles, Loader2, LogOut } from 'lucide-react';
+import { auth, db, googleProvider } from './lib/firebase';
+import { onAuthStateChanged, signInWithPopup, signOut, User } from 'firebase/auth';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { handleFirestoreError, OperationType } from './lib/firestoreErrorHandler';
 
 export default function App() {
+  const [user, setUser] = React.useState<User | null>(null);
+  const [isAuthReady, setIsAuthReady] = React.useState(false);
   const [showLanding, setShowLanding] = React.useState(true);
   const [selectedPlan, setSelectedPlan] = React.useState<SubscriptionPlan>('Basic');
   const [showPayment, setShowPayment] = React.useState(false);
+  const [isPaymentSuccess, setIsPaymentSuccess] = React.useState(false);
+  const [showBasicFeatures, setShowBasicFeatures] = React.useState(false);
   const [showProFeatures, setShowProFeatures] = React.useState(false);
   const [showPremiumFeatures, setShowPremiumFeatures] = React.useState(false);
+  const [showProfile, setShowProfile] = React.useState(false);
   const [selectedPackage, setSelectedPackage] = React.useState<ConsultationPackage | null>(null);
   const [profile, setProfile] = React.useState<UserProfile | null>(null);
   const [roadmap, setRoadmap] = React.useState<CareerRoadmap | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
+  // Auth State Listener
+  React.useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        // Fetch profile and roadmap from Firestore
+        setLoading(true);
+        try {
+          const profileDoc = await getDoc(doc(db, 'users', currentUser.uid));
+          if (profileDoc.exists()) {
+            const profileData = profileDoc.data() as UserProfile;
+            setProfile(profileData);
+            
+            const roadmapDoc = await getDoc(doc(db, 'roadmaps', currentUser.uid));
+            if (roadmapDoc.exists()) {
+              setRoadmap(roadmapDoc.data().roadmap as CareerRoadmap);
+              setShowLanding(false);
+            }
+          }
+        } catch (err) {
+          handleFirestoreError(err, OperationType.GET, `users/${currentUser.uid}`);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setProfile(null);
+        setRoadmap(null);
+        setShowLanding(true);
+      }
+      setIsAuthReady(true);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleSignIn = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (err) {
+      console.error('Sign in error:', err);
+      setError('Failed to sign in. Please try again.');
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      setShowLanding(true);
+    } catch (err) {
+      console.error('Sign out error:', err);
+    }
+  };
+
   const handleOnboardingComplete = async (userProfile: UserProfile) => {
-    setProfile(userProfile);
+    if (!user) return;
+    
+    const profileWithUid = { ...userProfile, uid: user.uid };
+    setProfile(profileWithUid);
     setLoading(true);
     setError(null);
     try {
@@ -32,7 +98,24 @@ export default function App() {
       if (!apiKey || apiKey === "undefined") {
         throw new Error("GEMINI_API_KEY is not configured. Please add it to your environment variables in the Settings menu.");
       }
-      const generatedRoadmap = await generateCareerRoadmap(userProfile);
+      const generatedRoadmap = await generateCareerRoadmap(profileWithUid);
+      
+      // Save to Firestore
+      try {
+        await setDoc(doc(db, 'users', user.uid), {
+          ...profileWithUid,
+          updatedAt: serverTimestamp()
+        });
+        
+        await setDoc(doc(db, 'roadmaps', user.uid), {
+          uid: user.uid,
+          roadmap: generatedRoadmap,
+          updatedAt: serverTimestamp()
+        });
+      } catch (err) {
+        handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}`);
+      }
+
       setRoadmap(generatedRoadmap);
     } catch (err) {
       console.error('Failed to generate roadmap:', err);
@@ -43,6 +126,8 @@ export default function App() {
   };
 
   const handleProfileUpdate = async (updatedProfile: UserProfile) => {
+    if (!user) return;
+
     setProfile(updatedProfile);
     setLoading(true);
     setError(null);
@@ -52,6 +137,23 @@ export default function App() {
         throw new Error("GEMINI_API_KEY is not configured. Please add it to your environment variables in the Settings menu.");
       }
       const generatedRoadmap = await generateCareerRoadmap(updatedProfile);
+      
+      // Save to Firestore
+      try {
+        await setDoc(doc(db, 'users', user.uid), {
+          ...updatedProfile,
+          updatedAt: serverTimestamp()
+        });
+        
+        await setDoc(doc(db, 'roadmaps', user.uid), {
+          uid: user.uid,
+          roadmap: generatedRoadmap,
+          updatedAt: serverTimestamp()
+        });
+      } catch (err) {
+        handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}`);
+      }
+
       setRoadmap(generatedRoadmap);
     } catch (err) {
       console.error('Failed to regenerate roadmap:', err);
@@ -61,7 +163,7 @@ export default function App() {
     }
   };
 
-  if (loading) {
+  if (!isAuthReady || loading) {
     return (
       <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
         {/* Background Glows */}
@@ -125,6 +227,24 @@ export default function App() {
               onComplete={() => setSelectedPackage(null)} 
             />
           </motion.div>
+        ) : showBasicFeatures ? (
+          <motion.div
+            key="basic-features"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <BasicFeatures 
+              onBack={() => {
+                setShowBasicFeatures(false);
+                setShowLanding(true);
+              }} 
+              onConfirm={() => {
+                setShowBasicFeatures(false);
+                setShowLanding(false);
+              }} 
+            />
+          </motion.div>
         ) : showProFeatures ? (
           <motion.div
             key="pro-features"
@@ -133,10 +253,18 @@ export default function App() {
             exit={{ opacity: 0 }}
           >
             <ProFeatures 
-              onBack={() => setShowProFeatures(false)} 
+              isSuccess={isPaymentSuccess}
+              onBack={() => {
+                setShowProFeatures(false);
+                setShowLanding(true);
+              }} 
               onConfirm={() => {
                 setShowProFeatures(false);
-                setShowPayment(true);
+                if (isPaymentSuccess) {
+                  setShowLanding(false);
+                } else {
+                  setShowPayment(true);
+                }
               }} 
             />
           </motion.div>
@@ -148,11 +276,32 @@ export default function App() {
             exit={{ opacity: 0 }}
           >
             <PremiumFeatures 
-              onBack={() => setShowPremiumFeatures(false)} 
+              isSuccess={isPaymentSuccess}
+              onBack={() => {
+                setShowPremiumFeatures(false);
+                setShowLanding(true);
+              }} 
               onConfirm={() => {
                 setShowPremiumFeatures(false);
-                setShowPayment(true);
+                if (isPaymentSuccess) {
+                  setShowLanding(false);
+                } else {
+                  setShowPayment(true);
+                }
               }} 
+            />
+          </motion.div>
+        ) : showProfile ? (
+          <motion.div
+            key="profile"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <ProfilePage 
+              profile={profile!} 
+              onUpdate={handleProfileUpdate} 
+              onBack={() => setShowProfile(false)} 
             />
           </motion.div>
         ) : showLanding ? (
@@ -163,10 +312,20 @@ export default function App() {
             exit={{ opacity: 0 }}
           >
             <LandingPage 
+              profile={profile}
+              onGoToDashboard={() => setShowLanding(false)}
+              onSignIn={handleSignIn}
+              onSignOut={handleSignOut}
               onStart={(plan) => {
+                if (!user) {
+                  handleSignIn();
+                  return;
+                }
                 setSelectedPlan(plan);
+                setIsPaymentSuccess(false);
+                setShowLanding(false);
                 if (plan === 'Basic') {
-                  setShowLanding(false);
+                  setShowBasicFeatures(true);
                 } else if (plan === 'Pro') {
                   setShowProFeatures(true);
                 } else if (plan === 'Premium') {
@@ -185,10 +344,15 @@ export default function App() {
           >
             <SubscriptionPayment 
               plan={selectedPlan} 
-              onBack={() => setShowPayment(false)} 
+              onBack={() => {
+                setShowPayment(false);
+                setShowLanding(true);
+              }} 
               onConfirm={() => {
                 setShowPayment(false);
-                setShowLanding(false);
+                setIsPaymentSuccess(true);
+                if (selectedPlan === 'Pro') setShowProFeatures(true);
+                if (selectedPlan === 'Premium') setShowPremiumFeatures(true);
               }} 
             />
           </motion.div>
@@ -218,12 +382,11 @@ export default function App() {
               onUpdateRoadmap={(updated) => setRoadmap(prev => ({ ...prev!, ...updated }))} 
               onUpdateProfile={handleProfileUpdate}
               onBackToLanding={() => {
-                setRoadmap(null);
-                setProfile(null);
                 setShowLanding(true);
               }}
-              onEditProfile={() => setRoadmap(null)}
+              onEditProfile={() => setShowProfile(true)}
               onBook={(pkg) => setSelectedPackage(pkg)}
+              onSignOut={handleSignOut}
             />
           </motion.div>
         )}

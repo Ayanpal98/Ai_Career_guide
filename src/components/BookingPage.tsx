@@ -59,7 +59,7 @@ export default function BookingPage({ pkg, onBack, onComplete }: BookingPageProp
           <div className="p-8 bg-white/5 rounded-[2.5rem] border border-white/10 text-center space-y-4">
             <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">UPI ID</div>
             <div className="text-2xl font-mono text-indigo-400 select-all cursor-pointer hover:text-indigo-300 transition-colors">
-              {pkg.upiId || 'ayanpal0698@okaxis'}
+              {pkg.upiId || '8798610548@ybl'}
             </div>
             <div className="text-[10px] text-slate-500">Click to copy UPI ID</div>
           </div>

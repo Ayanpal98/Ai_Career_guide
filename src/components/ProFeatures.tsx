@@ -16,9 +16,10 @@ import {
 interface ProFeaturesProps {
   onBack: () => void;
   onConfirm: () => void;
+  isSuccess?: boolean;
 }
 
-const ProFeatures: React.FC<ProFeaturesProps> = ({ onBack, onConfirm }) => {
+const ProFeatures: React.FC<ProFeaturesProps> = ({ onBack, onConfirm, isSuccess = false }) => {
   const features = [
     {
       title: "Unlimited Roadmaps",
@@ -59,13 +60,15 @@ const ProFeatures: React.FC<ProFeaturesProps> = ({ onBack, onConfirm }) => {
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 blur-[120px] rounded-full" />
 
       <div className="max-w-4xl mx-auto relative z-10">
-        <button 
-          onClick={onBack}
-          className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-12 group"
-        >
-          <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-          Back to Pricing
-        </button>
+        {!isSuccess && (
+          <button 
+            onClick={onBack}
+            className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-12 group"
+          >
+            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            Back to Pricing
+          </button>
+        )}
 
         <div className="text-center mb-20">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-black uppercase tracking-widest mb-6">
@@ -73,10 +76,12 @@ const ProFeatures: React.FC<ProFeaturesProps> = ({ onBack, onConfirm }) => {
             Pro Plan
           </div>
           <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight">
-            Unlock Your <span className="text-indigo-500">Full Potential.</span>
+            {isSuccess ? "Welcome to" : "Unlock Your"} <span className="text-indigo-500">{isSuccess ? "Pro Access." : "Full Potential."}</span>
           </h1>
           <p className="text-slate-400 text-xl max-w-2xl mx-auto leading-relaxed">
-            The Pro plan is designed for serious professionals who want to accelerate their growth with data-driven strategies and AI-powered accountability.
+            {isSuccess 
+              ? "Your Pro access is now active. You have unlocked all the tools you need to accelerate your career growth."
+              : "The Pro plan is designed for serious professionals who want to accelerate their growth with data-driven strategies and AI-powered accountability."}
           </p>
         </div>
 
@@ -100,21 +105,33 @@ const ProFeatures: React.FC<ProFeaturesProps> = ({ onBack, onConfirm }) => {
 
         <div className="p-12 rounded-[3rem] premium-border glass-dark text-center relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-full bg-indigo-500/5 pointer-events-none" />
-          <h2 className="text-3xl font-black mb-4 relative z-10">Ready to level up?</h2>
+          <h2 className="text-3xl font-black mb-4 relative z-10">
+            {isSuccess ? "Ready to start?" : "Ready to level up?"}
+          </h2>
           <p className="text-slate-400 mb-10 max-w-md mx-auto relative z-10">
-            Join thousands of professionals who are already using the Pro plan to reach their career goals faster.
+            {isSuccess 
+              ? "Let's set up your profile and generate your first Pro roadmap."
+              : "Join thousands of professionals who are already using the Pro plan to reach their career goals faster."}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 relative z-10">
             <button 
               onClick={onConfirm}
               className="px-12 py-6 bg-indigo-500 text-white font-black rounded-2xl text-xl hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-indigo-500/20"
             >
-              Get Pro Access Now
+              {isSuccess ? "Go to Dashboard" : "Get Pro Access Now"}
             </button>
-            <div className="text-2xl font-black">
-              ₹999<span className="text-sm text-slate-500">/mo</span>
-            </div>
+            {!isSuccess && (
+              <div className="text-2xl font-black">
+                ₹999<span className="text-sm text-slate-500">/mo</span>
+              </div>
+            )}
           </div>
+        </div>
+
+        <div className="mt-20 text-center">
+          <p className="text-slate-600 text-[10px] font-bold uppercase tracking-[0.5em]">
+            Built BY ATSFY Technologies
+          </p>
         </div>
       </div>
     </div>

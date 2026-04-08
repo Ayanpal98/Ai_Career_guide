@@ -20,9 +20,10 @@ import {
 interface PremiumFeaturesProps {
   onBack: () => void;
   onConfirm: () => void;
+  isSuccess?: boolean;
 }
 
-const PremiumFeatures: React.FC<PremiumFeaturesProps> = ({ onBack, onConfirm }) => {
+const PremiumFeatures: React.FC<PremiumFeaturesProps> = ({ onBack, onConfirm, isSuccess = false }) => {
   const features = [
     {
       title: "Everything in Pro",
@@ -63,13 +64,15 @@ const PremiumFeatures: React.FC<PremiumFeaturesProps> = ({ onBack, onConfirm }) 
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-500/10 blur-[120px] rounded-full" />
 
       <div className="max-w-4xl mx-auto relative z-10">
-        <button 
-          onClick={onBack}
-          className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-12 group"
-        >
-          <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-          Back to Pricing
-        </button>
+        {!isSuccess && (
+          <button 
+            onClick={onBack}
+            className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-12 group"
+          >
+            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            Back to Pricing
+          </button>
+        )}
 
         <div className="text-center mb-20">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-black uppercase tracking-widest mb-6">
@@ -77,10 +80,12 @@ const PremiumFeatures: React.FC<PremiumFeaturesProps> = ({ onBack, onConfirm }) 
             Premium Plan
           </div>
           <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight">
-            Master Your <span className="text-purple-500">Career Path.</span>
+            {isSuccess ? "Welcome to" : "Master Your"} <span className="text-purple-500">{isSuccess ? "Premium." : "Career Path."}</span>
           </h1>
           <p className="text-slate-400 text-xl max-w-2xl mx-auto leading-relaxed">
-            The Premium plan is the ultimate career accelerator, providing unparalleled support, advanced tools, and expert guidance to ensure your success.
+            {isSuccess 
+              ? "Your Premium access is now active. You have unlocked our most powerful tools and direct expert access."
+              : "The Premium plan is the ultimate career accelerator, providing unparalleled support, advanced tools, and expert guidance to ensure your success."}
           </p>
         </div>
 
@@ -104,21 +109,33 @@ const PremiumFeatures: React.FC<PremiumFeaturesProps> = ({ onBack, onConfirm }) 
 
         <div className="p-12 rounded-[3rem] premium-border glass-dark text-center relative overflow-hidden border-purple-500/20">
           <div className="absolute top-0 left-0 w-full h-full bg-purple-500/5 pointer-events-none" />
-          <h2 className="text-3xl font-black mb-4 relative z-10">The ultimate career investment.</h2>
+          <h2 className="text-3xl font-black mb-4 relative z-10">
+            {isSuccess ? "Ready to dominate?" : "The ultimate career investment."}
+          </h2>
           <p className="text-slate-400 mb-10 max-w-md mx-auto relative z-10">
-            Secure your future with the most comprehensive career development plan available today.
+            {isSuccess 
+              ? "Let's set up your profile and schedule your first expert consultation."
+              : "Secure your future with the most comprehensive career development plan available today."}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 relative z-10">
             <button 
               onClick={onConfirm}
               className="px-12 py-6 bg-purple-500 text-white font-black rounded-2xl text-xl hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-purple-500/20"
             >
-              Go Premium Now
+              {isSuccess ? "Go to Dashboard" : "Go Premium Now"}
             </button>
-            <div className="text-2xl font-black">
-              ₹2,499<span className="text-sm text-slate-500">/mo</span>
-            </div>
+            {!isSuccess && (
+              <div className="text-2xl font-black">
+                ₹2,499<span className="text-sm text-slate-500">/mo</span>
+              </div>
+            )}
           </div>
+        </div>
+
+        <div className="mt-20 text-center">
+          <p className="text-slate-600 text-[10px] font-bold uppercase tracking-[0.5em]">
+            Built BY ATSFY Technologies
+          </p>
         </div>
       </div>
     </div>

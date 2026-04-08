@@ -1,0 +1,82 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {userId} (Firebase Auth UID)
+    // Fields:
+    //   - plan: string (required, 'Basic' | 'Pro' | 'Premium')
+    //   - careerGoal: string (required)
+    //   - level: string (required, 'Beginner' | 'Intermediate' | 'Advanced')
+    //   - currentSkills: string (optional)
+    //   - education: string (optional)
+    //   - hoursPerDay: string (optional)
+    //   - timeline: string (optional, '3 months' | '6 months' | '1 year')
+    //   - constraints: string (optional)
+    //   - avatar: string (optional)
+    //   - fullName: string (optional)
+    //   - email: string (optional)
+    //   - targetIndustry: string (optional)
+    //   - workStyle: string (optional, 'Remote' | 'Hybrid' | 'Office')
+    //   - salaryExpectation: string (optional)
+    //   - uid: string (required, must match auth.uid)
+    //   - updatedAt: timestamp (optional)
+    //
+    // Collection: roadmaps
+    // Document ID: {userId} (Firebase Auth UID)
+    // Fields:
+    //   - uid: string (required, must match auth.uid)
+    //   - roadmap: map (required)
+    //   - updatedAt: timestamp (optional)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['plan', 'careerGoal', 'level', 'uid']) &&
+             data.plan in ['Basic', 'Pro', 'Premium'] &&
+             data.level in ['Beginner', 'Intermediate', 'Advanced'] &&
+             data.uid == request.auth.uid &&
+             (!('workStyle' in data) || data.workStyle in ['Remote', 'Hybrid', 'Office']) &&
+             (!('timeline' in data) || data.timeline in ['3 months', '6 months', '1 year']) &&
+             data.careerGoal is string && data.careerGoal.size() < 1000;
+    }
+
+    function isValidRoadmap(data) {
+      return data.keys().hasAll(['uid', 'roadmap']) &&
+             data.uid == request.auth.uid &&
+             data.roadmap is map;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUser(request.resource.data);
+      allow update: if isOwner(userId) && isValidUser(request.resource.data);
+      allow delete: if false; // Users cannot delete their profiles for now
+    }
+
+    match /roadmaps/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidRoadmap(request.resource.data);
+      allow update: if isOwner(userId) && isValidRoadmap(request.resource.data);
+      allow delete: if false;
+    }
+  }
+}

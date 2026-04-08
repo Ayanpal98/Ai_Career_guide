@@ -10,6 +10,11 @@ export interface UserProfile {
   timeline: '3 months' | '6 months' | '1 year';
   constraints: string;
   avatar?: string;
+  fullName?: string;
+  email?: string;
+  targetIndustry?: string;
+  workStyle?: 'Remote' | 'Hybrid' | 'Office';
+  salaryExpectation?: string;
 }
 
 export interface RoadmapPhase {

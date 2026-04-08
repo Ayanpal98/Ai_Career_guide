@@ -1,0 +1,49 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Stores user career goals, preferences, and personal information.",
+      "type": "object",
+      "properties": {
+        "plan": { "type": "string", "enum": ["Basic", "Pro", "Premium"] },
+        "careerGoal": { "type": "string" },
+        "level": { "type": "string", "enum": ["Beginner", "Intermediate", "Advanced"] },
+        "currentSkills": { "type": "string" },
+        "education": { "type": "string" },
+        "hoursPerDay": { "type": "string" },
+        "timeline": { "type": "string", "enum": ["3 months", "6 months", "1 year"] },
+        "constraints": { "type": "string" },
+        "avatar": { "type": "string" },
+        "fullName": { "type": "string" },
+        "email": { "type": "string" },
+        "targetIndustry": { "type": "string" },
+        "workStyle": { "type": "string", "enum": ["Remote", "Hybrid", "Office"] },
+        "salaryExpectation": { "type": "string" },
+        "uid": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["plan", "careerGoal", "level", "uid"]
+    },
+    "CareerRoadmap": {
+      "title": "Career Roadmap",
+      "description": "Stores the AI-generated career roadmap for a user.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "roadmap": { "type": "object" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "roadmap"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile document indexed by Firebase Auth UID."
+    },
+    "/roadmaps/{userId}": {
+      "schema": "CareerRoadmap",
+      "description": "User roadmap document indexed by Firebase Auth UID."
+    }
+  }
+}

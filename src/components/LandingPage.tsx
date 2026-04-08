@@ -3,17 +3,23 @@ import { motion, AnimatePresence } from 'motion/react';
 import { 
   Zap, Sparkles, CheckCircle2, ArrowRight, Play, Users, 
   Target, BarChart3, MessageSquare, ShieldCheck, Star,
-  ChevronRight, ArrowUpRight, Globe, Lock, AlertTriangle, X
+  ChevronRight, ArrowUpRight, Globe, Lock, AlertTriangle, X,
+  LogOut
 } from 'lucide-react';
 
-import { SubscriptionPlan, ConsultationPackage } from '../types';
+import { SubscriptionPlan, ConsultationPackage, UserProfile } from '../types';
+import { User } from 'lucide-react';
 
 interface LandingPageProps {
   onStart: (plan: SubscriptionPlan) => void;
   onBook: (pkg: ConsultationPackage) => void;
+  profile?: UserProfile | null;
+  onGoToDashboard?: () => void;
+  onSignIn: () => void;
+  onSignOut: () => void;
 }
 
-export default function LandingPage({ onStart, onBook }: LandingPageProps) {
+export default function LandingPage({ onStart, onBook, profile, onGoToDashboard, onSignIn, onSignOut }: LandingPageProps) {
   return (
     <div className="min-h-screen bg-[#020617] text-slate-200 font-sans selection:bg-indigo-500/30 overflow-x-hidden">
 
@@ -32,12 +38,51 @@ export default function LandingPage({ onStart, onBook }: LandingPageProps) {
             <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
             <a href="#consultation" className="hover:text-white transition-colors">Consultation</a>
           </div>
-          <button 
-            onClick={() => onStart('Basic')}
-            className="px-6 py-2.5 bg-white text-slate-950 font-black rounded-xl text-sm hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/10 animate-glow"
-          >
-            Get Started
-          </button>
+          <div className="flex items-center gap-4">
+            {profile ? (
+              <div className="flex items-center gap-3">
+                <button 
+                  onClick={onGoToDashboard}
+                  className="flex items-center gap-3 px-4 py-2 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all group"
+                >
+                  <div className="w-8 h-8 rounded-lg overflow-hidden bg-indigo-500/20 flex items-center justify-center border border-white/10">
+                    {profile.avatar ? (
+                      <img src={profile.avatar} alt="Avatar" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                    ) : (
+                      <User size={16} className="text-indigo-400" />
+                    )}
+                  </div>
+                  <div className="hidden sm:block text-left">
+                    <div className="text-xs font-black text-white truncate max-w-[100px]">{profile.fullName || 'User'}</div>
+                    <div className="text-[8px] font-bold text-slate-500 uppercase tracking-widest">Dashboard</div>
+                  </div>
+                  <ChevronRight size={14} className="text-slate-500 group-hover:translate-x-0.5 transition-transform" />
+                </button>
+                <button 
+                  onClick={onSignOut}
+                  className="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-red-500/20 hover:border-red-500/30 transition-all text-slate-400 hover:text-red-400"
+                  title="Sign Out"
+                >
+                  <LogOut size={18} />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-4">
+                <button 
+                  onClick={onSignIn}
+                  className="hidden sm:block text-sm font-bold text-slate-400 hover:text-white transition-colors"
+                >
+                  Sign In
+                </button>
+                <button 
+                  onClick={() => onStart('Basic')}
+                  className="px-6 py-2.5 bg-white text-slate-950 font-black rounded-xl text-sm hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/10 animate-glow"
+                >
+                  Get Started
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </nav>
 
@@ -454,7 +499,7 @@ export default function LandingPage({ onStart, onBook }: LandingPageProps) {
               <div className="mt-6 p-4 rounded-2xl bg-white/5 border border-white/5 text-center">
                 <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Pay via UPI</div>
                 <div className="text-xs font-mono text-indigo-400 select-all cursor-pointer hover:text-indigo-300 transition-colors">
-                  ayanpal0698@okaxis
+                  8798610548@ybl
                 </div>
               </div>
             </motion.div>
@@ -499,7 +544,7 @@ export default function LandingPage({ onStart, onBook }: LandingPageProps) {
               <div className="mt-6 p-4 rounded-2xl bg-white/5 border border-white/5 text-center">
                 <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Pay via UPI</div>
                 <div className="text-xs font-mono text-purple-400 select-all cursor-pointer hover:text-purple-300 transition-colors">
-                  ayanpal0698@okaxis
+                  8798610548@ybl
                 </div>
               </div>
             </motion.div>
@@ -572,7 +617,7 @@ export default function LandingPage({ onStart, onBook }: LandingPageProps) {
                 desc: "Laser-focused session for specific roadblocks or resume audits.",
                 features: ["Resume/Portfolio Audit", "Specific Career Q&A", "Session Recording", "Actionable Next Steps"],
                 color: "indigo",
-                upiId: "ayanpal0698@okaxis"
+                upiId: "8798610548@ybl"
               },
               { 
                 title: "Deep Dive", 
@@ -582,7 +627,7 @@ export default function LandingPage({ onStart, onBook }: LandingPageProps) {
                 features: ["Full Roadmap Review", "Mock Interview (1 Round)", "Networking Strategy", "Custom Resource List", "Action Plan PDF"],
                 color: "purple",
                 popular: true,
-                upiId: "ayanpal0698@okaxis"
+                upiId: "8798610548@ybl"
               },
               { 
                 title: "Elite Package", 
@@ -591,7 +636,7 @@ export default function LandingPage({ onStart, onBook }: LandingPageProps) {
                 desc: "High-touch guidance for those aiming for the top 1% of their field.",
                 features: ["3-5 Strategy Sessions", "Direct WhatsApp Access", "Placement Support", "Priority Booking", "Lifetime Community Access"],
                 color: "amber",
-                upiId: "ayanpal0698@okaxis"
+                upiId: "8798610548@ybl"
               }
             ].map((pkg, i) => (
               <motion.div 
@@ -813,6 +858,15 @@ export default function LandingPage({ onStart, onBook }: LandingPageProps) {
             </div>
           </div>
         </motion.div>
+      </section>
+
+      {/* Built By Section */}
+      <section className="py-12 px-6 bg-white/[0.02] border-t border-white/5">
+        <div className="max-w-7xl mx-auto text-center">
+          <p className="text-slate-500 text-sm font-bold uppercase tracking-[0.4em]">
+            Built BY <span className="text-white">ATSFY Technologies</span>
+          </p>
+        </div>
       </section>
 
       {/* Footer */}
