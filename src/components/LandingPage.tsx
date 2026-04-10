@@ -1,14 +1,14 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
-  Zap, Sparkles, CheckCircle2, ArrowRight, Play, Users, 
+  Zap, Sparkles, CheckCircle2, ArrowRight, Play, Users, User,
   Target, BarChart3, MessageSquare, ShieldCheck, Star,
   ChevronRight, ArrowUpRight, Globe, Lock, AlertTriangle, X,
   LogOut
 } from 'lucide-react';
 
 import { SubscriptionPlan, ConsultationPackage, UserProfile } from '../types';
-import { User } from 'lucide-react';
+import Hero3D from './Hero3D';
 
 interface LandingPageProps {
   onStart: (plan: SubscriptionPlan) => void;
@@ -18,6 +18,8 @@ interface LandingPageProps {
   onSignIn: () => void;
   onSignOut: () => void;
 }
+
+console.log('LandingPage.tsx: Module evaluating...');
 
 export default function LandingPage({ onStart, onBook, profile, onGoToDashboard, onSignIn, onSignOut }: LandingPageProps) {
   return (
@@ -91,141 +93,141 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard,
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none">
           <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/20 blur-[120px] rounded-full" />
           <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/20 blur-[120px] rounded-full" />
-          <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-blue-500/10 blur-[100px] rounded-full" />
         </div>
 
-        <div className="max-w-7xl mx-auto text-center relative z-10">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-indigo-400 text-xs font-black uppercase tracking-[0.2em] mb-8"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <Sparkles size={14} />
-            AI-Powered Career Architect
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-6xl md:text-8xl font-black text-white tracking-tight mb-8 leading-[0.9]"
-          >
-            Stop Guessing.<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
-              Start Growing.
-            </span>
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-slate-400 text-xl md:text-2xl max-w-3xl mx-auto font-medium leading-relaxed mb-12"
-          >
-            The only platform that turns your career goals into a step-by-step execution roadmap with real-time AI coaching.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-col items-center justify-center gap-12"
-          >
-            <button 
-              onClick={() => onStart('Basic')}
-              className="group flex items-center gap-3 px-10 py-5 bg-white text-slate-950 font-black rounded-2xl text-lg hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-white/20 animate-glow"
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-indigo-400 text-[10px] font-black uppercase tracking-[0.3em] mb-8"
             >
-              Get Your Roadmap
-              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-            </button>
+              <Sparkles size={12} />
+              AI-Powered Career Architect
+            </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-4xl">
-              <div className="glass p-6 rounded-3xl border-white/10 text-center group hover:border-indigo-500/30 transition-colors">
-                <div className="w-12 h-12 bg-indigo-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                  <Zap className="text-indigo-400" size={24} />
-                </div>
-                <h4 className="text-white font-black mb-2">AI Roadmap</h4>
-                <p className="text-sm text-slate-400">Personalized step-by-step career execution plans.</p>
+            <h1 className="text-[clamp(3.5rem,10vw,7.5rem)] font-black text-white leading-[0.82] tracking-tighter mb-10 uppercase text-3d-strong">
+              Architect <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
+                Your Future
+              </span>
+            </h1>
+
+            <p className="text-slate-400 text-xl md:text-2xl max-w-xl font-medium leading-relaxed mb-12 font-serif italic opacity-80">
+              "Stop guessing. Our AI engine maps your path from where you are to where you belong."
+            </p>
+
+            <div className="flex flex-wrap gap-6">
+              <button 
+                onClick={() => onStart('Basic')}
+                className="group flex items-center gap-3 px-10 py-5 bg-white text-slate-950 font-black rounded-2xl text-lg hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-white/20 animate-glow"
+              >
+                Get Your Roadmap
+                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              </button>
+              <button className="px-10 py-5 bg-white/5 border border-white/10 text-white font-black rounded-2xl text-lg hover:bg-white/10 transition-all flex items-center gap-3">
+                <Play size={20} className="text-indigo-400" />
+                Watch Demo
+              </button>
+            </div>
+
+            <div className="mt-16 flex items-center gap-8">
+              <div className="flex -space-x-4">
+                {[1, 2, 3, 4].map(i => (
+                  <div key={i} className="w-12 h-12 rounded-full border-4 border-[#020617] overflow-hidden">
+                    <img 
+                      src={`https://picsum.photos/seed/user${i}/100/100`} 
+                      alt="User" 
+                      className="w-full h-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                ))}
               </div>
-              <div className="glass p-6 rounded-3xl border-white/10 text-center group hover:border-purple-500/30 transition-colors">
-                <div className="w-12 h-12 bg-purple-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                  <Sparkles className="text-purple-400" size={24} />
-                </div>
-                <h4 className="text-white font-black mb-2">Real-time Coaching</h4>
-                <p className="text-sm text-slate-400">24/7 AI guidance for every career decision.</p>
-              </div>
-              <div className="glass p-6 rounded-3xl border-white/10 text-center group hover:border-pink-500/30 transition-colors">
-                <div className="w-12 h-12 bg-pink-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                  <Target className="text-pink-400" size={24} />
-                </div>
-                <h4 className="text-white font-black mb-2">Skill Analysis</h4>
-                <p className="text-sm text-slate-400">Identify and bridge gaps with targeted learning.</p>
+              <div className="text-sm">
+                <div className="font-black text-white">12,000+ Professionals</div>
+                <div className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Architecting their futures</div>
               </div>
             </div>
           </motion.div>
 
-          {/* Dashboard Preview */}
           <motion.div
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-24 relative max-w-5xl mx-auto"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="relative h-[500px] lg:h-[600px] flex items-center justify-center"
           >
-            <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent z-10" />
-            <div className="premium-border p-2 rounded-[2.5rem] bg-slate-900/50 backdrop-blur-3xl shadow-2xl overflow-hidden">
-              <img 
-                src="https://picsum.photos/seed/dashboard/1600/900" 
-                alt="Dashboard Preview" 
-                className="rounded-[2rem] w-full opacity-80 grayscale-[0.5] group-hover:grayscale-0 transition-all"
-                referrerPolicy="no-referrer"
-              />
-              {/* Floating UI Elements */}
-              <div className="absolute top-12 -left-12 glass p-6 rounded-3xl border-indigo-500/30 hidden lg:block animate-bounce-slow">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-indigo-500 text-white">
-                    <Target size={24} />
-                  </div>
-                  <div className="text-left">
-                    <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">Next Action</div>
-                    <div className="text-sm font-black text-white">Complete Portfolio Audit</div>
-                  </div>
-                </div>
-              </div>
-              <div className="absolute bottom-24 -right-12 glass p-6 rounded-3xl border-emerald-500/30 hidden lg:block animate-bounce-slow [animation-delay:1s]">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-emerald-500 text-white">
-                    <Sparkles size={24} />
-                  </div>
-                  <div className="text-left">
-                    <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">AI Coach</div>
-                    <div className="text-sm font-black text-white">"You're 15% ahead of schedule!"</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Hero3D />
           </motion.div>
         </div>
+
+        {/* Dashboard Preview */}
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-24 relative max-w-5xl mx-auto"
+        >
+          <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent z-10" />
+          <div className="premium-border p-2 rounded-[2.5rem] bg-slate-900/50 backdrop-blur-3xl shadow-2xl overflow-hidden">
+            <img 
+              src="https://picsum.photos/seed/dashboard/1600/900" 
+              alt="Dashboard Preview" 
+              className="rounded-[2rem] w-full opacity-80 grayscale-[0.5] group-hover:grayscale-0 transition-all"
+              referrerPolicy="no-referrer"
+            />
+            {/* Floating UI Elements */}
+            <div className="absolute top-12 -left-12 glass p-6 rounded-3xl border-indigo-500/30 hidden lg:block animate-bounce-slow">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-indigo-500 text-white">
+                  <Target size={24} />
+                </div>
+                <div className="text-left">
+                  <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">Next Action</div>
+                  <div className="text-sm font-black text-white">Complete Portfolio Audit</div>
+                </div>
+              </div>
+            </div>
+            <div className="absolute bottom-24 -right-12 glass p-6 rounded-3xl border-emerald-500/30 hidden lg:block animate-bounce-slow [animation-delay:1s]">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-emerald-500 text-white">
+                  <Sparkles size={24} />
+                </div>
+                <div className="text-left">
+                  <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">AI Coach</div>
+                  <div className="text-sm font-black text-white">"You're 15% ahead of schedule!"</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </section>
 
       {/* Social Proof */}
-      <section className="py-20 border-y border-white/5 bg-white/[0.02]">
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-            className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-40 grayscale"
-          >
-            <div className="flex items-center gap-2 font-black text-2xl tracking-tighter">Google</div>
-            <div className="flex items-center gap-2 font-black text-2xl tracking-tighter">Meta</div>
-            <div className="flex items-center gap-2 font-black text-2xl tracking-tighter">Amazon</div>
-            <div className="flex items-center gap-2 font-black text-2xl tracking-tighter">Stripe</div>
-            <div className="flex items-center gap-2 font-black text-2xl tracking-tighter">Netflix</div>
-          </motion.div>
-          <div className="mt-12 text-center">
-            <p className="text-sm font-bold text-slate-500 uppercase tracking-[0.3em]">Trusted by professionals at world-class companies</p>
+      <section className="py-12 border-y border-white/5 bg-white/[0.01] overflow-hidden">
+        <div className="flex flex-col gap-8">
+          <div className="text-center">
+            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em]">Trusted by professionals at world-class companies</p>
+          </div>
+          <div className="flex overflow-hidden group">
+            <div className="flex gap-16 md:gap-32 animate-[marquee_30s_linear_infinite] group-hover:[animation-play-state:paused] whitespace-nowrap px-8">
+              {['Google', 'Meta', 'Amazon', 'Stripe', 'Netflix', 'Apple', 'Microsoft', 'Airbnb', 'Uber', 'SpaceX'].map((company) => (
+                <div key={company} className="flex items-center gap-2 font-black text-2xl md:text-3xl tracking-tighter text-slate-500 hover:text-white transition-colors cursor-default">
+                  {company}
+                </div>
+              ))}
+              {/* Duplicate for seamless loop */}
+              {['Google', 'Meta', 'Amazon', 'Stripe', 'Netflix', 'Apple', 'Microsoft', 'Airbnb', 'Uber', 'SpaceX'].map((company) => (
+                <div key={`${company}-2`} className="flex items-center gap-2 font-black text-2xl md:text-3xl tracking-tighter text-slate-500 hover:text-white transition-colors cursor-default">
+                  {company}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -238,7 +240,7 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard,
         </div>
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-24">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-6">The Career Fog is Real.</h2>
+            <h2 className="text-4xl md:text-6xl font-black text-white mb-6 text-3d">The Career Fog is Real.</h2>
             <p className="text-slate-400 text-xl max-w-2xl mx-auto">Most people don't lack ambition. They lack a sequence.</p>
           </div>
 
@@ -266,14 +268,13 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard,
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -10, scale: 1.02 }}
-                className="glass-card p-10 rounded-[3rem] border-white/5 cursor-default"
+                className="glass-card p-10 rounded-[3rem] border-white/5 cursor-default card-3d"
               >
-                <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center text-indigo-400 mb-8">
+                <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center text-indigo-400 mb-8 depth-2">
                   <item.icon size={28} />
                 </div>
-                <h3 className="text-2xl font-black text-white mb-4">{item.title}</h3>
-                <p className="text-slate-400 leading-relaxed">{item.desc}</p>
+                <h3 className="text-2xl font-black text-white mb-4 depth-1">{item.title}</h3>
+                <p className="text-slate-400 leading-relaxed depth-1">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -293,7 +294,7 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard,
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-black uppercase tracking-widest mb-8">
                 The Solution
               </div>
-              <h2 className="text-5xl md:text-7xl font-black text-white mb-8 leading-tight">
+              <h2 className="text-5xl md:text-7xl font-black text-white mb-8 leading-tight text-3d">
                 Precision Engineering for Your Career.
               </h2>
               <p className="text-slate-400 text-xl leading-relaxed mb-12">
@@ -330,24 +331,22 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard,
                   initial={{ opacity: 0, x: 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  whileHover={{ scale: 1.05 }}
-                  className="glass-card p-8 rounded-[2.5rem] border-indigo-500/20"
+                  className="glass-card p-8 rounded-[2.5rem] border-indigo-500/20 card-3d"
                 >
-                  <BarChart3 size={32} className="text-indigo-400 mb-6" />
-                  <h4 className="text-xl font-bold text-white mb-2">Progress Tracking</h4>
-                  <p className="text-sm text-slate-400">Visualize every step of your journey with deep analytics.</p>
+                  <BarChart3 size={32} className="text-indigo-400 mb-6 depth-2" />
+                  <h4 className="text-xl font-bold text-white mb-2 depth-1">Progress Tracking</h4>
+                  <p className="text-sm text-slate-400 depth-1">Visualize every step of your journey with deep analytics.</p>
                 </motion.div>
                 <motion.div 
                   initial={{ opacity: 0, x: 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.1 }}
-                  whileHover={{ scale: 1.05 }}
-                  className="glass-card p-8 rounded-[2.5rem] border-purple-500/20"
+                  className="glass-card p-8 rounded-[2.5rem] border-purple-500/20 card-3d"
                 >
-                  <MessageSquare size={32} className="text-purple-400 mb-6" />
-                  <h4 className="text-xl font-bold text-white mb-2">AI Coach</h4>
-                  <p className="text-sm text-slate-400">Get instant answers to your career dilemmas, anytime.</p>
+                  <MessageSquare size={32} className="text-purple-400 mb-6 depth-2" />
+                  <h4 className="text-xl font-bold text-white mb-2 depth-1">AI Coach</h4>
+                  <p className="text-sm text-slate-400 depth-1">Get instant answers to your career dilemmas, anytime.</p>
                 </motion.div>
               </div>
               <div className="space-y-6 mt-12">
@@ -356,24 +355,22 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard,
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.2 }}
-                  whileHover={{ scale: 1.05 }}
-                  className="glass-card p-8 rounded-[2.5rem] border-emerald-500/20"
+                  className="glass-card p-8 rounded-[2.5rem] border-emerald-500/20 card-3d"
                 >
-                  <Target size={32} className="text-emerald-400 mb-6" />
-                  <h4 className="text-xl font-bold text-white mb-2">Next Step Focus</h4>
-                  <p className="text-sm text-slate-400">Never feel overwhelmed. We show you exactly what to do next.</p>
+                  <Target size={32} className="text-emerald-400 mb-6 depth-2" />
+                  <h4 className="text-xl font-bold text-white mb-2 depth-1">Next Step Focus</h4>
+                  <p className="text-sm text-slate-400 depth-1">Never feel overwhelmed. We show you exactly what to do next.</p>
                 </motion.div>
                 <motion.div 
                   initial={{ opacity: 0, x: 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.3 }}
-                  whileHover={{ scale: 1.05 }}
-                  className="glass-card p-8 rounded-[2.5rem] border-amber-500/20"
+                  className="glass-card p-8 rounded-[2.5rem] border-amber-500/20 card-3d"
                 >
-                  <Zap size={32} className="text-amber-400 mb-6" />
-                  <h4 className="text-xl font-bold text-white mb-2">Project Lab</h4>
-                  <p className="text-sm text-slate-400">Build real-world projects that prove your expertise.</p>
+                  <Zap size={32} className="text-amber-400 mb-6 depth-2" />
+                  <h4 className="text-xl font-bold text-white mb-2 depth-1">Project Lab</h4>
+                  <p className="text-sm text-slate-400 depth-1">Build real-world projects that prove your expertise.</p>
                 </motion.div>
               </div>
             </div>
@@ -384,7 +381,7 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard,
       {/* How It Works */}
       <section id="how-it-works" className="py-32 px-6">
         <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl md:text-6xl font-black text-white mb-24">3 Steps to Mastery.</h2>
+          <h2 className="text-4xl md:text-6xl font-black text-white mb-24 text-3d">3 Steps to Mastery.</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
             <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-y-1/2 z-0" />
@@ -421,7 +418,7 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard,
         </div>
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-24">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-6">Invest in Your Future.</h2>
+            <h2 className="text-4xl md:text-6xl font-black text-white mb-6 text-3d">Invest in Your Future.</h2>
             <p className="text-slate-400 text-xl">Plans designed to take you from beginner to industry leader.</p>
           </div>
 
@@ -431,16 +428,12 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard,
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              whileHover="hover"
-              className="glass-card p-12 rounded-[3rem] border-white/5 flex flex-col"
+              className="glass-card p-12 rounded-[3rem] border-white/5 flex flex-col card-3d"
             >
-              <div className="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">Basic</div>
-              <motion.div 
-                variants={{ hover: { scale: 1.05, color: "#818cf8" } }}
-                className="text-5xl font-black text-white mb-8"
-              >
+              <div className="text-xs font-black text-slate-500 uppercase tracking-widest mb-4 depth-1">Basic</div>
+              <div className="text-5xl font-black text-white mb-8 depth-2">
                 ₹0<span className="text-lg text-slate-500">/mo</span>
-              </motion.div>
+              </div>
               <ul className="space-y-4 mb-12 flex-1">
                 {["1 Career Roadmap", "Basic Progress Tracking", "Community Access", "Public Resources"].map((f, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm text-slate-400">
@@ -463,19 +456,15 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard,
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              whileHover="hover"
-              className="premium-border p-12 rounded-[3rem] glass-dark flex flex-col relative scale-105 z-10 shadow-2xl shadow-indigo-500/10"
+              className="premium-border p-12 rounded-[3rem] glass-dark flex flex-col relative scale-105 z-10 shadow-2xl shadow-indigo-500/10 card-3d"
             >
-              <div className="absolute top-0 right-12 -translate-y-1/2 px-4 py-1 bg-indigo-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full">
+              <div className="absolute top-0 right-12 -translate-y-1/2 px-4 py-1 bg-indigo-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full depth-3">
                 Most Popular
               </div>
-              <div className="text-xs font-black text-indigo-400 uppercase tracking-widest mb-4">Pro</div>
-              <motion.div 
-                variants={{ hover: { scale: 1.05, color: "#818cf8" } }}
-                className="text-5xl font-black text-white mb-8"
-              >
+              <div className="text-xs font-black text-indigo-400 uppercase tracking-widest mb-4 depth-1">Pro</div>
+              <div className="text-5xl font-black text-white mb-8 depth-2">
                 ₹999<span className="text-lg text-slate-500">/mo</span>
-              </motion.div>
+              </div>
               <ul className="space-y-4 mb-12 flex-1">
                 {[
                   "Unlimited Roadmaps",
@@ -510,16 +499,12 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard,
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              whileHover="hover"
-              className="glass-card p-12 rounded-[3rem] border-purple-500/20 flex flex-col"
+              className="glass-card p-12 rounded-[3rem] border-purple-500/20 flex flex-col card-3d"
             >
-              <div className="text-xs font-black text-purple-400 uppercase tracking-widest mb-4">Premium</div>
-              <motion.div 
-                variants={{ hover: { scale: 1.05, color: "#a855f7" } }}
-                className="text-5xl font-black text-white mb-8"
-              >
+              <div className="text-xs font-black text-purple-400 uppercase tracking-widest mb-4 depth-1">Premium</div>
+              <div className="text-5xl font-black text-white mb-8 depth-2">
                 ₹2,499<span className="text-lg text-slate-500">/mo</span>
-              </motion.div>
+              </div>
               <ul className="space-y-4 mb-12 flex-1">
                 {[
                   "Everything in Pro",
@@ -566,7 +551,7 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard,
                 <ShieldCheck size={14} />
                 Premium Experience
               </div>
-              <h2 className="text-4xl md:text-7xl font-black text-white mb-8 leading-[1.1] tracking-tighter">
+              <h2 className="text-4xl md:text-7xl font-black text-white mb-8 leading-[1.1] tracking-tighter text-3d">
                 Accelerate with <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">1:1 Mastery.</span>
               </h2>
               <p className="text-slate-400 text-xl leading-relaxed">
@@ -594,15 +579,13 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard,
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -10, scale: 1.02 }}
-                className="glass-card p-8 rounded-[2.5rem] border-white/5 group"
+                className="glass-card p-8 rounded-[2.5rem] border-white/5 cursor-default card-3d"
               >
-                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-amber-500 mb-6 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-amber-500 mb-6 depth-2">
                   <item.icon size={24} />
                 </div>
-                <h4 className="text-xl font-black text-white mb-4">{item.title}</h4>
-                <p className="text-slate-400 text-sm leading-relaxed">{item.desc}</p>
+                <h4 className="text-xl font-black text-white mb-4 depth-1">{item.title}</h4>
+                <p className="text-slate-400 text-sm leading-relaxed depth-1">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -755,7 +738,7 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard,
       <section className="py-32 px-6 bg-white/[0.01]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-24">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-6">Success Stories.</h2>
+            <h2 className="text-4xl md:text-6xl font-black text-white mb-6 text-3d">Success Stories.</h2>
             <p className="text-slate-400 text-xl">Real people. Real growth. Real results.</p>
           </div>
 
@@ -839,7 +822,7 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard,
           transition={{ duration: 0.8 }}
           className="max-w-4xl mx-auto text-center relative z-10"
         >
-          <h2 className="text-5xl md:text-7xl font-black text-white mb-8 leading-tight">
+          <h2 className="text-5xl md:text-7xl font-black text-white mb-8 leading-tight text-3d">
             Start building your career today.
           </h2>
           <p className="text-slate-400 text-xl mb-12 max-w-2xl mx-auto leading-relaxed">

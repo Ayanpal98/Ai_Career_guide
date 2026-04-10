@@ -2,11 +2,12 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { CareerRoadmap, SubscriptionPlan, UserProfile, ChatMessage, ConsultationPackage } from '../types';
 import { chatWithCoach } from '../services/gemini';
+import SkillsRadar from './SkillsRadar';
 import { 
   LayoutDashboard, Map as MapIcon, ListTodo, BarChart3, MessageSquare, Settings, 
   CheckCircle2, Circle, ChevronRight, Lock, Sparkles, Zap, Award, Target, TrendingUp,
   AlertTriangle, Calendar, ExternalLink, ArrowUpRight, Play, Clock, Send, Loader2, User,
-  Briefcase, Globe, Camera, HelpCircle, X, LogOut
+  Briefcase, Globe, Camera, HelpCircle, X, LogOut, Info, Newspaper, LineChart, ArrowRight
 } from 'lucide-react';
 
 interface DashboardProps {
@@ -19,6 +20,8 @@ interface DashboardProps {
   onBook: (pkg: ConsultationPackage) => void;
   onSignOut: () => void;
 }
+
+console.log('Dashboard.tsx: Module evaluating...');
 
 export default function Dashboard({ 
   roadmap, 
@@ -84,11 +87,11 @@ export default function Dashboard({
 
   const renderSidebar = () => (
     <nav className="fixed left-0 top-0 bottom-0 w-72 glass-dark border-r border-white/5 p-8 flex flex-col gap-8 z-50">
-      <div className="flex items-center gap-3 text-white font-black text-2xl tracking-tighter mb-4">
+      <div className="flex items-center gap-3 text-white font-black text-2xl tracking-tighter mb-4 font-display uppercase">
         <div className="p-2 rounded-xl bg-indigo-500 shadow-lg shadow-indigo-500/20">
           <Zap size={24} />
         </div>
-        Career Path builder
+        Career Path
       </div>
 
       <div className="flex items-center gap-4 p-4 rounded-3xl bg-white/5 border border-white/5 mb-4">
@@ -187,139 +190,195 @@ export default function Dashboard({
   );
 
   const renderHeader = () => (
-    <header className="mb-12 flex items-end justify-between gap-8">
-      <div className="space-y-2">
-        <h1 className="text-4xl font-black text-white tracking-tight">Welcome back 👋</h1>
+    <header className="mb-12 flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+      <div className="space-y-3">
+        <div className="flex items-center gap-2 text-indigo-400 font-black text-xs uppercase tracking-[0.3em]">
+          <div className="w-8 h-[1px] bg-indigo-500" />
+          Executive Dashboard
+        </div>
+        <h1 className="text-5xl lg:text-7xl font-black text-white tracking-tighter leading-[0.85] font-serif italic text-3d">
+          Welcome back, <br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 not-italic">
+            {profile.fullName?.split(' ')[0] || 'Architect'}
+          </span>
+        </h1>
         <p className="text-slate-400 text-lg max-w-2xl font-medium leading-relaxed">{roadmap.summary}</p>
       </div>
       
-      <div className="glass-card p-6 rounded-3xl min-w-[300px] relative overflow-hidden">
+      <div className="glass-card p-8 rounded-[2.5rem] min-w-[320px] relative overflow-hidden border-white/5 bg-white/[0.02]">
         <div className="flex items-center justify-between mb-4">
-          <span className="text-sm font-bold text-slate-400 uppercase tracking-widest">Total Progress</span>
-          <span className="text-2xl font-black text-white">{progress}%</span>
+          <span className="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">System Velocity</span>
+          <span className="text-3xl font-black text-white">{progress}%</span>
         </div>
-        <div className="h-3 bg-white/5 rounded-full overflow-hidden">
+        <div className="h-2 bg-white/5 rounded-full overflow-hidden">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
-            className="h-full bg-gradient-to-r from-indigo-500 to-purple-500"
+            className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
           />
         </div>
-        <div className="mt-4 flex items-center gap-2 text-xs font-bold text-indigo-400 uppercase tracking-widest">
-          <TrendingUp size={14} />
-          <span>On track for {roadmap.plan} milestones</span>
+        <div className="mt-6 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-[10px] font-black text-indigo-400 uppercase tracking-widest">
+            <TrendingUp size={14} />
+            <span>Optimal Growth</span>
+          </div>
+          <div className="text-[10px] font-black text-slate-600 uppercase tracking-widest">
+            {roadmap.plan} Tier
+          </div>
         </div>
       </div>
     </header>
   );
 
   const renderOverview = () => (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      {/* Next Step Panel */}
-      <div className="lg:col-span-2 space-y-8">
-        <section className="premium-border p-8 rounded-[2.5rem] relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-            <Play size={120} className="text-white" />
+    <div className="space-y-10">
+      {/* Top Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {[
+          { label: 'Overall Progress', value: `${progress}%`, icon: TrendingUp, color: 'indigo' },
+          { label: 'Tasks Completed', value: `${Object.values(completedTasks).filter(Boolean).length}/${roadmap.phases.reduce((acc, p) => acc + p.tasks.length, 0)}`, icon: CheckCircle2, color: 'emerald' },
+          { label: 'Market Demand', value: 'High', icon: LineChart, color: 'amber' },
+          { label: 'Current Level', value: profile.level, icon: Award, color: 'purple' },
+        ].map((stat, i) => (
+          <div key={i} className="glass-card p-8 rounded-[2rem] border-white/5 group transition-all bg-white/[0.01] relative overflow-hidden card-3d">
+            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity depth-2">
+              <stat.icon size={64} />
+            </div>
+            <div className={`w-10 h-10 rounded-xl bg-${stat.color}-500/10 flex items-center justify-center mb-6 depth-2`}>
+              <stat.icon className={`text-${stat.color}-400`} size={20} />
+            </div>
+            <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-2 font-mono depth-1">{stat.label}</div>
+            <div className="text-4xl font-black text-white font-mono tracking-tighter depth-1">{stat.value}</div>
           </div>
-          <div className="relative z-10">
-            <span className="text-xs font-bold text-indigo-400 uppercase tracking-[0.2em] mb-4 block">Next Immediate Step</span>
-            <h2 className="text-3xl font-black text-white mb-4">{roadmap.nextStep || "Ready to begin your journey?"}</h2>
-            <div className="flex items-center gap-6 mb-8 text-slate-400 text-sm font-medium">
-              <div className="flex items-center gap-2">
-                <Target size={18} className="text-indigo-400" />
-                <span>Focus Area: {roadmap.phases?.[0]?.title || "Initial Phase"}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock size={18} className="text-indigo-400" />
-                <span>~2 hours</span>
-              </div>
-            </div>
-            <button className="flex items-center gap-3 px-8 py-4 bg-white text-slate-950 font-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-2xl">
-              Start Now
-              <ArrowUpRight size={20} />
-            </button>
-          </div>
-        </section>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <section className="glass-card p-8 rounded-[2rem]">
-            <div className="flex items-center gap-3 mb-6 text-amber-500 font-bold uppercase tracking-widest text-xs">
-              <AlertTriangle size={18} />
-              Skill Gap Analysis
-            </div>
-            <ul className="space-y-4">
-              {(roadmap.skillGapAnalysis || []).map((gap, i) => (
-                <li key={i} className="flex gap-4 text-slate-300 text-sm leading-relaxed">
-                  <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0 shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
-                  {gap}
-                </li>
-              ))}
-              {(!roadmap.skillGapAnalysis || roadmap.skillGapAnalysis.length === 0) && (
-                <li className="text-slate-500 text-xs italic">No skill gaps identified yet.</li>
-              )}
-            </ul>
-          </section>
-
-          <section className="glass-card p-8 rounded-[2rem]">
-            <div className="flex items-center gap-3 mb-6 text-emerald-500 font-bold uppercase tracking-widest text-xs">
-              <Award size={18} />
-              Your Strengths
-            </div>
-            <ul className="space-y-4">
-              {(roadmap.strengths || []).map((strength, i) => (
-                <li key={i} className="flex gap-4 text-slate-300 text-sm leading-relaxed">
-                  <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                  {strength}
-                </li>
-              ))}
-              {(!roadmap.strengths || roadmap.strengths.length === 0) && (
-                <li className="text-slate-500 text-xs italic">Analyzing your strengths...</li>
-              )}
-            </ul>
-          </section>
-        </div>
+        ))}
       </div>
 
-      {/* AI Coach Insights */}
-      <div className="space-y-8">
-        <section className="glass-card p-8 rounded-[2rem] border-indigo-500/20">
-          <div className="flex items-center gap-3 mb-6 text-indigo-400 font-bold uppercase tracking-widest text-xs">
-            <MessageSquare size={18} />
-            AI Coach Insights
-          </div>
-          <div className="space-y-6">
-            <div className="p-5 bg-white/5 rounded-2xl border border-white/5 text-sm text-slate-300 leading-relaxed italic relative">
-              <Sparkles size={16} className="absolute -top-2 -right-2 text-amber-400" />
-              "{roadmap.realityCheck || "Your journey is unique. Stay focused and keep growing."}"
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        {/* Main Roadmap Preview */}
+        <div className="lg:col-span-8 space-y-10">
+          <div className="glass-card p-10 rounded-[3rem] border-white/5 relative overflow-hidden bg-white/[0.01] card-3d">
+            <div className="absolute top-0 right-0 p-12 opacity-5 depth-3">
+              <MapIcon size={200} />
             </div>
-            {isPremium && roadmap.accountabilityPrompts && roadmap.accountabilityPrompts.length > 0 && (
-              <div className="space-y-3">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Weekly Reflection</span>
-                <p className="text-xs text-slate-400">{roadmap.accountabilityPrompts[0]}</p>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {isPro && roadmap.projects && (
-          <section className="glass-card p-8 rounded-[2rem]">
-            <div className="flex items-center gap-3 mb-6 text-blue-400 font-bold uppercase tracking-widest text-xs">
-              <Zap size={18} />
-              Project Lab
-            </div>
-            <div className="space-y-4">
-              {roadmap.projects.slice(0, 2).map((project, i) => (
-                <div key={i} className="p-4 bg-white/5 rounded-2xl border border-white/5 text-xs text-slate-400 group hover:border-blue-500/30 transition-all cursor-pointer">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-bold text-slate-200">Project {i + 1}</span>
-                    <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                  </div>
-                  {project}
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-10">
+                <div className="depth-1">
+                  <h3 className="text-3xl font-black text-white mb-3 tracking-tight">Roadmap Velocity</h3>
+                  <p className="text-slate-400 text-lg font-medium">You are currently on track to reach your goal in {profile.timeline}.</p>
                 </div>
-              ))}
+                <button 
+                  onClick={() => setActiveTab('roadmap')}
+                  className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all border border-white/10 depth-2"
+                >
+                  <ArrowUpRight size={24} />
+                </button>
+              </div>
+              
+              <div className="space-y-6 depth-1">
+                {roadmap.phases.slice(0, 2).map((phase, i) => (
+                  <div key={i} className="p-8 rounded-[2rem] bg-white/[0.03] border border-white/5 flex items-center gap-8 group hover:bg-white/[0.05] transition-all">
+                    <div className="w-16 h-16 rounded-2xl bg-indigo-500/20 flex items-center justify-center shrink-0 font-black text-2xl text-indigo-400">
+                      0{i + 1}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xl text-white font-black mb-2 truncate">{phase.title}</div>
+                      <div className="text-sm text-slate-500 font-bold uppercase tracking-widest">{phase.tasks.length} strategic milestones</div>
+                    </div>
+                    <div className="hidden md:block w-40 h-2 bg-white/5 rounded-full overflow-hidden">
+                      <div className="h-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]" style={{ width: '40%' }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </section>
-        )}
+          </div>
+
+          {/* Market Insights */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div className="glass-card p-10 rounded-[3rem] border-white/5 bg-white/[0.01]">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="p-3 rounded-2xl bg-amber-500/20">
+                  <Newspaper className="text-amber-400" size={24} />
+                </div>
+                <h4 className="text-xl font-black text-white tracking-tight">Market Intelligence</h4>
+              </div>
+              <div className="space-y-6">
+                {[
+                  'Demand for React experts is up 12% this quarter.',
+                  'AI integration skills are now a top priority for recruiters.',
+                  'Remote roles in your target industry have stabilized.'
+                ].map((insight, i) => (
+                  <div key={i} className="flex gap-4 text-slate-400 leading-relaxed font-medium">
+                    <div className="mt-2 w-2 h-2 rounded-full bg-amber-500 shrink-0 shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
+                    {insight}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="glass-card p-10 rounded-[3rem] border-white/5 bg-white/[0.01]">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="p-3 rounded-2xl bg-purple-500/20">
+                  <Info className="text-purple-400" size={24} />
+                </div>
+                <h4 className="text-xl font-black text-white tracking-tight">Next Milestone</h4>
+              </div>
+              <div className="p-8 rounded-[2rem] bg-purple-500/10 border border-purple-500/20 relative overflow-hidden group">
+                <div className="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform">
+                  <Target size={100} />
+                </div>
+                <div className="relative z-10">
+                  <div className="text-xs font-black text-purple-400 uppercase tracking-[0.3em] mb-4">Priority Execution</div>
+                  <div className="text-2xl font-black text-white mb-8 leading-tight">{roadmap.phases[0].tasks[0]}</div>
+                  <button 
+                    onClick={() => setActiveTab('tasks')}
+                    className="w-full py-5 bg-purple-500 text-white font-black rounded-2xl text-sm hover:scale-105 transition-all shadow-xl shadow-purple-500/20"
+                  >
+                    Execute Task
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Skills Radar & Profile Stats */}
+        <div className="lg:col-span-4 space-y-10">
+          <div className="glass-card p-10 rounded-[3rem] border-white/5 bg-white/[0.01]">
+            <h4 className="text-xl font-black text-white mb-8 tracking-tight">Skills Architecture</h4>
+            <div className="py-4">
+              <SkillsRadar />
+            </div>
+            <div className="mt-8 pt-8 border-t border-white/5 grid grid-cols-2 gap-6">
+              <div className="text-center">
+                <div className="text-3xl font-black text-white">84</div>
+                <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Skill Score</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-black text-indigo-400">+12%</div>
+                <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Growth</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="glass-card p-10 rounded-[3rem] border-white/5 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 relative overflow-hidden group">
+            <div className="absolute -right-8 -top-8 opacity-5 group-hover:scale-110 transition-transform">
+              <MessageSquare size={160} />
+            </div>
+            <div className="relative z-10">
+              <h4 className="text-xl font-black text-white mb-4 tracking-tight">AI Coach Tip</h4>
+              <p className="text-slate-400 leading-relaxed mb-8 font-medium">
+                "Based on your progress, I recommend focusing on the 'System Design' module next. It's a key requirement for the roles you're targeting."
+              </p>
+              <button 
+                onClick={() => setActiveTab('coach')}
+                className="flex items-center gap-3 text-indigo-400 font-black text-sm hover:gap-5 transition-all uppercase tracking-widest"
+              >
+                Ask Coach <ArrowRight size={18} />
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -337,13 +396,16 @@ export default function Dashboard({
           <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-1 h-12 bg-indigo-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-12">
             <div className="max-w-xl">
-              <span className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.3em] mb-4 block">Phase {i + 1}</span>
-              <h3 className="text-3xl font-black text-white mb-4">{phase.title}</h3>
-              <p className="text-slate-400 text-lg leading-relaxed mb-8">{phase.description}</p>
+              <div className="flex items-center gap-3 mb-6">
+                <span className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.4em] font-mono">Phase {i + 1}</span>
+                <div className="h-[1px] flex-1 bg-white/5" />
+              </div>
+              <h3 className="text-4xl font-black text-white mb-6 tracking-tighter font-display uppercase italic">{phase.title}</h3>
+              <p className="text-slate-400 text-lg leading-relaxed mb-10 font-serif opacity-80 italic">"{phase.description}"</p>
               
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-2">
                 {(phase.skills || []).map((skill, j) => (
-                  <span key={j} className="px-4 py-2 bg-white/5 rounded-full text-xs font-bold text-slate-300 border border-white/5">
+                  <span key={j} className="px-3 py-1.5 bg-white/5 rounded-lg text-[10px] font-black text-slate-400 border border-white/5 uppercase tracking-widest font-mono">
                     {skill}
                   </span>
                 ))}
@@ -382,66 +444,69 @@ export default function Dashboard({
   const renderTasks = () => (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
       <div className="space-y-8">
-        <div className="flex items-center gap-3 font-black text-white mb-4 uppercase tracking-widest text-xs">
-          <Calendar size={18} className="text-indigo-400" />
+        <div className="flex items-center gap-3 font-black text-white mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
+          <Calendar size={16} className="text-indigo-400" />
           Daily Rituals
+          <div className="h-[1px] flex-1 bg-white/5" />
         </div>
         {(roadmap.actionPlan?.daily || []).map((task, i) => (
-          <div key={i} className="p-8 glass-card rounded-[2.5rem] space-y-4 relative overflow-hidden group">
-            <div className={`absolute top-0 right-0 px-4 py-1 text-[10px] font-black uppercase tracking-widest rounded-bl-xl ${
+          <div key={i} className="p-8 glass-card rounded-[2.5rem] space-y-4 relative overflow-hidden group border-white/5 hover:border-indigo-500/20">
+            <div className={`absolute top-0 right-0 px-4 py-1 text-[9px] font-black uppercase tracking-widest rounded-bl-xl font-mono ${
               task.difficulty === 'Hard' ? 'bg-red-500/20 text-red-400' : 
               task.difficulty === 'Medium' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'
             }`}>
               {task.difficulty}
             </div>
-            <h4 className="text-xl font-bold text-white leading-tight">{task.task}</h4>
-            <div className="flex items-center gap-4 text-xs text-slate-500 font-bold uppercase tracking-widest">
-              <span className="flex items-center gap-1.5"><Clock size={14} /> {task.timeRequired}</span>
-              <span className="flex items-center gap-1.5"><Target size={14} /> {task.outcome}</span>
+            <h4 className="text-xl font-black text-white leading-tight tracking-tight">{task.task}</h4>
+            <div className="flex items-center gap-4 text-[10px] text-slate-500 font-black uppercase tracking-widest font-mono">
+              <span className="flex items-center gap-1.5"><Clock size={12} /> {task.timeRequired}</span>
+              <span className="flex items-center gap-1.5"><Target size={12} /> {task.outcome}</span>
             </div>
           </div>
         ))}
       </div>
 
       <div className="space-y-8">
-        <div className="flex items-center gap-3 font-black text-white mb-4 uppercase tracking-widest text-xs">
-          <TrendingUp size={18} className="text-purple-400" />
+        <div className="flex items-center gap-3 font-black text-white mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
+          <TrendingUp size={16} className="text-purple-400" />
           Weekly Sprints
+          <div className="h-[1px] flex-1 bg-white/5" />
         </div>
         {(roadmap.actionPlan?.weekly || []).map((task, i) => (
-          <div key={i} className="p-8 glass-card rounded-[2.5rem] space-y-4 relative overflow-hidden group">
-            <div className={`absolute top-0 right-0 px-4 py-1 text-[10px] font-black uppercase tracking-widest rounded-bl-xl ${
+          <div key={i} className="p-8 glass-card rounded-[2.5rem] space-y-4 relative overflow-hidden group border-white/5 hover:border-purple-500/20">
+            <div className={`absolute top-0 right-0 px-4 py-1 text-[9px] font-black uppercase tracking-widest rounded-bl-xl font-mono ${
               task.difficulty === 'Hard' ? 'bg-red-500/20 text-red-400' : 
               task.difficulty === 'Medium' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'
             }`}>
               {task.difficulty}
             </div>
-            <h4 className="text-xl font-bold text-white leading-tight">{task.task}</h4>
-            <div className="flex items-center gap-4 text-xs text-slate-500 font-bold uppercase tracking-widest">
-              <span className="flex items-center gap-1.5"><Clock size={14} /> {task.timeRequired}</span>
-              <span className="flex items-center gap-1.5"><Target size={14} /> {task.outcome}</span>
+            <h4 className="text-xl font-black text-white leading-tight tracking-tight">{task.task}</h4>
+            <div className="flex items-center gap-4 text-[10px] text-slate-500 font-black uppercase tracking-widest font-mono">
+              <span className="flex items-center gap-1.5"><Clock size={12} /> {task.timeRequired}</span>
+              <span className="flex items-center gap-1.5"><Target size={12} /> {task.outcome}</span>
             </div>
           </div>
         ))}
       </div>
 
       <div className="space-y-8">
-        <div className="flex items-center gap-3 font-black text-white mb-4 uppercase tracking-widest text-xs">
-          <Award size={18} className="text-amber-400" />
+        <div className="flex items-center gap-3 font-black text-white mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
+          <Award size={16} className="text-amber-400" />
           Monthly Milestones
+          <div className="h-[1px] flex-1 bg-white/5" />
         </div>
         {(roadmap.actionPlan?.monthly || []).map((task, i) => (
-          <div key={i} className="p-8 glass-card rounded-[2.5rem] space-y-4 relative overflow-hidden group">
-            <div className={`absolute top-0 right-0 px-4 py-1 text-[10px] font-black uppercase tracking-widest rounded-bl-xl ${
+          <div key={i} className="p-8 glass-card rounded-[2.5rem] space-y-4 relative overflow-hidden group border-white/5 hover:border-amber-500/20">
+            <div className={`absolute top-0 right-0 px-4 py-1 text-[9px] font-black uppercase tracking-widest rounded-bl-xl font-mono ${
               task.difficulty === 'Hard' ? 'bg-red-500/20 text-red-400' : 
               task.difficulty === 'Medium' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'
             }`}>
               {task.difficulty}
             </div>
-            <h4 className="text-xl font-bold text-white leading-tight">{task.task}</h4>
-            <div className="flex items-center gap-4 text-xs text-slate-500 font-bold uppercase tracking-widest">
-              <span className="flex items-center gap-1.5"><Clock size={14} /> {task.timeRequired}</span>
-              <span className="flex items-center gap-1.5"><Target size={14} /> {task.outcome}</span>
+            <h4 className="text-xl font-black text-white leading-tight tracking-tight">{task.task}</h4>
+            <div className="flex items-center gap-4 text-[10px] text-slate-500 font-black uppercase tracking-widest font-mono">
+              <span className="flex items-center gap-1.5"><Clock size={12} /> {task.timeRequired}</span>
+              <span className="flex items-center gap-1.5"><Target size={12} /> {task.outcome}</span>
             </div>
           </div>
         ))}
@@ -703,40 +768,50 @@ export default function Dashboard({
                   </div>
                 )}
                 {activeTab === 'coach' && isPro && (
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 h-[calc(100vh-300px)]">
-                    <div className="lg:col-span-2 flex flex-col glass-card rounded-[3rem] overflow-hidden border-indigo-500/20 relative">
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 h-[calc(100vh-300px)]">
+                    <div className="lg:col-span-8 flex flex-col glass-card rounded-[3rem] overflow-hidden border-white/5 relative bg-white/[0.01]">
                       {!isPremium && (
-                        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-8 text-center bg-[#020617]/60 backdrop-blur-sm">
-                          <div className="p-4 rounded-2xl bg-purple-500/20 text-purple-400 mb-6">
-                            <Lock size={32} />
+                        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-12 text-center bg-[#020617]/80 backdrop-blur-md">
+                          <div className="p-6 rounded-3xl bg-purple-500/20 text-purple-400 mb-8 border border-purple-500/30">
+                            <Lock size={40} />
                           </div>
-                          <h3 className="text-2xl font-black text-white mb-2">Premium Feature</h3>
-                          <p className="text-slate-400 max-w-xs mb-8">The AI Coach Chat is fully unlocked for Premium users. Upgrade to get direct guidance.</p>
-                          <button className="px-8 py-4 bg-purple-500 text-white font-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-purple-500/20">
+                          <h3 className="text-3xl font-black text-white mb-4 uppercase tracking-tighter">Premium Intelligence</h3>
+                          <p className="text-slate-400 max-w-sm mb-10 text-lg font-medium leading-relaxed">The AI Coach Chat is fully unlocked for Premium users. Get direct, strategic guidance from our most advanced models.</p>
+                          <button className="px-10 py-5 bg-purple-500 text-white font-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-purple-500/30 uppercase tracking-widest text-sm">
                             Upgrade to Premium
                           </button>
                         </div>
                       )}
-                      <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/5">
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-2xl bg-indigo-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
-                            <Sparkles size={24} />
+                      <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+                        <div className="flex items-center gap-5">
+                          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-2xl shadow-indigo-500/20">
+                            <Sparkles size={28} />
                           </div>
                           <div>
-                            <h3 className="text-xl font-black text-white">AI Career Coach</h3>
-                            <div className="flex items-center gap-2 text-xs font-bold text-emerald-400 uppercase tracking-widest">
-                              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                              Online & Ready
+                            <h3 className="text-2xl font-black text-white tracking-tight">Career Architect AI</h3>
+                            <div className="flex items-center gap-2 text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em]">
+                              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                              Neural Engine Online
                             </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                            GPT-4o Optimized
                           </div>
                         </div>
                       </div>
 
-                      <div className="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar">
+                      <div className="flex-1 overflow-y-auto p-10 space-y-8 custom-scrollbar">
                         {messages.length === 0 && (
-                          <div className="flex flex-col items-center justify-center h-full text-center space-y-4 opacity-50">
-                            <MessageSquare size={48} className="text-indigo-400" />
-                            <p className="text-slate-400 max-w-xs">Ask me anything about your roadmap, skill gaps, or career strategy.</p>
+                          <div className="flex flex-col items-center justify-center h-full text-center space-y-6 opacity-40">
+                            <div className="w-20 h-20 rounded-3xl bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+                              <MessageSquare size={40} />
+                            </div>
+                            <div className="space-y-2">
+                              <p className="text-white font-black text-xl">System Initialized</p>
+                              <p className="text-slate-400 max-w-xs font-medium">Ask me anything about your roadmap, skill gaps, or long-term career strategy.</p>
+                            </div>
                           </div>
                         )}
                         {messages.map((msg, i) => (
@@ -746,15 +821,15 @@ export default function Dashboard({
                             animate={{ opacity: 1, y: 0 }}
                             className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                           >
-                            <div className={`flex gap-4 max-w-[80%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-                              <div className={`w-10 h-10 rounded-xl shrink-0 flex items-center justify-center ${
-                                msg.role === 'user' ? 'bg-slate-800 text-slate-400' : 'bg-indigo-500 text-white'
+                            <div className={`flex gap-5 max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                              <div className={`w-12 h-12 rounded-2xl shrink-0 flex items-center justify-center shadow-xl ${
+                                msg.role === 'user' ? 'bg-slate-800 text-slate-400 border border-white/5' : 'bg-indigo-500 text-white'
                               }`}>
-                                {msg.role === 'user' ? <User size={20} /> : <Sparkles size={20} />}
+                                {msg.role === 'user' ? <User size={24} /> : <Sparkles size={24} />}
                               </div>
-                              <div className={`p-5 rounded-2xl text-sm leading-relaxed ${
+                              <div className={`p-6 rounded-3xl text-base leading-relaxed font-medium shadow-2xl ${
                                 msg.role === 'user' 
-                                  ? 'bg-white/5 text-slate-200 rounded-tr-none' 
+                                  ? 'bg-white/5 text-slate-200 rounded-tr-none border border-white/5' 
                                   : 'bg-indigo-500/10 text-slate-200 border border-indigo-500/20 rounded-tl-none'
                               }`}>
                                 {msg.text}
@@ -764,15 +839,15 @@ export default function Dashboard({
                         ))}
                         {isTyping && (
                           <div className="flex justify-start">
-                            <div className="flex gap-4 max-w-[80%]">
-                              <div className="w-10 h-10 rounded-xl bg-indigo-500 text-white flex items-center justify-center">
-                                <Loader2 size={20} className="animate-spin" />
+                            <div className="flex gap-5 max-w-[85%]">
+                              <div className="w-12 h-12 rounded-2xl bg-indigo-500 text-white flex items-center justify-center shadow-xl">
+                                <Loader2 size={24} className="animate-spin" />
                               </div>
-                              <div className="p-5 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 rounded-tl-none">
-                                <div className="flex gap-1">
-                                  <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce" />
-                                  <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce [animation-delay:0.2s]" />
-                                  <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce [animation-delay:0.4s]" />
+                              <div className="p-6 rounded-3xl bg-indigo-500/10 border border-indigo-500/20 rounded-tl-none">
+                                <div className="flex gap-1.5">
+                                  <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" />
+                                  <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce [animation-delay:0.2s]" />
+                                  <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce [animation-delay:0.4s]" />
                                 </div>
                               </div>
                             </div>
@@ -781,8 +856,8 @@ export default function Dashboard({
                         <div ref={chatEndRef} />
                       </div>
 
-                      <form onSubmit={handleSendMessage} className="p-8 bg-white/5 border-t border-white/5">
-                        <div className="relative">
+                      <form onSubmit={handleSendMessage} className="p-10 bg-white/[0.02] border-t border-white/5">
+                        <div className="relative group">
                           <input
                             type="text"
                             value={input}
@@ -801,31 +876,44 @@ export default function Dashboard({
                       </form>
                     </div>
 
-                    <div className="space-y-8">
-                      <section className="glass-card p-8 rounded-[3rem] border-purple-500/20 relative overflow-hidden">
-                        <div className="absolute -right-4 -top-4 opacity-5">
-                          <Award size={120} />
+                    <div className="lg:col-span-4 space-y-10">
+                      <section className="glass-card p-10 rounded-[3rem] border-purple-500/20 relative overflow-hidden bg-white/[0.01]">
+                        <div className="absolute -right-8 -top-8 opacity-5">
+                          <Award size={160} />
                         </div>
-                        <h4 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
-                          <Award size={22} className="text-purple-400" /> Interview Prep
+                        <h4 className="text-xl font-black text-white mb-8 flex items-center gap-4 tracking-tight">
+                          <div className="p-2 rounded-xl bg-purple-500/20">
+                            <Award size={24} className="text-purple-400" />
+                          </div>
+                          Strategic Prep
                         </h4>
-                        <p className="text-slate-400 text-sm leading-relaxed mb-6">{roadmap.interviewPrep?.strategy}</p>
-                        <div className="space-y-3">
+                        <p className="text-slate-400 text-base leading-relaxed mb-8 font-medium">{roadmap.interviewPrep?.strategy}</p>
+                        <div className="space-y-4">
+                          <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2">High-Probability Questions</div>
                           {roadmap.interviewPrep?.questions.slice(0, 2).map((q, i) => (
-                            <div key={i} className="p-4 bg-white/5 rounded-2xl border border-white/5 text-slate-300 italic text-xs">
+                            <div key={i} className="p-6 bg-white/[0.03] rounded-2xl border border-white/5 text-slate-300 italic text-sm leading-relaxed relative group hover:border-purple-500/30 transition-all">
+                              <Sparkles size={14} className="absolute -top-2 -right-2 text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                               "{q}"
                             </div>
                           ))}
                         </div>
                       </section>
 
-                      <section className="glass-card p-8 rounded-[3rem] border-emerald-500/20">
-                        <h4 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
-                          <Target size={22} className="text-emerald-400" /> Dynamic Updates
+                      <section className="glass-card p-10 rounded-[3rem] border-emerald-500/20 bg-white/[0.01]">
+                        <h4 className="text-xl font-black text-white mb-8 flex items-center gap-4 tracking-tight">
+                          <div className="p-2 rounded-xl bg-emerald-500/20">
+                            <Target size={24} className="text-emerald-400" />
+                          </div>
+                          Real-time Sync
                         </h4>
-                        <p className="text-slate-400 text-xs leading-relaxed">
-                          Your AI Coach can adjust your roadmap in real-time. Just mention any new constraints or progress in the chat.
+                        <p className="text-slate-400 text-sm leading-relaxed font-medium">
+                          Your Career Architect AI monitors your inputs and adjusts your roadmap in real-time. 
+                          Mention any new constraints or achievements to trigger a system-wide recalibration.
                         </p>
+                        <div className="mt-8 p-6 rounded-2xl bg-emerald-500/5 border border-emerald-500/10 flex items-center gap-4">
+                          <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                          <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Active Monitoring</span>
+                        </div>
                       </section>
                     </div>
                   </div>

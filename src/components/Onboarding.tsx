@@ -160,25 +160,25 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
               <button
                 key={plan.id}
                 onClick={() => updateField('plan', plan.id)}
-                className={`p-8 rounded-[2rem] border transition-all text-left relative overflow-hidden group ${
+                className={`p-10 rounded-[2.5rem] border transition-all text-left relative overflow-hidden group ${
                   formData.plan === plan.id
-                    ? `bg-${plan.color}-500/10 border-${plan.color}-500 text-white`
-                    : 'bg-slate-900/50 border-slate-800 text-slate-400 hover:border-slate-700'
+                    ? `bg-${plan.color}-500/10 border-${plan.color}-500 shadow-2xl shadow-${plan.color}-500/20`
+                    : 'bg-slate-900/30 border-white/5 text-slate-400 hover:border-white/10'
                 }`}
               >
                 {formData.plan === plan.id && (
                   <motion.div
                     layoutId="plan-glow"
-                    className={`absolute inset-0 bg-gradient-to-br from-${plan.color}-500/20 to-transparent pointer-events-none`}
+                    className={`absolute inset-0 bg-gradient-to-br from-${plan.color}-500/10 to-transparent pointer-events-none`}
                   />
                 )}
                 <div className="relative z-10">
-                  <div className="text-xs font-bold uppercase tracking-widest mb-2 opacity-60">{plan.id}</div>
-                  <div className="text-3xl font-black mb-6">{plan.price}</div>
-                  <ul className="space-y-3">
+                  <div className="text-[10px] font-black uppercase tracking-[0.3em] mb-4 opacity-60 font-mono">{plan.id}</div>
+                  <div className="text-4xl font-black mb-8 text-white tracking-tighter font-mono">{plan.price}</div>
+                  <ul className="space-y-4">
                     {plan.features.map((f, i) => (
-                      <li key={i} className="text-sm flex items-start gap-2">
-                        <div className={`mt-1 w-1.5 h-1.5 rounded-full bg-${plan.color}-500`} />
+                      <li key={i} className="text-xs font-medium flex items-start gap-3 leading-relaxed">
+                        <div className={`mt-1.5 w-1.5 h-1.5 rounded-full bg-${plan.color}-500 shrink-0`} />
                         {f}
                       </li>
                     ))}
@@ -209,14 +209,14 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/10 blur-[120px] rounded-full" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 blur-[120px] rounded-full" />
 
-      <div className="max-w-4xl w-full glass p-12 md:p-16 rounded-[3rem] border-white/5 relative z-10">
+      <div className="max-w-4xl w-full glass p-12 md:p-20 rounded-[4rem] border-white/5 relative z-10 shadow-2xl card-3d">
         {/* Progress Bar */}
-        <div className="mb-12 flex gap-2">
+        <div className="mb-16 flex gap-3">
           {steps.map((_, i) => (
             <div
               key={i}
-              className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${
-                i <= currentStep ? 'bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]' : 'bg-slate-800'
+              className={`h-1 flex-1 rounded-full transition-all duration-700 ${
+                i <= currentStep ? 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.6)]' : 'bg-slate-800/50'
               }`}
             />
           ))}
@@ -225,20 +225,23 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="space-y-8"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="space-y-10"
           >
-            <div className="space-y-2">
-              <div className="flex items-center gap-3 text-indigo-400 mb-4">
-                {React.createElement(steps[currentStep].icon, { size: 24 })}
-                <span className="text-sm font-bold uppercase tracking-widest">Step {currentStep + 1} of {steps.length}</span>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 text-indigo-400 mb-6">
+                <div className="p-2 rounded-xl bg-indigo-500/10">
+                  {React.createElement(steps[currentStep].icon, { size: 20 })}
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-[0.4em] font-mono">Step {currentStep + 1} / {steps.length}</span>
               </div>
-              <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">
+              <h1 className="text-5xl md:text-6xl font-black text-white tracking-tighter leading-[0.9] font-serif italic text-3d depth-1">
                 {steps[currentStep].title}
               </h1>
-              <p className="text-slate-400 text-lg max-w-xl">
+              <p className="text-slate-400 text-xl max-w-xl font-medium opacity-80">
                 {steps[currentStep].description}
               </p>
             </div>

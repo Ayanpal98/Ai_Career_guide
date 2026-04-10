@@ -17,9 +17,16 @@ import { onAuthStateChanged, signInWithPopup, signOut, User } from 'firebase/aut
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { handleFirestoreError, OperationType } from './lib/firestoreErrorHandler';
 
+console.log('App.tsx: Module evaluating...');
+
 export default function App() {
+  console.log('App: Component function called');
   const [user, setUser] = React.useState<User | null>(null);
   const [isAuthReady, setIsAuthReady] = React.useState(false);
+  
+  React.useEffect(() => {
+    console.log('App: Mounted');
+  }, []);
   const [showLanding, setShowLanding] = React.useState(true);
   const [selectedPlan, setSelectedPlan] = React.useState<SubscriptionPlan>('Basic');
   const [showPayment, setShowPayment] = React.useState(false);
@@ -36,42 +43,76 @@ export default function App() {
 
   // Auth State Listener
   React.useEffect(() => {
+    console.log('App: Setting up auth listener...');
+    
+    // Safety timeout: if auth doesn't respond in 5s, force ready
+    const timer = setTimeout(() => {
+      if (!isAuthReady) {
+        console.warn('App: Auth listener timed out, forcing ready state');
+        setIsAuthReady(true);
+      }
+    }, 5000);
+
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      console.log('App: Auth state changed, user:', currentUser?.uid);
       setUser(currentUser);
-      if (currentUser) {
-        // Fetch profile and roadmap from Firestore
-        setLoading(true);
-        try {
+      try {
+        if (currentUser) {
+          // Fetch profile and roadmap from Firestore
+          setLoading(true);
+          console.log('App: Fetching profile for', currentUser.uid);
           const profileDoc = await getDoc(doc(db, 'users', currentUser.uid));
           if (profileDoc.exists()) {
             const profileData = profileDoc.data() as UserProfile;
             setProfile(profileData);
+            console.log('App: Profile found');
             
+            console.log('App: Fetching roadmap for', currentUser.uid);
             const roadmapDoc = await getDoc(doc(db, 'roadmaps', currentUser.uid));
             if (roadmapDoc.exists()) {
-              setRoadmap(roadmapDoc.data().roadmap as CareerRoadmap);
-              setShowLanding(false);
+              const roadmapData = roadmapDoc.data();
+              if (roadmapData && roadmapData.roadmap) {
+                setRoadmap(roadmapData.roadmap as CareerRoadmap);
+                setShowLanding(false);
+                console.log('App: Roadmap found');
+              } else {
+                console.warn('App: Roadmap document exists but roadmap data is missing');
+              }
             }
           }
-        } catch (err) {
-          handleFirestoreError(err, OperationType.GET, `users/${currentUser.uid}`);
-        } finally {
-          setLoading(false);
+        } else {
+          setProfile(null);
+          setRoadmap(null);
+          setShowLanding(true);
+          console.log('App: No user logged in');
         }
-      } else {
-        setProfile(null);
-        setRoadmap(null);
-        setShowLanding(true);
+      } catch (err) {
+        console.error('Initial auth data fetch error:', err);
+      } finally {
+        setLoading(false);
+        setIsAuthReady(true);
+        clearTimeout(timer);
+        console.log('App: Auth initialization complete');
       }
-      setIsAuthReady(true);
     });
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+      clearTimeout(timer);
+    };
   }, []);
 
   const handleSignIn = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
-    } catch (err) {
+    } catch (err: any) {
+      if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-by-user') {
+        console.log('Sign in cancelled by user');
+        return;
+      }
+      if (err.code === 'auth/popup-blocked') {
+        setError('Sign in popup was blocked by your browser. Please allow popups for this site.');
+        return;
+      }
       console.error('Sign in error:', err);
       setError('Failed to sign in. Please try again.');
     }
@@ -164,6 +205,7 @@ export default function App() {
   };
 
   if (!isAuthReady || loading) {
+    console.log('App: Rendering loading screen...');
     return (
       <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
         {/* Background Glows */}
@@ -187,7 +229,7 @@ export default function App() {
             Architecting Your Future
           </h1>
           <p className="text-slate-400 text-lg max-w-md mx-auto leading-relaxed">
-            Our AI Career Engine is analyzing your profile, identifying skill gaps, and building your personalized roadmap...
+            Career Engine Initializing...
           </p>
         </motion.div>
       </div>
@@ -211,6 +253,7 @@ export default function App() {
     );
   }
 
+  console.log('App: Rendering main UI...');
   return (
     <div className="min-h-screen bg-[#020617]">
       <AnimatePresence mode="wait">

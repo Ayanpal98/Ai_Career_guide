@@ -3,10 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ai_career_guide</title>
+    <title>Career Path Builder</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div style="min-height: 100vh; background-color: #020617; display: flex; align-items: center; justify-content: center; color: white; font-family: sans-serif;">
+        <div style="text-align: center;">
+          <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 1rem;">Career Path Builder</h1>
+          <p style="color: #94a3b8;">Initializing System Core...</p>
+        </div>
+      </div>
+    </div>
+    <script>
+      console.log('Index.html: Inline script running...');
+      window.addEventListener('error', function(e) {
+        console.error('Index.html: Global error caught:', e.message, 'at', e.filename, ':', e.lineno);
+      });
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
