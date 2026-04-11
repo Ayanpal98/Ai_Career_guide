@@ -34,6 +34,8 @@ export default function Dashboard({
   onSignOut
 }: DashboardProps) {
   const [activeTab, setActiveTab] = React.useState<'overview' | 'roadmap' | 'tasks' | 'progress' | 'coach' | 'strategy'>('overview');
+  const [roadmapView, setRoadmapView] = React.useState<'list' | 'timeline' | 'kanban'>('timeline');
+  const [taskView, setTaskView] = React.useState<'columns' | 'kanban'>('columns');
   const [completedTasks, setCompletedTasks] = React.useState<Record<string, boolean>>({});
   const [isHelpModalOpen, setIsHelpModalOpen] = React.useState(false);
 
@@ -383,136 +385,406 @@ export default function Dashboard({
     </div>
   );
 
-  const renderRoadmap = () => (
-    <div className="space-y-12">
-      {(roadmap.phases || []).map((phase, i) => (
-        <motion.div
-          key={i}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: i * 0.1 }}
-          className="glass-card p-10 rounded-[3rem] relative group"
-        >
-          <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-1 h-12 bg-indigo-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-12">
-            <div className="max-w-xl">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.4em] font-mono">Phase {i + 1}</span>
-                <div className="h-[1px] flex-1 bg-white/5" />
-              </div>
-              <h3 className="text-4xl font-black text-white mb-6 tracking-tighter font-display uppercase italic">{phase.title}</h3>
-              <p className="text-slate-400 text-lg leading-relaxed mb-10 font-serif opacity-80 italic">"{phase.description}"</p>
-              
-              <div className="flex flex-wrap gap-2">
-                {(phase.skills || []).map((skill, j) => (
-                  <span key={j} className="px-3 py-1.5 bg-white/5 rounded-lg text-[10px] font-black text-slate-400 border border-white/5 uppercase tracking-widest font-mono">
-                    {skill}
+  const renderRoadmap = () => {
+    const renderListView = () => (
+      <div className="space-y-12">
+        {(roadmap.phases || []).map((phase, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.1 }}
+            className="glass-card p-10 rounded-[3rem] relative group"
+          >
+            <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-1 h-12 bg-indigo-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-12">
+              <div className="max-w-xl">
+                <div className="flex items-center gap-3 mb-6">
+                  <span className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.4em] font-mono">Phase {i + 1}</span>
+                  <div className="h-[1px] flex-1 bg-white/5" />
+                  <span className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest ${
+                    phase.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400' :
+                    phase.status === 'in-progress' ? 'bg-indigo-500/20 text-indigo-400' :
+                    'bg-white/5 text-slate-500'
+                  }`}>
+                    {phase.status}
                   </span>
+                </div>
+                <h3 className="text-4xl font-black text-white mb-6 tracking-tighter font-display uppercase italic">{phase.title}</h3>
+                <p className="text-slate-400 text-lg leading-relaxed mb-10 font-serif opacity-80 italic">"{phase.description}"</p>
+                
+                <div className="flex flex-wrap gap-2">
+                  {(phase.skills || []).map((skill, j) => (
+                    <span key={j} className="px-3 py-1.5 bg-white/5 rounded-lg text-[10px] font-black text-slate-400 border border-white/5 uppercase tracking-widest font-mono">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {(phase.tasks || []).map((task, j) => (
+                  <button
+                    key={j}
+                    onClick={() => toggleTask(`${i}-${j}`)}
+                    className={`flex items-center gap-4 p-5 rounded-2xl border transition-all text-left group/task ${
+                      completedTasks[`${i}-${j}`]
+                        ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                        : 'bg-white/5 border-white/5 text-slate-400 hover:border-indigo-500/30'
+                    }`}
+                  >
+                    <div className={`shrink-0 p-1 rounded-full ${completedTasks[`${i}-${j}`] ? 'bg-emerald-500 text-white' : 'border-2 border-slate-700'}`}>
+                      {completedTasks[`${i}-${j}`] ? <CheckCircle2 size={16} /> : <div className="w-4 h-4" />}
+                    </div>
+                    <span className="text-sm font-bold leading-tight">{task}</span>
+                  </button>
                 ))}
               </div>
             </div>
-            
-            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {(phase.tasks || []).map((task, j) => (
-                <button
-                  key={j}
-                  onClick={() => toggleTask(`${i}-${j}`)}
-                  className={`flex items-center gap-4 p-5 rounded-2xl border transition-all text-left group/task ${
-                    completedTasks[`${i}-${j}`]
-                      ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-                      : 'bg-white/5 border-white/5 text-slate-400 hover:border-indigo-500/30'
-                  }`}
-                >
-                  <div className={`shrink-0 p-1 rounded-full ${completedTasks[`${i}-${j}`] ? 'bg-emerald-500 text-white' : 'border-2 border-slate-700'}`}>
-                    {completedTasks[`${i}-${j}`] ? <CheckCircle2 size={16} /> : <div className="w-4 h-4" />}
+          </motion.div>
+        ))}
+      </div>
+    );
+
+    const renderTimelineView = () => (
+      <div className="relative pl-8 md:pl-0">
+        {/* Vertical Line */}
+        <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-indigo-500/50 via-purple-500/50 to-transparent md:-translate-x-1/2" />
+
+        <div className="space-y-24 relative">
+          {(roadmap.phases || []).map((phase, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className={`flex flex-col md:flex-row items-center gap-8 md:gap-0 ${
+                i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
+              }`}
+            >
+              {/* Content Card */}
+              <div className={`w-full md:w-[45%] ${i % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>
+                <div className="glass-card p-8 rounded-[2.5rem] border-white/5 hover:border-indigo-500/30 transition-all card-3d">
+                  <div className={`flex items-center gap-3 mb-4 ${i % 2 === 0 ? 'md:justify-end' : 'md:justify-start'}`}>
+                    <span className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.3em] font-mono">Phase {i + 1}</span>
+                    <span className={`px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest ${
+                      phase.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400' :
+                      phase.status === 'in-progress' ? 'bg-indigo-500/20 text-indigo-400' :
+                      'bg-white/5 text-slate-500'
+                    }`}>
+                      {phase.status}
+                    </span>
                   </div>
-                  <span className="text-sm font-bold leading-tight">{task}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-      ))}
-      {(!roadmap.phases || roadmap.phases.length === 0) && (
-        <div className="text-center py-20 glass-card rounded-[3rem]">
-          <p className="text-slate-500">No phases generated yet. Try updating your profile.</p>
-        </div>
-      )}
-    </div>
-  );
+                  <h3 className="text-2xl font-black text-white mb-4 tracking-tight uppercase">{phase.title}</h3>
+                  <p className="text-slate-400 text-sm leading-relaxed mb-6 line-clamp-3">{phase.description}</p>
+                  
+                  <div className={`flex flex-wrap gap-2 ${i % 2 === 0 ? 'md:justify-end' : 'md:justify-start'}`}>
+                    {phase.skills.slice(0, 3).map((skill, j) => (
+                      <span key={j} className="px-2 py-1 bg-white/5 rounded-lg text-[9px] font-bold text-slate-500 uppercase tracking-wider">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
 
-  const renderTasks = () => (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-      <div className="space-y-8">
-        <div className="flex items-center gap-3 font-black text-white mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
-          <Calendar size={16} className="text-indigo-400" />
-          Daily Rituals
-          <div className="h-[1px] flex-1 bg-white/5" />
+              {/* Center Node */}
+              <div className="relative z-10 flex items-center justify-center w-16 h-16 shrink-0">
+                <div className="absolute inset-0 bg-indigo-500/20 blur-xl rounded-full animate-pulse" />
+                <div className={`w-12 h-12 rounded-2xl border-2 flex items-center justify-center font-black text-xl transition-all ${
+                  phase.status === 'completed' ? 'bg-emerald-500 border-emerald-400 text-white' :
+                  phase.status === 'in-progress' ? 'bg-indigo-500 border-indigo-400 text-white shadow-[0_0_20px_rgba(99,102,241,0.5)]' :
+                  'bg-[#020617] border-white/10 text-slate-500'
+                }`}>
+                  {i + 1}
+                </div>
+              </div>
+
+              {/* Spacer for alternate layout */}
+              <div className="hidden md:block w-[45%]" />
+            </motion.div>
+          ))}
         </div>
-        {(roadmap.actionPlan?.daily || []).map((task, i) => (
-          <div key={i} className="p-8 glass-card rounded-[2.5rem] space-y-4 relative overflow-hidden group border-white/5 hover:border-indigo-500/20">
-            <div className={`absolute top-0 right-0 px-4 py-1 text-[9px] font-black uppercase tracking-widest rounded-bl-xl font-mono ${
-              task.difficulty === 'Hard' ? 'bg-red-500/20 text-red-400' : 
-              task.difficulty === 'Medium' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'
-            }`}>
-              {task.difficulty}
+      </div>
+    );
+
+    const renderKanbanView = () => {
+      const columns = [
+        { id: 'pending', label: 'Backlog', icon: Circle, color: 'slate' },
+        { id: 'in-progress', label: 'In Progress', icon: Zap, color: 'indigo' },
+        { id: 'completed', label: 'Completed', icon: CheckCircle2, color: 'emerald' }
+      ];
+
+      return (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {columns.map(col => (
+            <div key={col.id} className="space-y-6">
+              <div className="flex items-center gap-3 px-4">
+                <col.icon size={18} className={`text-${col.color}-400`} />
+                <h4 className="text-sm font-black text-white uppercase tracking-[0.2em]">{col.label}</h4>
+                <span className="ml-auto text-[10px] font-black text-slate-500 bg-white/5 px-2 py-1 rounded-lg">
+                  {roadmap.phases.filter(p => p.status === col.id).length}
+                </span>
+              </div>
+              
+              <div className="space-y-4 min-h-[400px] p-4 rounded-[2.5rem] bg-white/[0.01] border border-white/5">
+                {roadmap.phases
+                  .filter(p => p.status === col.id)
+                  .map((phase, i) => (
+                    <motion.div
+                      key={i}
+                      layoutId={`phase-${phase.title}`}
+                      className="glass-card p-6 rounded-3xl border-white/5 hover:border-indigo-500/20 transition-all cursor-pointer group"
+                    >
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Phase {roadmap.phases.indexOf(phase) + 1}</span>
+                        <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.5)] opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </div>
+                      <h5 className="text-lg font-black text-white mb-3 leading-tight">{phase.title}</h5>
+                      <p className="text-xs text-slate-400 line-clamp-2 mb-4 leading-relaxed">{phase.description}</p>
+                      
+                      <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                        <div className="flex -space-x-2">
+                          {phase.skills.slice(0, 3).map((_, j) => (
+                            <div key={j} className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[8px] font-bold text-slate-500">
+                              S{j+1}
+                            </div>
+                          ))}
+                        </div>
+                        <div className="text-[9px] font-black text-indigo-400 uppercase tracking-widest flex items-center gap-1">
+                          <Clock size={10} />
+                          {phase.timeEstimate}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                
+                {roadmap.phases.filter(p => p.status === col.id).length === 0 && (
+                  <div className="h-32 flex items-center justify-center border-2 border-dashed border-white/5 rounded-3xl text-slate-600 text-xs font-bold uppercase tracking-widest">
+                    Empty
+                  </div>
+                )}
+              </div>
             </div>
-            <h4 className="text-xl font-black text-white leading-tight tracking-tight">{task.task}</h4>
-            <div className="flex items-center gap-4 text-[10px] text-slate-500 font-black uppercase tracking-widest font-mono">
+          ))}
+        </div>
+      );
+    };
+
+    return (
+      <div className="space-y-10">
+        {/* View Toggle */}
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <h2 className="text-3xl font-black text-white tracking-tight">Career Trajectory</h2>
+            <p className="text-slate-500 text-sm font-medium">Visualize your path to mastery</p>
+          </div>
+          <div className="flex p-1.5 bg-white/5 rounded-2xl border border-white/5">
+            {[
+              { id: 'timeline', icon: MapIcon, label: 'Timeline' },
+              { id: 'kanban', icon: LayoutDashboard, label: 'Kanban' },
+              { id: 'list', icon: ListTodo, label: 'List' }
+            ].map(view => (
+              <button
+                key={view.id}
+                onClick={() => setRoadmapView(view.id as any)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                  roadmapView === view.id
+                    ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20'
+                    : 'text-slate-500 hover:text-slate-300'
+                }`}
+              >
+                <view.icon size={14} />
+                <span className="hidden sm:block">{view.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={roadmapView}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            {roadmapView === 'timeline' && renderTimelineView()}
+            {roadmapView === 'kanban' && renderKanbanView()}
+            {roadmapView === 'list' && renderListView()}
+          </motion.div>
+        </AnimatePresence>
+
+        {(!roadmap.phases || roadmap.phases.length === 0) && (
+          <div className="text-center py-20 glass-card rounded-[3rem]">
+            <p className="text-slate-500">No phases generated yet. Try updating your profile.</p>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderTasks = () => {
+    const allTasks = [
+      ...(roadmap.actionPlan?.daily || []).map(t => ({ ...t, type: 'Daily' })),
+      ...(roadmap.actionPlan?.weekly || []).map(t => ({ ...t, type: 'Weekly' })),
+      ...(roadmap.actionPlan?.monthly || []).map(t => ({ ...t, type: 'Monthly' }))
+    ];
+
+    const renderTaskCard = (task: any, i: number) => (
+      <motion.div
+        key={task.id || i}
+        layout
+        onClick={() => toggleTask(task.id || `task-${task.type}-${i}`)}
+        className={`p-8 glass-card rounded-[2.5rem] space-y-4 relative overflow-hidden group border-white/5 cursor-pointer transition-all ${
+          completedTasks[task.id || `task-${task.type}-${i}`]
+            ? 'bg-emerald-500/10 border-emerald-500/20 opacity-60'
+            : 'hover:border-indigo-500/20'
+        }`}
+      >
+        <div className={`absolute top-0 right-0 px-4 py-1 text-[9px] font-black uppercase tracking-widest rounded-bl-xl font-mono ${
+          task.difficulty === 'Hard' ? 'bg-red-500/20 text-red-400' : 
+          task.difficulty === 'Medium' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'
+        }`}>
+          {task.difficulty}
+        </div>
+        <div className="flex items-start gap-4">
+          <div className={`mt-1 shrink-0 p-1 rounded-full ${completedTasks[task.id || `task-${task.type}-${i}`] ? 'bg-emerald-500 text-white' : 'border-2 border-slate-700'}`}>
+            {completedTasks[task.id || `task-${task.type}-${i}`] ? <CheckCircle2 size={14} /> : <div className="w-3.5 h-3.5" />}
+          </div>
+          <div className="space-y-3">
+            <h4 className={`text-xl font-black text-white leading-tight tracking-tight ${completedTasks[task.id || `task-${task.type}-${i}`] ? 'line-through text-slate-500' : ''}`}>
+              {task.task}
+            </h4>
+            <div className="flex flex-wrap items-center gap-4 text-[10px] text-slate-500 font-black uppercase tracking-widest font-mono">
               <span className="flex items-center gap-1.5"><Clock size={12} /> {task.timeRequired}</span>
               <span className="flex items-center gap-1.5"><Target size={12} /> {task.outcome}</span>
+              <span className="px-2 py-0.5 bg-white/5 rounded text-indigo-400">{task.type}</span>
             </div>
           </div>
-        ))}
-      </div>
-
-      <div className="space-y-8">
-        <div className="flex items-center gap-3 font-black text-white mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
-          <TrendingUp size={16} className="text-purple-400" />
-          Weekly Sprints
-          <div className="h-[1px] flex-1 bg-white/5" />
         </div>
-        {(roadmap.actionPlan?.weekly || []).map((task, i) => (
-          <div key={i} className="p-8 glass-card rounded-[2.5rem] space-y-4 relative overflow-hidden group border-white/5 hover:border-purple-500/20">
-            <div className={`absolute top-0 right-0 px-4 py-1 text-[9px] font-black uppercase tracking-widest rounded-bl-xl font-mono ${
-              task.difficulty === 'Hard' ? 'bg-red-500/20 text-red-400' : 
-              task.difficulty === 'Medium' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'
-            }`}>
-              {task.difficulty}
-            </div>
-            <h4 className="text-xl font-black text-white leading-tight tracking-tight">{task.task}</h4>
-            <div className="flex items-center gap-4 text-[10px] text-slate-500 font-black uppercase tracking-widest font-mono">
-              <span className="flex items-center gap-1.5"><Clock size={12} /> {task.timeRequired}</span>
-              <span className="flex items-center gap-1.5"><Target size={12} /> {task.outcome}</span>
-            </div>
-          </div>
-        ))}
-      </div>
+      </motion.div>
+    );
 
-      <div className="space-y-8">
-        <div className="flex items-center gap-3 font-black text-white mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
-          <Award size={16} className="text-amber-400" />
-          Monthly Milestones
-          <div className="h-[1px] flex-1 bg-white/5" />
+    const renderColumnsView = () => (
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div className="space-y-8">
+          <div className="flex items-center gap-3 font-black text-white mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
+            <Calendar size={16} className="text-indigo-400" />
+            Daily Rituals
+            <div className="h-[1px] flex-1 bg-white/5" />
+          </div>
+          {(roadmap.actionPlan?.daily || []).map((task, i) => renderTaskCard({ ...task, type: 'Daily' }, i))}
         </div>
-        {(roadmap.actionPlan?.monthly || []).map((task, i) => (
-          <div key={i} className="p-8 glass-card rounded-[2.5rem] space-y-4 relative overflow-hidden group border-white/5 hover:border-amber-500/20">
-            <div className={`absolute top-0 right-0 px-4 py-1 text-[9px] font-black uppercase tracking-widest rounded-bl-xl font-mono ${
-              task.difficulty === 'Hard' ? 'bg-red-500/20 text-red-400' : 
-              task.difficulty === 'Medium' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'
-            }`}>
-              {task.difficulty}
+
+        <div className="space-y-8">
+          <div className="flex items-center gap-3 font-black text-white mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
+            <TrendingUp size={16} className="text-purple-400" />
+            Weekly Sprints
+            <div className="h-[1px] flex-1 bg-white/5" />
+          </div>
+          {(roadmap.actionPlan?.weekly || []).map((task, i) => renderTaskCard({ ...task, type: 'Weekly' }, i))}
+        </div>
+
+        <div className="space-y-8">
+          <div className="flex items-center gap-3 font-black text-white mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
+            <Award size={16} className="text-amber-400" />
+            Monthly Milestones
+            <div className="h-[1px] flex-1 bg-white/5" />
+          </div>
+          {(roadmap.actionPlan?.monthly || []).map((task, i) => renderTaskCard({ ...task, type: 'Monthly' }, i))}
+        </div>
+      </div>
+    );
+
+    const renderKanbanView = () => {
+      const todoTasks = allTasks.filter(t => !completedTasks[t.id || `task-${t.type}-${allTasks.indexOf(t)}`]);
+      const doneTasks = allTasks.filter(t => completedTasks[t.id || `task-${t.type}-${allTasks.indexOf(t)}`]);
+
+      return (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="space-y-8">
+            <div className="flex items-center gap-3 font-black text-white mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
+              <Circle size={16} className="text-indigo-400" />
+              To Do
+              <span className="ml-2 px-2 py-0.5 bg-white/5 rounded text-slate-500">{todoTasks.length}</span>
+              <div className="h-[1px] flex-1 bg-white/5" />
             </div>
-            <h4 className="text-xl font-black text-white leading-tight tracking-tight">{task.task}</h4>
-            <div className="flex items-center gap-4 text-[10px] text-slate-500 font-black uppercase tracking-widest font-mono">
-              <span className="flex items-center gap-1.5"><Clock size={12} /> {task.timeRequired}</span>
-              <span className="flex items-center gap-1.5"><Target size={12} /> {task.outcome}</span>
+            <div className="space-y-6">
+              {todoTasks.map((task, i) => renderTaskCard(task, i))}
+              {todoTasks.length === 0 && (
+                <div className="h-40 flex flex-col items-center justify-center border-2 border-dashed border-white/5 rounded-[3rem] text-slate-600">
+                  <CheckCircle2 size={40} className="mb-4 opacity-20" />
+                  <span className="text-xs font-black uppercase tracking-widest">All tasks cleared</span>
+                </div>
+              )}
             </div>
           </div>
-        ))}
+
+          <div className="space-y-8">
+            <div className="flex items-center gap-3 font-black text-white mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
+              <CheckCircle2 size={16} className="text-emerald-400" />
+              Completed
+              <span className="ml-2 px-2 py-0.5 bg-white/5 rounded text-slate-500">{doneTasks.length}</span>
+              <div className="h-[1px] flex-1 bg-white/5" />
+            </div>
+            <div className="space-y-6">
+              {doneTasks.map((task, i) => renderTaskCard(task, i))}
+              {doneTasks.length === 0 && (
+                <div className="h-40 flex flex-col items-center justify-center border-2 border-dashed border-white/5 rounded-[3rem] text-slate-600">
+                  <Loader2 size={40} className="mb-4 opacity-20 animate-spin" />
+                  <span className="text-xs font-black uppercase tracking-widest">No tasks completed yet</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    return (
+      <div className="space-y-10">
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <h2 className="text-3xl font-black text-white tracking-tight">Execution Engine</h2>
+            <p className="text-slate-500 text-sm font-medium">Manage your daily, weekly, and monthly growth</p>
+          </div>
+          <div className="flex p-1.5 bg-white/5 rounded-2xl border border-white/5">
+            {[
+              { id: 'columns', icon: ListTodo, label: 'Frequency' },
+              { id: 'kanban', icon: LayoutDashboard, label: 'Status' }
+            ].map(view => (
+              <button
+                key={view.id}
+                onClick={() => setTaskView(view.id as any)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                  taskView === view.id
+                    ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20'
+                    : 'text-slate-500 hover:text-slate-300'
+                }`}
+              >
+                <view.icon size={14} />
+                <span className="hidden sm:block">{view.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={taskView}
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.2 }}
+          >
+            {taskView === 'columns' ? renderColumnsView() : renderKanbanView()}
+          </motion.div>
+        </AnimatePresence>
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderStrategy = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
