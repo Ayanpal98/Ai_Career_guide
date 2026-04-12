@@ -4,7 +4,7 @@ import {
   Zap, Sparkles, CheckCircle2, ArrowRight, Play, Users, User,
   Target, BarChart3, MessageSquare, ShieldCheck, Star,
   ChevronRight, ArrowUpRight, Globe, Lock, AlertTriangle, X,
-  LogOut, Search, Filter
+  Search, Filter
 } from 'lucide-react';
 
 import { SubscriptionPlan, ConsultationPackage, UserProfile } from '../types';
@@ -15,13 +15,11 @@ interface LandingPageProps {
   onBook: (pkg: ConsultationPackage) => void;
   profile?: UserProfile | null;
   onGoToDashboard?: () => void;
-  onSignIn: () => void;
-  onSignOut: () => void;
 }
 
 console.log('LandingPage.tsx: Module evaluating...');
 
-export default function LandingPage({ onStart, onBook, profile, onGoToDashboard, onSignIn, onSignOut }: LandingPageProps) {
+export default function LandingPage({ onStart, onBook, profile, onGoToDashboard }: LandingPageProps) {
   return (
     <div className="min-h-screen bg-[#020617] text-slate-200 font-sans selection:bg-indigo-500/30 overflow-x-hidden">
 

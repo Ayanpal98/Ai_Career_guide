@@ -11,9 +11,8 @@ import ProfilePage from './components/ProfilePage';
 import { UserProfile, CareerRoadmap, SubscriptionPlan, ConsultationPackage } from './types';
 import { generateCareerRoadmap } from './services/gemini';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Loader2, LogOut, Zap } from 'lucide-react';
-import { auth, db, googleProvider } from './lib/firebase';
-import { onAuthStateChanged, signInWithPopup, signOut, User } from 'firebase/auth';
+import { Sparkles, Loader2, Zap } from 'lucide-react';
+import { db } from './lib/firebase';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { handleFirestoreError, OperationType } from './lib/firestoreErrorHandler';
 
@@ -21,11 +20,11 @@ console.log('App.tsx: Module evaluating...');
 
 export default function App() {
   console.log('App: Component function called');
-  const [user, setUser] = React.useState<User | null>(null);
-  const [isAuthReady, setIsAuthReady] = React.useState(false);
+  const [user, setUser] = React.useState<any>({ uid: 'guest-user', email: 'guest@example.com' });
+  const [isAuthReady, setIsAuthReady] = React.useState(true);
   
   React.useEffect(() => {
-    console.log('App: Mounted');
+    console.log('App: Guest mode active');
   }, []);
   const [showLanding, setShowLanding] = React.useState(true);
   const [selectedPlan, setSelectedPlan] = React.useState<SubscriptionPlan>('Basic');
@@ -41,91 +40,11 @@ export default function App() {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  // Auth State Listener
+  // Auth State Listener (Bypassed for Guest Mode)
   React.useEffect(() => {
-    console.log('App: Setting up auth listener...');
-    
-    // Safety timeout: if auth doesn't respond in 5s, force ready
-    const timer = setTimeout(() => {
-      if (!isAuthReady) {
-        console.warn('App: Auth listener timed out, forcing ready state');
-        setIsAuthReady(true);
-      }
-    }, 5000);
-
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      console.log('App: Auth state changed, user:', currentUser?.uid);
-      setUser(currentUser);
-      try {
-        if (currentUser) {
-          // Fetch profile and roadmap from Firestore
-          setLoading(true);
-          console.log('App: Fetching profile for', currentUser.uid);
-          const profileDoc = await getDoc(doc(db, 'users', currentUser.uid));
-          if (profileDoc.exists()) {
-            const profileData = profileDoc.data() as UserProfile;
-            setProfile(profileData);
-            console.log('App: Profile found');
-            
-            console.log('App: Fetching roadmap for', currentUser.uid);
-            const roadmapDoc = await getDoc(doc(db, 'roadmaps', currentUser.uid));
-            if (roadmapDoc.exists()) {
-              const roadmapData = roadmapDoc.data();
-              if (roadmapData && roadmapData.roadmap) {
-                setRoadmap(roadmapData.roadmap as CareerRoadmap);
-                setShowLanding(false);
-                console.log('App: Roadmap found');
-              } else {
-                console.warn('App: Roadmap document exists but roadmap data is missing');
-              }
-            }
-          }
-        } else {
-          setProfile(null);
-          setRoadmap(null);
-          setShowLanding(true);
-          console.log('App: No user logged in');
-        }
-      } catch (err) {
-        console.error('Initial auth data fetch error:', err);
-      } finally {
-        setLoading(false);
-        setIsAuthReady(true);
-        clearTimeout(timer);
-        console.log('App: Auth initialization complete');
-      }
-    });
-    return () => {
-      unsubscribe();
-      clearTimeout(timer);
-    };
+    console.log('App: Initializing in guest mode...');
+    setIsAuthReady(true);
   }, []);
-
-  const handleSignIn = async () => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-    } catch (err: any) {
-      if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-by-user') {
-        console.log('Sign in cancelled by user');
-        return;
-      }
-      if (err.code === 'auth/popup-blocked') {
-        setError('Sign in popup was blocked by your browser. Please allow popups for this site.');
-        return;
-      }
-      console.error('Sign in error:', err);
-      setError('Failed to sign in. Please try again.');
-    }
-  };
-
-  const handleSignOut = async () => {
-    try {
-      await signOut(auth);
-      setShowLanding(true);
-    } catch (err) {
-      console.error('Sign out error:', err);
-    }
-  };
 
   const handleOnboardingComplete = async (userProfile: UserProfile) => {
     if (!user) return;
@@ -356,13 +275,7 @@ export default function App() {
             <LandingPage 
               profile={profile}
               onGoToDashboard={() => setShowLanding(false)}
-              onSignIn={handleSignIn}
-              onSignOut={handleSignOut}
               onStart={(plan) => {
-                if (!user) {
-                  handleSignIn();
-                  return;
-                }
                 setSelectedPlan(plan);
                 setIsPaymentSuccess(false);
                 setShowLanding(false);
@@ -428,7 +341,6 @@ export default function App() {
               }}
               onEditProfile={() => setShowProfile(true)}
               onBook={(pkg) => setSelectedPackage(pkg)}
-              onSignOut={handleSignOut}
             />
           </motion.div>
         )}

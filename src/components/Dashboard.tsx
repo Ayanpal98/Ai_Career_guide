@@ -7,7 +7,7 @@ import {
   LayoutDashboard, Map as MapIcon, ListTodo, BarChart3, MessageSquare, Settings, 
   CheckCircle2, Circle, ChevronRight, Lock, Sparkles, Zap, Award, Target, TrendingUp,
   AlertTriangle, Calendar, ExternalLink, ArrowUpRight, Play, Clock, Send, Loader2, User,
-  Briefcase, Globe, Camera, HelpCircle, X, LogOut, Info, Newspaper, LineChart, ArrowRight
+  Briefcase, Globe, Camera, HelpCircle, X, Info, Newspaper, LineChart, ArrowRight
 } from 'lucide-react';
 
 interface DashboardProps {
@@ -18,7 +18,6 @@ interface DashboardProps {
   onBackToLanding: () => void;
   onEditProfile: () => void;
   onBook: (pkg: ConsultationPackage) => void;
-  onSignOut: () => void;
 }
 
 console.log('Dashboard.tsx: Module evaluating...');
@@ -30,8 +29,7 @@ export default function Dashboard({
   onUpdateProfile, 
   onBackToLanding, 
   onEditProfile, 
-  onBook,
-  onSignOut
+  onBook
 }: DashboardProps) {
   const [activeTab, setActiveTab] = React.useState<'overview' | 'roadmap' | 'tasks' | 'progress' | 'coach' | 'strategy'>('overview');
   const [roadmapView, setRoadmapView] = React.useState<'list' | 'timeline' | 'kanban'>('timeline');
@@ -148,13 +146,6 @@ export default function Dashboard({
         >
           <Settings size={20} />
           <span className="text-sm">Edit Profile</span>
-        </button>
-        <button
-          onClick={onSignOut}
-          className="flex items-center gap-4 px-5 py-3 rounded-2xl text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all group"
-        >
-          <LogOut size={20} className="group-hover:scale-110 transition-transform" />
-          <span className="text-sm">Sign Out</span>
         </button>
         <button
           onClick={onBackToLanding}
