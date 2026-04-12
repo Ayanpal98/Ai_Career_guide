@@ -11,7 +11,7 @@ import ProfilePage from './components/ProfilePage';
 import { UserProfile, CareerRoadmap, SubscriptionPlan, ConsultationPackage } from './types';
 import { generateCareerRoadmap } from './services/gemini';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Loader2, LogOut } from 'lucide-react';
+import { Sparkles, Loader2, LogOut, Zap } from 'lucide-react';
 import { auth, db, googleProvider } from './lib/firebase';
 import { onAuthStateChanged, signInWithPopup, signOut, User } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
@@ -207,15 +207,11 @@ export default function App() {
   if (!isAuthReady || loading) {
     console.log('App: Rendering loading screen...');
     return (
-      <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
-        {/* Background Glows */}
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/10 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 blur-[120px] rounded-full" />
-        
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-          className="mb-8 text-indigo-500"
+          className="mb-8 text-primary"
         >
           <Loader2 size={64} />
         </motion.div>
@@ -224,12 +220,12 @@ export default function App() {
           animate={{ opacity: 1, y: 0 }}
           className="space-y-4"
         >
-          <h1 className="text-4xl font-black text-white tracking-tight flex items-center justify-center gap-3">
-            <Sparkles className="text-indigo-400" />
-            Architecting Your Future
+          <h1 className="text-4xl font-black text-gray-900 tracking-tight flex items-center justify-center gap-3 font-display uppercase italic">
+            <Zap className="text-primary" fill="currentColor" />
+            INOTION
           </h1>
-          <p className="text-slate-400 text-lg max-w-md mx-auto leading-relaxed">
-            Career Engine Initializing...
+          <p className="text-gray-400 text-xs font-black uppercase tracking-[0.4em]">
+            Architecting Your Future
           </p>
         </motion.div>
       </div>
@@ -238,15 +234,18 @@ export default function App() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center p-6 text-center">
-        <div className="p-8 glass-card rounded-[3rem] border-red-500/20 max-w-md">
-          <h2 className="text-2xl font-black text-white mb-4">Something went wrong</h2>
-          <p className="text-slate-400 mb-8">{error}</p>
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 text-center">
+        <div className="p-8 bg-white rounded-[3rem] border border-red-100 max-w-md shadow-sm">
+          <h2 className="text-2xl font-black text-gray-900 mb-4 uppercase tracking-tight">System Breach</h2>
+          <p className="text-gray-500 mb-8 leading-relaxed">{error}</p>
           <button
-            onClick={() => setProfile(null)}
-            className="px-8 py-4 bg-indigo-500 text-white font-black rounded-2xl hover:scale-105 active:scale-95 transition-all"
+            onClick={() => {
+              setError(null);
+              setProfile(null);
+            }}
+            className="px-8 py-4 bg-primary text-white font-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20"
           >
-            Try Again
+            Reboot System
           </button>
         </div>
       </div>
@@ -255,7 +254,7 @@ export default function App() {
 
   console.log('App: Rendering main UI...');
   return (
-    <div className="min-h-screen bg-[#020617]">
+    <div className="min-h-screen bg-white">
       <AnimatePresence mode="wait">
         {selectedPackage ? (
           <motion.div

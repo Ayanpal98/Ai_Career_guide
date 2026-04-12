@@ -6,6 +6,14 @@
   --font-display: "Space Grotesk", sans-serif;
   --font-serif: "Playfair Display", serif;
   --font-mono: "JetBrains Mono", monospace;
+  
+  --color-primary: #F27D26; /* Coral/Orange accent from image */
+  --color-primary-hover: #E06C15;
+  --color-bg-light: #F8F9FA;
+  --color-card-bg: #FFFFFF;
+  --color-text-main: #1A1A1A;
+  --color-text-muted: #6B7280;
+
   --animate-bounce-slow: bounce-slow 3s ease-in-out infinite;
   --animate-glow: glow 2s ease-in-out infinite;
   --animate-slam-in: slamIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -39,74 +47,29 @@
 
   @keyframes glow {
     0%, 100% {
-      box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+      box-shadow: 0 0 20px rgba(242, 125, 38, 0.3);
     }
     50% {
-      box-shadow: 0 0 40px rgba(99, 102, 241, 0.6);
+      box-shadow: 0 0 40px rgba(242, 125, 38, 0.6);
     }
   }
-
-  @keyframes glow-purple {
-    0%, 100% {
-      box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
-    }
-    50% {
-      box-shadow: 0 0 40px rgba(168, 85, 247, 0.6);
-    }
-  }
-
-  @keyframes glow-amber {
-    0%, 100% {
-      box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
-    }
-    50% {
-      box-shadow: 0 0 40px rgba(245, 158, 11, 0.6);
-    }
-  }
-
-  --animate-glow-purple: glow-purple 2s ease-in-out infinite;
-  --animate-glow-amber: glow-amber 2s ease-in-out infinite;
 }
 
 @layer components {
   .glass {
-    @apply bg-linear-to-br from-white/[0.08] to-white/[0.01] backdrop-blur-2xl border border-white/[0.12] shadow-2xl;
-  }
-
-  .glass-dark {
-    @apply bg-linear-to-br from-black/40 to-black/10 backdrop-blur-3xl border border-white/[0.05] shadow-2xl;
+    @apply bg-white/80 backdrop-blur-xl border border-white/20 shadow-xl;
   }
 
   .glass-card {
-    @apply bg-linear-to-br from-white/[0.08] to-white/[0.01] backdrop-blur-2xl border border-white/[0.12] shadow-2xl hover:from-white/[0.12] hover:to-white/[0.04] hover:border-white/[0.2] transition-all duration-300;
+    @apply bg-white border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300;
   }
 
   .premium-border {
-    @apply relative border border-indigo-500/30 bg-indigo-500/[0.02] shadow-[0_0_40px_rgba(99,102,241,0.1)];
-  }
-
-  .premium-border::before {
-    content: '';
-    @apply absolute inset-0 rounded-[inherit] p-[1px] bg-gradient-to-br from-indigo-500/50 via-transparent to-purple-500/50 -z-10;
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask-composite: exclude;
-  }
-
-  .premium-glow {
-    @apply shadow-[0_0_20px_rgba(99,102,241,0.3)];
+    @apply relative border border-primary/30 bg-primary/[0.02] shadow-[0_0_40px_rgba(242,125,38,0.1)];
   }
 
   .text-3d {
-    text-shadow: 1px 1px 0px rgba(255,255,255,0.1), 2px 2px 0px rgba(0,0,0,0.2);
-  }
-
-  .text-3d-strong {
-    text-shadow: 
-      0 1px 0 #4f46e5,
-      0 2px 0 #4338ca,
-      0 3px 0 #3730a3,
-      0 4px 0 #312e81,
-      0 5px 10px rgba(0,0,0,0.4);
+    text-shadow: 1px 1px 0px rgba(0,0,0,0.05);
   }
 
   .card-3d {
@@ -115,16 +78,12 @@
   }
 
   .card-3d:hover {
-    transform: perspective(1000px) rotateX(4deg) rotateY(-4deg) translateZ(20px);
+    transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) translateZ(10px);
   }
-
-  .depth-1 { transform: translateZ(10px); }
-  .depth-2 { transform: translateZ(20px); }
-  .depth-3 { transform: translateZ(30px); }
 }
 
 body {
-  @apply bg-[#020617] text-slate-200 antialiased selection:bg-indigo-500/30;
+  @apply bg-white text-gray-900 antialiased selection:bg-primary/30;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
@@ -138,21 +97,9 @@ h1, h2, h3, h4, .font-display {
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-[#020617];
+  @apply bg-gray-50;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-800 rounded-full hover:bg-slate-700 transition-colors;
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  @apply bg-transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-white/10 rounded-full hover:bg-white/20 transition-colors;
+  @apply bg-gray-200 rounded-full hover:bg-gray-300 transition-colors;
 }

@@ -61,9 +61,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, onUpdate, onBack }) 
   const [activeSection, setActiveSection] = React.useState('personal');
 
   return (
-    <div className="min-h-screen bg-[#020617] text-white py-12 px-6 relative overflow-hidden">
+    <div className="min-h-screen bg-white text-gray-900 py-12 px-6 relative overflow-hidden">
       {/* Background Glows */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/5 blur-[120px] rounded-full" />
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 blur-[120px] rounded-full" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/5 blur-[120px] rounded-full" />
 
       <div className="max-w-5xl mx-auto relative z-10">
@@ -72,19 +72,19 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, onUpdate, onBack }) 
           <div className="flex items-center gap-6">
             <button 
               onClick={onBack}
-              className="p-3 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
+              className="p-3 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-all group"
             >
-              <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+              <ArrowLeft size={20} className="text-gray-600 group-hover:-translate-x-1 transition-transform" />
             </button>
             <div>
-              <h1 className="text-4xl font-black tracking-tight">{profile.fullName || 'User Profile'}</h1>
-              <p className="text-slate-500 text-sm font-bold uppercase tracking-widest mt-1">Manage your identity & career path</p>
+              <h1 className="text-4xl font-black tracking-tight text-gray-900">{profile.fullName || 'User Profile'}</h1>
+              <p className="text-gray-400 text-sm font-bold uppercase tracking-widest mt-1">Manage your identity & career path</p>
             </div>
           </div>
           <button
             onClick={handleSave}
             disabled={isSaving}
-            className="flex items-center gap-2 px-8 py-4 bg-indigo-500 text-white font-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-indigo-500/20 disabled:opacity-50 disabled:scale-100"
+            className="flex items-center gap-2 px-8 py-4 bg-primary text-white font-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20 disabled:opacity-50 disabled:scale-100"
           >
             {isSaving ? (
               <motion.div
@@ -109,8 +109,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, onUpdate, onBack }) 
                 onClick={() => setActiveSection(section.id)}
                 className={`w-full flex items-center gap-3 px-6 py-4 rounded-2xl font-bold transition-all ${
                   activeSection === section.id 
-                    ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' 
-                    : 'text-slate-500 hover:bg-white/5 hover:text-slate-300'
+                    ? 'bg-primary/10 text-primary border border-primary/20' 
+                    : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600'
                 }`}
               >
                 {section.icon}
@@ -121,7 +121,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, onUpdate, onBack }) 
 
           {/* Main Content Area */}
           <div className="lg:col-span-9">
-            <div className="glass-card p-10 rounded-[3rem] border-white/5">
+            <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm">
               {activeSection === 'personal' && (
                 <motion.div 
                   initial={{ opacity: 0, y: 10 }}
@@ -130,11 +130,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, onUpdate, onBack }) 
                 >
                   <div className="flex items-center gap-8">
                     <div className="relative group">
-                      <div className="w-32 h-32 rounded-[2.5rem] overflow-hidden bg-white/5 border-2 border-white/10 flex items-center justify-center relative">
+                      <div className="w-32 h-32 rounded-[2.5rem] overflow-hidden bg-gray-50 border-2 border-gray-100 flex items-center justify-center relative">
                         {editedProfile.avatar ? (
                           <img src={editedProfile.avatar} alt="Avatar" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                         ) : (
-                          <User size={48} className="text-slate-600" />
+                          <User size={48} className="text-gray-300" />
                         )}
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <Camera size={28} className="text-white" />
@@ -148,8 +148,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, onUpdate, onBack }) 
                       />
                     </div>
                     <div>
-                      <h3 className="text-xl font-black mb-2">Profile Picture</h3>
-                      <p className="text-slate-500 text-sm leading-relaxed max-w-xs">
+                      <h3 className="text-xl font-black mb-2 text-gray-900">Profile Picture</h3>
+                      <p className="text-gray-500 text-sm leading-relaxed max-w-xs">
                         Upload a professional photo to personalize your dashboard and reports.
                       </p>
                     </div>
@@ -157,7 +157,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, onUpdate, onBack }) 
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-3">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                      <label className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
                         <User size={14} /> Full Name
                       </label>
                       <input
@@ -165,11 +165,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, onUpdate, onBack }) 
                         value={editedProfile.fullName || ''}
                         onChange={e => setEditedProfile({ ...editedProfile, fullName: e.target.value })}
                         placeholder="John Doe"
-                        className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 px-6 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                       />
                     </div>
                     <div className="space-y-3">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                      <label className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
                         <Mail size={14} /> Email Address
                       </label>
                       <input
@@ -177,7 +177,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, onUpdate, onBack }) 
                         value={editedProfile.email || ''}
                         onChange={e => setEditedProfile({ ...editedProfile, email: e.target.value })}
                         placeholder="john@example.com"
-                        className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 px-6 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                       />
                     </div>
                   </div>
@@ -191,26 +191,26 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, onUpdate, onBack }) 
                   className="space-y-8"
                 >
                   <div className="space-y-3">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                    <label className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
                       <Briefcase size={14} /> Primary Career Goal
                     </label>
                     <input
                       type="text"
                       value={editedProfile.careerGoal}
                       onChange={e => setEditedProfile({ ...editedProfile, careerGoal: e.target.value })}
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 px-6 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-3">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                      <label className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
                         <Target size={14} /> Current Level
                       </label>
                       <select
                         value={editedProfile.level}
                         onChange={e => setEditedProfile({ ...editedProfile, level: e.target.value as any })}
-                        className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all appearance-none"
+                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 px-6 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary transition-all appearance-none"
                       >
                         <option value="Beginner">Beginner</option>
                         <option value="Intermediate">Intermediate</option>
@@ -218,13 +218,13 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, onUpdate, onBack }) 
                       </select>
                     </div>
                     <div className="space-y-3">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                      <label className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
                         <Clock size={14} /> Target Timeline
                       </label>
                       <select
                         value={editedProfile.timeline}
                         onChange={e => setEditedProfile({ ...editedProfile, timeline: e.target.value as any })}
-                        className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all appearance-none"
+                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 px-6 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary transition-all appearance-none"
                       >
                         <option value="3 months">3 months</option>
                         <option value="6 months">6 months</option>
@@ -235,25 +235,25 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, onUpdate, onBack }) 
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-3">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                      <label className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
                         <Clock size={14} /> Daily Availability
                       </label>
                       <input
                         type="text"
                         value={editedProfile.hoursPerDay}
                         onChange={e => setEditedProfile({ ...editedProfile, hoursPerDay: e.target.value })}
-                        className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 px-6 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                       />
                     </div>
                     <div className="space-y-3">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                      <label className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
                         <ShieldAlert size={14} /> Constraints
                       </label>
                       <input
                         type="text"
                         value={editedProfile.constraints}
                         onChange={e => setEditedProfile({ ...editedProfile, constraints: e.target.value })}
-                        className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 px-6 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                       />
                     </div>
                   </div>
@@ -267,7 +267,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, onUpdate, onBack }) 
                   className="space-y-8"
                 >
                   <div className="space-y-3">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                    <label className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
                       <Building2 size={14} /> Target Industry
                     </label>
                     <input
@@ -275,19 +275,19 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, onUpdate, onBack }) 
                       value={editedProfile.targetIndustry || ''}
                       onChange={e => setEditedProfile({ ...editedProfile, targetIndustry: e.target.value })}
                       placeholder="e.g. FinTech, Healthcare, E-commerce"
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 px-6 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-3">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                      <label className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
                         <Globe size={14} /> Work Style
                       </label>
                       <select
                         value={editedProfile.workStyle || 'Remote'}
                         onChange={e => setEditedProfile({ ...editedProfile, workStyle: e.target.value as any })}
-                        className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all appearance-none"
+                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 px-6 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary transition-all appearance-none"
                       >
                         <option value="Remote">Remote</option>
                         <option value="Hybrid">Hybrid</option>
@@ -295,7 +295,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, onUpdate, onBack }) 
                       </select>
                     </div>
                     <div className="space-y-3">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                      <label className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
                         <IndianRupee size={14} /> Salary Expectation (Annual)
                       </label>
                       <input
@@ -303,7 +303,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, onUpdate, onBack }) 
                         value={editedProfile.salaryExpectation || ''}
                         onChange={e => setEditedProfile({ ...editedProfile, salaryExpectation: e.target.value })}
                         placeholder="e.g. ₹12,00,000 - ₹15,00,000"
-                        className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 px-6 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                       />
                     </div>
                   </div>
@@ -317,26 +317,26 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, onUpdate, onBack }) 
                   className="space-y-8"
                 >
                   <div className="space-y-3">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                    <label className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
                       <Wrench size={14} /> Current Skills (comma separated)
                     </label>
                     <textarea
                       value={editedProfile.currentSkills}
                       onChange={e => setEditedProfile({ ...editedProfile, currentSkills: e.target.value })}
                       rows={4}
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all resize-none"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 px-6 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary transition-all resize-none"
                     />
                   </div>
 
                   <div className="space-y-3">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                    <label className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
                       <GraduationCap size={14} /> Highest Education
                     </label>
                     <input
                       type="text"
                       value={editedProfile.education}
                       onChange={e => setEditedProfile({ ...editedProfile, education: e.target.value })}
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 px-6 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                     />
                   </div>
                 </motion.div>
@@ -347,7 +347,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ profile, onUpdate, onBack }) 
 
         {/* Branding */}
         <div className="mt-20 text-center">
-          <p className="text-slate-600 text-[10px] font-bold uppercase tracking-[0.5em]">
+          <p className="text-gray-400 text-[10px] font-bold uppercase tracking-[0.5em]">
             Built BY ATSFY Technologies
           </p>
         </div>

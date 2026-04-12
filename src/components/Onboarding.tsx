@@ -61,7 +61,7 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
         return (
           <textarea
             autoFocus
-            className="w-full bg-slate-900/50 border border-slate-800 rounded-2xl p-6 text-xl text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+            className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-6 text-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
             placeholder="e.g. Senior Full Stack Developer at a top tech company..."
             value={formData.careerGoal || ''}
             onChange={e => updateField('careerGoal', e.target.value)}
@@ -76,8 +76,8 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
                 onClick={() => updateField('level', level)}
                 className={`p-6 rounded-2xl border transition-all text-left ${
                   formData.level === level
-                    ? 'bg-indigo-500/10 border-indigo-500 text-white'
-                    : 'bg-slate-900/50 border-slate-800 text-slate-400 hover:border-slate-700'
+                    ? 'bg-primary/10 border-primary text-primary'
+                    : 'bg-gray-50 border-gray-100 text-gray-400 hover:border-gray-200'
                 }`}
               >
                 <div className="font-bold text-lg mb-1">{level}</div>
@@ -94,7 +94,7 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
         return (
           <textarea
             autoFocus
-            className="w-full bg-slate-900/50 border border-slate-800 rounded-2xl p-6 text-xl text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+            className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-6 text-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
             placeholder="e.g. JavaScript, React, Python, Communication..."
             value={formData.currentSkills || ''}
             onChange={e => updateField('currentSkills', e.target.value)}
@@ -104,7 +104,7 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
         return (
           <textarea
             autoFocus
-            className="w-full bg-slate-900/50 border border-slate-800 rounded-2xl p-6 text-xl text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+            className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-6 text-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
             placeholder="e.g. B.Tech in Computer Science, Self-taught..."
             value={formData.education || ''}
             onChange={e => updateField('education', e.target.value)}
@@ -115,7 +115,7 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
           <input
             type="number"
             autoFocus
-            className="w-full bg-slate-900/50 border border-slate-800 rounded-2xl p-6 text-xl text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+            className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-6 text-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
             placeholder="Hours per day (e.g. 4)"
             value={formData.hoursPerDay || ''}
             onChange={e => updateField('hoursPerDay', e.target.value)}
@@ -130,8 +130,8 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
                 onClick={() => updateField('timeline', time)}
                 className={`p-6 rounded-2xl border transition-all text-left ${
                   formData.timeline === time
-                    ? 'bg-indigo-500/10 border-indigo-500 text-white'
-                    : 'bg-slate-900/50 border-slate-800 text-slate-400 hover:border-slate-700'
+                    ? 'bg-primary/10 border-primary text-primary'
+                    : 'bg-gray-50 border-gray-100 text-gray-400 hover:border-gray-200'
                 }`}
               >
                 <div className="font-bold text-lg mb-1">{time}</div>
@@ -143,7 +143,7 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
         return (
           <textarea
             autoFocus
-            className="w-full bg-slate-900/50 border border-slate-800 rounded-2xl p-6 text-xl text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+            className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-6 text-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
             placeholder="e.g. Limited budget for courses, working full-time..."
             value={formData.constraints || ''}
             onChange={e => updateField('constraints', e.target.value)}
@@ -153,8 +153,8 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
         return (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { id: 'Basic', price: '₹0', features: ['Basic roadmap', 'Limited features', 'Locked advanced sections'], color: 'slate' },
-              { id: 'Pro', price: '₹999', features: ['Personalized roadmap', 'Weekly plans', 'Project suggestions', 'Resume guidance'], color: 'indigo' },
+              { id: 'Basic', price: '₹0', features: ['Basic roadmap', 'Limited features', 'Locked advanced sections'], color: 'gray' },
+              { id: 'Pro', price: '₹999', features: ['Personalized roadmap', 'Weekly plans', 'Project suggestions', 'Resume guidance'], color: 'primary' },
               { id: 'Premium', price: '₹4999', features: ['Deep career strategy', 'Interview preparation', 'Networking plan', 'AI coach fully unlocked'], color: 'purple' },
             ].map(plan => (
               <button
@@ -162,23 +162,23 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
                 onClick={() => updateField('plan', plan.id)}
                 className={`p-10 rounded-[2.5rem] border transition-all text-left relative overflow-hidden group ${
                   formData.plan === plan.id
-                    ? `bg-${plan.color}-500/10 border-${plan.color}-500 shadow-2xl shadow-${plan.color}-500/20`
-                    : 'bg-slate-900/30 border-white/5 text-slate-400 hover:border-white/10'
+                    ? `bg-${plan.color === 'primary' ? 'primary' : plan.color}-500/10 border-${plan.color === 'primary' ? 'primary' : plan.color}-500 shadow-2xl shadow-${plan.color === 'primary' ? 'primary' : plan.color}-500/20`
+                    : 'bg-gray-50 border-gray-100 text-gray-400 hover:border-gray-200'
                 }`}
               >
                 {formData.plan === plan.id && (
                   <motion.div
                     layoutId="plan-glow"
-                    className={`absolute inset-0 bg-gradient-to-br from-${plan.color}-500/10 to-transparent pointer-events-none`}
+                    className={`absolute inset-0 bg-gradient-to-br from-${plan.color === 'primary' ? 'primary' : plan.color}-500/10 to-transparent pointer-events-none`}
                   />
                 )}
                 <div className="relative z-10">
                   <div className="text-[10px] font-black uppercase tracking-[0.3em] mb-4 opacity-60 font-mono">{plan.id}</div>
-                  <div className="text-4xl font-black mb-8 text-white tracking-tighter font-mono">{plan.price}</div>
+                  <div className="text-4xl font-black mb-8 text-gray-900 tracking-tighter font-mono">{plan.price}</div>
                   <ul className="space-y-4">
                     {plan.features.map((f, i) => (
                       <li key={i} className="text-xs font-medium flex items-start gap-3 leading-relaxed">
-                        <div className={`mt-1.5 w-1.5 h-1.5 rounded-full bg-${plan.color}-500 shrink-0`} />
+                        <div className={`mt-1.5 w-1.5 h-1.5 rounded-full bg-${plan.color === 'primary' ? 'primary' : plan.color}-500 shrink-0`} />
                         {f}
                       </li>
                     ))}
@@ -204,19 +204,15 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
   };
 
   return (
-    <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center p-6 relative overflow-hidden">
-      {/* Background Glows */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/10 blur-[120px] rounded-full" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 blur-[120px] rounded-full" />
-
-      <div className="max-w-4xl w-full glass p-12 md:p-20 rounded-[4rem] border-white/5 relative z-10 shadow-2xl card-3d">
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      <div className="max-w-4xl w-full bg-white p-12 md:p-20 rounded-[4rem] border border-gray-100 relative z-10 shadow-sm card-3d">
         {/* Progress Bar */}
         <div className="mb-16 flex gap-3">
           {steps.map((_, i) => (
             <div
               key={i}
               className={`h-1 flex-1 rounded-full transition-all duration-700 ${
-                i <= currentStep ? 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.6)]' : 'bg-slate-800/50'
+                i <= currentStep ? 'bg-primary shadow-[0_0_15px_rgba(242,125,38,0.3)]' : 'bg-gray-100'
               }`}
             />
           ))}
@@ -232,16 +228,16 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
             className="space-y-10"
           >
             <div className="space-y-4">
-              <div className="flex items-center gap-3 text-indigo-400 mb-6">
-                <div className="p-2 rounded-xl bg-indigo-500/10">
+              <div className="flex items-center gap-3 text-primary mb-6">
+                <div className="p-2 rounded-xl bg-primary/10">
                   {React.createElement(steps[currentStep].icon, { size: 20 })}
                 </div>
                 <span className="text-[10px] font-black uppercase tracking-[0.4em] font-mono">Step {currentStep + 1} / {steps.length}</span>
               </div>
-              <h1 className="text-5xl md:text-6xl font-black text-white tracking-tighter leading-[0.9] font-serif italic text-3d depth-1">
+              <h1 className="text-5xl md:text-6xl font-black text-gray-900 tracking-tighter leading-[0.9] font-display uppercase italic text-3d depth-1">
                 {steps[currentStep].title}
               </h1>
-              <p className="text-slate-400 text-xl max-w-xl font-medium opacity-80">
+              <p className="text-gray-500 text-xl max-w-xl font-medium opacity-80">
                 {steps[currentStep].description}
               </p>
             </div>
@@ -250,10 +246,10 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
               {renderStepContent()}
             </div>
 
-            <div className="flex items-center justify-between pt-8 border-t border-slate-800/50">
+            <div className="flex items-center justify-between pt-8 border-t border-gray-100">
               <button
                 onClick={handleBack}
-                className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all text-slate-400 hover:text-white hover:bg-white/5"
+                className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all text-gray-400 hover:text-gray-900 hover:bg-gray-50"
               >
                 <ChevronLeft size={20} />
                 {currentStep === 0 ? 'Back to Home' : 'Back'}
@@ -263,8 +259,8 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
                 onClick={handleNext}
                 className={`flex items-center gap-2 px-8 py-4 rounded-2xl font-bold transition-all ${
                   canContinue()
-                    ? 'bg-indigo-500 text-white shadow-xl shadow-indigo-500/20 hover:scale-105 active:scale-95'
-                    : 'bg-slate-800 text-slate-500 cursor-not-allowed'
+                    ? 'bg-primary text-white shadow-xl shadow-primary/20 hover:scale-105 active:scale-95'
+                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 }`}
               >
                 {currentStep === steps.length - 1 ? 'Generate Roadmap' : 'Continue'}

@@ -88,25 +88,25 @@ export default function Dashboard({
   const isPremium = roadmap.plan === 'Premium';
 
   const renderSidebar = () => (
-    <nav className="fixed left-0 top-0 bottom-0 w-72 glass-dark border-r border-white/5 p-8 flex flex-col gap-8 z-50">
-      <div className="flex items-center gap-3 text-white font-black text-2xl tracking-tighter mb-4 font-display uppercase">
-        <div className="p-2 rounded-xl bg-indigo-500 shadow-lg shadow-indigo-500/20">
+    <nav className="fixed left-0 top-0 bottom-0 w-72 bg-white border-r border-gray-100 p-8 flex flex-col gap-8 z-50">
+      <div className="flex items-center gap-3 text-gray-900 font-black text-2xl tracking-tighter mb-4 font-display uppercase">
+        <div className="p-2 rounded-xl bg-primary shadow-lg shadow-primary/20 text-white">
           <Zap size={24} />
         </div>
-        Career Path
+        INOTION
       </div>
 
-      <div className="flex items-center gap-4 p-4 rounded-3xl bg-white/5 border border-white/5 mb-4">
-        <div className="w-12 h-12 rounded-2xl overflow-hidden bg-indigo-500/20 flex items-center justify-center shrink-0 border border-white/10">
+      <div className="flex items-center gap-4 p-4 rounded-3xl bg-gray-50 border border-gray-100 mb-4">
+        <div className="w-12 h-12 rounded-2xl overflow-hidden bg-primary/10 flex items-center justify-center shrink-0 border border-primary/20">
           {profile.avatar ? (
             <img src={profile.avatar} alt="Avatar" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
           ) : (
-            <User size={24} className="text-indigo-400" />
+            <User size={24} className="text-primary" />
           )}
         </div>
         <div className="min-w-0">
-          <div className="text-sm font-black text-white truncate">{profile.fullName || 'User Profile'}</div>
-          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest truncate">{profile.email || profile.level}</div>
+          <div className="text-sm font-black text-gray-900 truncate">{profile.fullName || 'User Profile'}</div>
+          <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest truncate">{profile.email || profile.level}</div>
         </div>
       </div>
 
@@ -124,41 +124,41 @@ export default function Dashboard({
             onClick={() => !item.locked && setActiveTab(item.id as any)}
             className={`flex items-center gap-4 px-5 py-4 rounded-2xl transition-all relative group ${
               activeTab === item.id
-                ? 'bg-white/5 text-white font-bold'
-                : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
+                ? 'bg-primary/10 text-primary font-bold'
+                : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
             } ${item.locked ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            <item.icon size={20} className={activeTab === item.id ? 'text-indigo-400' : ''} />
+            <item.icon size={20} className={activeTab === item.id ? 'text-primary' : ''} />
             <span className="text-sm">{item.label}</span>
             {item.locked && <Lock size={14} className="ml-auto" />}
             {activeTab === item.id && (
               <motion.div
                 layoutId="active-nav"
-                className="absolute left-0 w-1 h-6 bg-indigo-500 rounded-full"
+                className="absolute left-0 w-1 h-6 bg-primary rounded-full"
               />
             )}
           </button>
         ))}
       </div>
 
-      <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-white/5">
+      <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-gray-100">
         <button
           onClick={onEditProfile}
-          className="flex items-center gap-4 px-5 py-3 rounded-2xl text-slate-500 hover:text-slate-300 hover:bg-white/5 transition-all"
+          className="flex items-center gap-4 px-5 py-3 rounded-2xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-all"
         >
           <Settings size={20} />
           <span className="text-sm">Edit Profile</span>
         </button>
         <button
           onClick={onSignOut}
-          className="flex items-center gap-4 px-5 py-3 rounded-2xl text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all group"
+          className="flex items-center gap-4 px-5 py-3 rounded-2xl text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all group"
         >
           <LogOut size={20} className="group-hover:scale-110 transition-transform" />
           <span className="text-sm">Sign Out</span>
         </button>
         <button
           onClick={onBackToLanding}
-          className="flex items-center gap-4 px-5 py-3 rounded-2xl text-slate-500 hover:text-slate-300 hover:bg-white/5 transition-all"
+          className="flex items-center gap-4 px-5 py-3 rounded-2xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-all"
         >
           <ExternalLink size={20} />
           <span className="text-sm">Exit to Home</span>
@@ -166,7 +166,7 @@ export default function Dashboard({
       </div>
 
       <div className="mt-auto">
-        <div className="p-6 rounded-3xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white relative overflow-hidden group">
+        <div className="p-6 rounded-3xl bg-primary text-white relative overflow-hidden group">
           <div className="absolute -right-4 -top-4 opacity-10 group-hover:scale-110 transition-transform">
             <Sparkles size={120} />
           </div>
@@ -175,16 +175,10 @@ export default function Dashboard({
             <div className="text-lg font-black mb-4">Upgrade for 1:1 Coaching</div>
             <button 
               onClick={onBackToLanding}
-              className="w-full py-3 bg-white text-indigo-600 rounded-xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all"
+              className="w-full py-3 bg-white text-primary rounded-xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all"
             >
               View Plans
             </button>
-            <div className="mt-4 text-[10px] font-bold text-white/60 text-center">
-              UPI: <span className="text-white select-all cursor-pointer">8798610548@ybl</span>
-            </div>
-            <div className="mt-6 pt-6 border-t border-white/10 text-[8px] font-bold text-white/40 text-center uppercase tracking-widest">
-              Built BY ATSFY Technologies
-            </div>
           </div>
         </div>
       </div>
@@ -194,37 +188,37 @@ export default function Dashboard({
   const renderHeader = () => (
     <header className="mb-12 flex flex-col lg:flex-row lg:items-end justify-between gap-8">
       <div className="space-y-3">
-        <div className="flex items-center gap-2 text-indigo-400 font-black text-xs uppercase tracking-[0.3em]">
-          <div className="w-8 h-[1px] bg-indigo-500" />
+        <div className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-[0.3em]">
+          <div className="w-8 h-[1px] bg-primary" />
           Executive Dashboard
         </div>
-        <h1 className="text-5xl lg:text-7xl font-black text-white tracking-tighter leading-[0.85] font-serif italic text-3d">
+        <h1 className="text-5xl lg:text-7xl font-black text-gray-900 tracking-tighter leading-[0.85] font-display uppercase italic text-3d">
           Welcome back, <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 not-italic">
+          <span className="text-primary not-italic">
             {profile.fullName?.split(' ')[0] || 'Architect'}
           </span>
         </h1>
-        <p className="text-slate-400 text-lg max-w-2xl font-medium leading-relaxed">{roadmap.summary}</p>
+        <p className="text-gray-500 text-lg max-w-2xl font-medium leading-relaxed">{roadmap.summary}</p>
       </div>
       
-      <div className="glass-card p-8 rounded-[2.5rem] min-w-[320px] relative overflow-hidden border-white/5 bg-white/[0.02]">
+      <div className="bg-white p-8 rounded-[2.5rem] min-w-[320px] relative overflow-hidden border border-gray-100 shadow-sm">
         <div className="flex items-center justify-between mb-4">
-          <span className="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">System Velocity</span>
-          <span className="text-3xl font-black text-white">{progress}%</span>
+          <span className="text-xs font-black text-gray-400 uppercase tracking-[0.2em]">System Velocity</span>
+          <span className="text-3xl font-black text-gray-900">{progress}%</span>
         </div>
-        <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
-            className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
+            className="h-full bg-primary"
           />
         </div>
         <div className="mt-6 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-[10px] font-black text-indigo-400 uppercase tracking-widest">
+          <div className="flex items-center gap-2 text-[10px] font-black text-primary uppercase tracking-widest">
             <TrendingUp size={14} />
             <span>Optimal Growth</span>
           </div>
-          <div className="text-[10px] font-black text-slate-600 uppercase tracking-widest">
+          <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
             {roadmap.plan} Tier
           </div>
         </div>
@@ -237,20 +231,20 @@ export default function Dashboard({
       {/* Top Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {[
-          { label: 'Overall Progress', value: `${progress}%`, icon: TrendingUp, color: 'indigo' },
+          { label: 'Overall Progress', value: `${progress}%`, icon: TrendingUp, color: 'primary' },
           { label: 'Tasks Completed', value: `${Object.values(completedTasks).filter(Boolean).length}/${roadmap.phases.reduce((acc, p) => acc + p.tasks.length, 0)}`, icon: CheckCircle2, color: 'emerald' },
           { label: 'Market Demand', value: 'High', icon: LineChart, color: 'amber' },
           { label: 'Current Level', value: profile.level, icon: Award, color: 'purple' },
         ].map((stat, i) => (
-          <div key={i} className="glass-card p-8 rounded-[2rem] border-white/5 group transition-all bg-white/[0.01] relative overflow-hidden card-3d">
+          <div key={i} className="bg-white p-8 rounded-[2rem] border border-gray-100 group transition-all relative overflow-hidden card-3d shadow-sm hover:shadow-md">
             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity depth-2">
               <stat.icon size={64} />
             </div>
-            <div className={`w-10 h-10 rounded-xl bg-${stat.color}-500/10 flex items-center justify-center mb-6 depth-2`}>
-              <stat.icon className={`text-${stat.color}-400`} size={20} />
+            <div className={`w-10 h-10 rounded-xl bg-${stat.color === 'primary' ? 'primary' : stat.color}-500/10 flex items-center justify-center mb-6 depth-2`}>
+              <stat.icon className={`text-${stat.color === 'primary' ? 'primary' : stat.color}-500`} size={20} />
             </div>
-            <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-2 font-mono depth-1">{stat.label}</div>
-            <div className="text-4xl font-black text-white font-mono tracking-tighter depth-1">{stat.value}</div>
+            <div className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-2 font-mono depth-1">{stat.label}</div>
+            <div className="text-4xl font-black text-gray-900 font-mono tracking-tighter depth-1">{stat.value}</div>
           </div>
         ))}
       </div>
@@ -258,36 +252,36 @@ export default function Dashboard({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         {/* Main Roadmap Preview */}
         <div className="lg:col-span-8 space-y-10">
-          <div className="glass-card p-10 rounded-[3rem] border-white/5 relative overflow-hidden bg-white/[0.01] card-3d">
+          <div className="bg-white p-10 rounded-[3rem] border border-gray-100 relative overflow-hidden card-3d shadow-sm hover:shadow-md">
             <div className="absolute top-0 right-0 p-12 opacity-5 depth-3">
               <MapIcon size={200} />
             </div>
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-10">
                 <div className="depth-1">
-                  <h3 className="text-3xl font-black text-white mb-3 tracking-tight">Roadmap Velocity</h3>
-                  <p className="text-slate-400 text-lg font-medium">You are currently on track to reach your goal in {profile.timeline}.</p>
+                  <h3 className="text-3xl font-black text-gray-900 mb-3 tracking-tight">Roadmap Velocity</h3>
+                  <p className="text-gray-500 text-lg font-medium">You are currently on track to reach your goal in {profile.timeline}.</p>
                 </div>
                 <button 
                   onClick={() => setActiveTab('roadmap')}
-                  className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-all border border-white/10 depth-2"
+                  className="p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-all border border-gray-100 depth-2"
                 >
-                  <ArrowUpRight size={24} />
+                  <ArrowUpRight size={24} className="text-gray-900" />
                 </button>
               </div>
               
               <div className="space-y-6 depth-1">
                 {roadmap.phases.slice(0, 2).map((phase, i) => (
-                  <div key={i} className="p-8 rounded-[2rem] bg-white/[0.03] border border-white/5 flex items-center gap-8 group hover:bg-white/[0.05] transition-all">
-                    <div className="w-16 h-16 rounded-2xl bg-indigo-500/20 flex items-center justify-center shrink-0 font-black text-2xl text-indigo-400">
+                  <div key={i} className="p-8 rounded-[2rem] bg-gray-50 border border-gray-100 flex items-center gap-8 group hover:bg-gray-100 transition-all">
+                    <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 font-black text-2xl text-primary">
                       0{i + 1}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-xl text-white font-black mb-2 truncate">{phase.title}</div>
-                      <div className="text-sm text-slate-500 font-bold uppercase tracking-widest">{phase.tasks.length} strategic milestones</div>
+                      <div className="text-xl text-gray-900 font-black mb-2 truncate">{phase.title}</div>
+                      <div className="text-sm text-gray-400 font-bold uppercase tracking-widest">{phase.tasks.length} strategic milestones</div>
                     </div>
-                    <div className="hidden md:block w-40 h-2 bg-white/5 rounded-full overflow-hidden">
-                      <div className="h-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]" style={{ width: '40%' }} />
+                    <div className="hidden md:block w-40 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-full bg-primary" style={{ width: '40%' }} />
                     </div>
                   </div>
                 ))}
@@ -297,12 +291,12 @@ export default function Dashboard({
 
           {/* Market Insights */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            <div className="glass-card p-10 rounded-[3rem] border-white/5 bg-white/[0.01]">
+            <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm hover:shadow-md card-3d">
               <div className="flex items-center gap-4 mb-8">
-                <div className="p-3 rounded-2xl bg-amber-500/20">
-                  <Newspaper className="text-amber-400" size={24} />
+                <div className="p-3 rounded-2xl bg-amber-500/10">
+                  <Newspaper className="text-amber-500" size={24} />
                 </div>
-                <h4 className="text-xl font-black text-white tracking-tight">Market Intelligence</h4>
+                <h4 className="text-xl font-black text-gray-900 tracking-tight">Market Intelligence</h4>
               </div>
               <div className="space-y-6">
                 {[
@@ -310,28 +304,28 @@ export default function Dashboard({
                   'AI integration skills are now a top priority for recruiters.',
                   'Remote roles in your target industry have stabilized.'
                 ].map((insight, i) => (
-                  <div key={i} className="flex gap-4 text-slate-400 leading-relaxed font-medium">
-                    <div className="mt-2 w-2 h-2 rounded-full bg-amber-500 shrink-0 shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
+                  <div key={i} className="flex gap-4 text-gray-500 leading-relaxed font-medium">
+                    <div className="mt-2 w-2 h-2 rounded-full bg-amber-500 shrink-0 shadow-[0_0_10px_rgba(245,158,11,0.3)]" />
                     {insight}
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="glass-card p-10 rounded-[3rem] border-white/5 bg-white/[0.01]">
+            <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm hover:shadow-md card-3d">
               <div className="flex items-center gap-4 mb-8">
-                <div className="p-3 rounded-2xl bg-purple-500/20">
-                  <Info className="text-purple-400" size={24} />
+                <div className="p-3 rounded-2xl bg-purple-500/10">
+                  <Info className="text-purple-500" size={24} />
                 </div>
-                <h4 className="text-xl font-black text-white tracking-tight">Next Milestone</h4>
+                <h4 className="text-xl font-black text-gray-900 tracking-tight">Next Milestone</h4>
               </div>
-              <div className="p-8 rounded-[2rem] bg-purple-500/10 border border-purple-500/20 relative overflow-hidden group">
+              <div className="p-8 rounded-[2rem] bg-purple-50 border border-purple-100 relative overflow-hidden group">
                 <div className="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform">
                   <Target size={100} />
                 </div>
                 <div className="relative z-10">
                   <div className="text-xs font-black text-purple-400 uppercase tracking-[0.3em] mb-4">Priority Execution</div>
-                  <div className="text-2xl font-black text-white mb-8 leading-tight">{roadmap.phases[0].tasks[0]}</div>
+                  <div className="text-2xl font-black text-gray-900 mb-8 leading-tight">{roadmap.phases[0].tasks[0]}</div>
                   <button 
                     onClick={() => setActiveTab('tasks')}
                     className="w-full py-5 bg-purple-500 text-white font-black rounded-2xl text-sm hover:scale-105 transition-all shadow-xl shadow-purple-500/20"
@@ -346,35 +340,35 @@ export default function Dashboard({
 
         {/* Skills Radar & Profile Stats */}
         <div className="lg:col-span-4 space-y-10">
-          <div className="glass-card p-10 rounded-[3rem] border-white/5 bg-white/[0.01]">
-            <h4 className="text-xl font-black text-white mb-8 tracking-tight">Skills Architecture</h4>
+          <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm hover:shadow-md card-3d">
+            <h4 className="text-xl font-black text-gray-900 mb-8 tracking-tight">Skills Architecture</h4>
             <div className="py-4">
               <SkillsRadar />
             </div>
-            <div className="mt-8 pt-8 border-t border-white/5 grid grid-cols-2 gap-6">
+            <div className="mt-8 pt-8 border-t border-gray-100 grid grid-cols-2 gap-6">
               <div className="text-center">
-                <div className="text-3xl font-black text-white">84</div>
-                <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Skill Score</div>
+                <div className="text-3xl font-black text-gray-900">84</div>
+                <div className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Skill Score</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-black text-indigo-400">+12%</div>
-                <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Growth</div>
+                <div className="text-3xl font-black text-primary">+12%</div>
+                <div className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Growth</div>
               </div>
             </div>
           </div>
 
-          <div className="glass-card p-10 rounded-[3rem] border-white/5 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 relative overflow-hidden group">
+          <div className="bg-white p-10 rounded-[3rem] border border-gray-100 bg-gradient-to-br from-primary/5 to-purple-500/5 relative overflow-hidden group shadow-sm hover:shadow-md card-3d">
             <div className="absolute -right-8 -top-8 opacity-5 group-hover:scale-110 transition-transform">
               <MessageSquare size={160} />
             </div>
             <div className="relative z-10">
-              <h4 className="text-xl font-black text-white mb-4 tracking-tight">AI Coach Tip</h4>
-              <p className="text-slate-400 leading-relaxed mb-8 font-medium">
+              <h4 className="text-xl font-black text-gray-900 mb-4 tracking-tight">AI Coach Tip</h4>
+              <p className="text-gray-500 leading-relaxed mb-8 font-medium">
                 "Based on your progress, I recommend focusing on the 'System Design' module next. It's a key requirement for the roles you're targeting."
               </p>
               <button 
                 onClick={() => setActiveTab('coach')}
-                className="flex items-center gap-3 text-indigo-400 font-black text-sm hover:gap-5 transition-all uppercase tracking-widest"
+                className="flex items-center gap-3 text-primary font-black text-sm hover:gap-5 transition-all uppercase tracking-widest"
               >
                 Ask Coach <ArrowRight size={18} />
               </button>
@@ -395,28 +389,28 @@ export default function Dashboard({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.1 }}
-            className="glass-card p-10 rounded-[3rem] relative group"
+            className="bg-white p-10 rounded-[3rem] relative group border border-gray-100 shadow-sm hover:shadow-md"
           >
-            <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-1 h-12 bg-indigo-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-1 h-12 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="flex flex-col md:flex-row md:items-start justify-between gap-12">
               <div className="max-w-xl">
                 <div className="flex items-center gap-3 mb-6">
-                  <span className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.4em] font-mono">Phase {i + 1}</span>
-                  <div className="h-[1px] flex-1 bg-white/5" />
+                  <span className="text-[10px] font-black text-primary uppercase tracking-[0.4em] font-mono">Phase {i + 1}</span>
+                  <div className="h-[1px] flex-1 bg-gray-100" />
                   <span className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest ${
-                    phase.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400' :
-                    phase.status === 'in-progress' ? 'bg-indigo-500/20 text-indigo-400' :
-                    'bg-white/5 text-slate-500'
+                    phase.status === 'completed' ? 'bg-emerald-500/10 text-emerald-500' :
+                    phase.status === 'in-progress' ? 'bg-primary/10 text-primary' :
+                    'bg-gray-100 text-gray-400'
                   }`}>
                     {phase.status}
                   </span>
                 </div>
-                <h3 className="text-4xl font-black text-white mb-6 tracking-tighter font-display uppercase italic">{phase.title}</h3>
-                <p className="text-slate-400 text-lg leading-relaxed mb-10 font-serif opacity-80 italic">"{phase.description}"</p>
+                <h3 className="text-4xl font-black text-gray-900 mb-6 tracking-tighter font-display uppercase italic">{phase.title}</h3>
+                <p className="text-gray-500 text-lg leading-relaxed mb-10 font-serif opacity-80 italic">"{phase.description}"</p>
                 
                 <div className="flex flex-wrap gap-2">
                   {(phase.skills || []).map((skill, j) => (
-                    <span key={j} className="px-3 py-1.5 bg-white/5 rounded-lg text-[10px] font-black text-slate-400 border border-white/5 uppercase tracking-widest font-mono">
+                    <span key={j} className="px-3 py-1.5 bg-gray-50 rounded-lg text-[10px] font-black text-gray-400 border border-gray-100 uppercase tracking-widest font-mono">
                       {skill}
                     </span>
                   ))}
@@ -430,11 +424,11 @@ export default function Dashboard({
                     onClick={() => toggleTask(`${i}-${j}`)}
                     className={`flex items-center gap-4 p-5 rounded-2xl border transition-all text-left group/task ${
                       completedTasks[`${i}-${j}`]
-                        ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-                        : 'bg-white/5 border-white/5 text-slate-400 hover:border-indigo-500/30'
+                        ? 'bg-emerald-50 text-emerald-600 border-emerald-100'
+                        : 'bg-gray-50 border-gray-100 text-gray-500 hover:border-primary/30'
                     }`}
                   >
-                    <div className={`shrink-0 p-1 rounded-full ${completedTasks[`${i}-${j}`] ? 'bg-emerald-500 text-white' : 'border-2 border-slate-700'}`}>
+                    <div className={`shrink-0 p-1 rounded-full ${completedTasks[`${i}-${j}`] ? 'bg-emerald-500 text-white' : 'border-2 border-gray-300'}`}>
                       {completedTasks[`${i}-${j}`] ? <CheckCircle2 size={16} /> : <div className="w-4 h-4" />}
                     </div>
                     <span className="text-sm font-bold leading-tight">{task}</span>
@@ -450,7 +444,7 @@ export default function Dashboard({
     const renderTimelineView = () => (
       <div className="relative pl-8 md:pl-0">
         {/* Vertical Line */}
-        <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-indigo-500/50 via-purple-500/50 to-transparent md:-translate-x-1/2" />
+        <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-primary/30 via-purple-500/30 to-transparent md:-translate-x-1/2" />
 
         <div className="space-y-24 relative">
           {(roadmap.phases || []).map((phase, i) => (
@@ -465,23 +459,23 @@ export default function Dashboard({
             >
               {/* Content Card */}
               <div className={`w-full md:w-[45%] ${i % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>
-                <div className="glass-card p-8 rounded-[2.5rem] border-white/5 hover:border-indigo-500/30 transition-all card-3d">
+                <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 hover:border-primary/30 transition-all card-3d shadow-sm hover:shadow-md">
                   <div className={`flex items-center gap-3 mb-4 ${i % 2 === 0 ? 'md:justify-end' : 'md:justify-start'}`}>
-                    <span className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.3em] font-mono">Phase {i + 1}</span>
+                    <span className="text-[10px] font-black text-primary uppercase tracking-[0.3em] font-mono">Phase {i + 1}</span>
                     <span className={`px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest ${
-                      phase.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400' :
-                      phase.status === 'in-progress' ? 'bg-indigo-500/20 text-indigo-400' :
-                      'bg-white/5 text-slate-500'
+                      phase.status === 'completed' ? 'bg-emerald-500/10 text-emerald-500' :
+                      phase.status === 'in-progress' ? 'bg-primary/10 text-primary' :
+                      'bg-gray-100 text-gray-400'
                     }`}>
                       {phase.status}
                     </span>
                   </div>
-                  <h3 className="text-2xl font-black text-white mb-4 tracking-tight uppercase">{phase.title}</h3>
-                  <p className="text-slate-400 text-sm leading-relaxed mb-6 line-clamp-3">{phase.description}</p>
+                  <h3 className="text-2xl font-black text-gray-900 mb-4 tracking-tight uppercase">{phase.title}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-3">{phase.description}</p>
                   
                   <div className={`flex flex-wrap gap-2 ${i % 2 === 0 ? 'md:justify-end' : 'md:justify-start'}`}>
                     {phase.skills.slice(0, 3).map((skill, j) => (
-                      <span key={j} className="px-2 py-1 bg-white/5 rounded-lg text-[9px] font-bold text-slate-500 uppercase tracking-wider">
+                      <span key={j} className="px-2 py-1 bg-gray-50 rounded-lg text-[9px] font-bold text-gray-400 uppercase tracking-wider">
                         {skill}
                       </span>
                     ))}
@@ -491,11 +485,11 @@ export default function Dashboard({
 
               {/* Center Node */}
               <div className="relative z-10 flex items-center justify-center w-16 h-16 shrink-0">
-                <div className="absolute inset-0 bg-indigo-500/20 blur-xl rounded-full animate-pulse" />
+                <div className="absolute inset-0 bg-primary/10 blur-xl rounded-full animate-pulse" />
                 <div className={`w-12 h-12 rounded-2xl border-2 flex items-center justify-center font-black text-xl transition-all ${
                   phase.status === 'completed' ? 'bg-emerald-500 border-emerald-400 text-white' :
-                  phase.status === 'in-progress' ? 'bg-indigo-500 border-indigo-400 text-white shadow-[0_0_20px_rgba(99,102,241,0.5)]' :
-                  'bg-[#020617] border-white/10 text-slate-500'
+                  phase.status === 'in-progress' ? 'bg-primary border-primary text-white shadow-[0_0_20px_rgba(242,125,38,0.3)]' :
+                  'bg-white border-gray-100 text-gray-400'
                 }`}>
                   {i + 1}
                 </div>
@@ -511,8 +505,8 @@ export default function Dashboard({
 
     const renderKanbanView = () => {
       const columns = [
-        { id: 'pending', label: 'Backlog', icon: Circle, color: 'slate' },
-        { id: 'in-progress', label: 'In Progress', icon: Zap, color: 'indigo' },
+        { id: 'pending', label: 'Backlog', icon: Circle, color: 'gray' },
+        { id: 'in-progress', label: 'In Progress', icon: Zap, color: 'primary' },
         { id: 'completed', label: 'Completed', icon: CheckCircle2, color: 'emerald' }
       ];
 
@@ -521,38 +515,38 @@ export default function Dashboard({
           {columns.map(col => (
             <div key={col.id} className="space-y-6">
               <div className="flex items-center gap-3 px-4">
-                <col.icon size={18} className={`text-${col.color}-400`} />
-                <h4 className="text-sm font-black text-white uppercase tracking-[0.2em]">{col.label}</h4>
-                <span className="ml-auto text-[10px] font-black text-slate-500 bg-white/5 px-2 py-1 rounded-lg">
+                <col.icon size={18} className={`text-${col.color === 'primary' ? 'primary' : col.color}-500`} />
+                <h4 className="text-sm font-black text-gray-900 uppercase tracking-[0.2em]">{col.label}</h4>
+                <span className="ml-auto text-[10px] font-black text-gray-400 bg-gray-50 px-2 py-1 rounded-lg">
                   {roadmap.phases.filter(p => p.status === col.id).length}
                 </span>
               </div>
               
-              <div className="space-y-4 min-h-[400px] p-4 rounded-[2.5rem] bg-white/[0.01] border border-white/5">
+              <div className="space-y-4 min-h-[400px] p-4 rounded-[2.5rem] bg-gray-50/50 border border-gray-100">
                 {roadmap.phases
                   .filter(p => p.status === col.id)
                   .map((phase, i) => (
                     <motion.div
                       key={i}
                       layoutId={`phase-${phase.title}`}
-                      className="glass-card p-6 rounded-3xl border-white/5 hover:border-indigo-500/20 transition-all cursor-pointer group"
+                      className="bg-white p-6 rounded-3xl border border-gray-100 hover:border-primary/20 transition-all cursor-pointer group shadow-sm hover:shadow-md"
                     >
                       <div className="flex items-center justify-between mb-4">
-                        <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Phase {roadmap.phases.indexOf(phase) + 1}</span>
-                        <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.5)] opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Phase {roadmap.phases.indexOf(phase) + 1}</span>
+                        <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(242,125,38,0.3)] opacity-0 group-hover:opacity-100 transition-opacity" />
                       </div>
-                      <h5 className="text-lg font-black text-white mb-3 leading-tight">{phase.title}</h5>
-                      <p className="text-xs text-slate-400 line-clamp-2 mb-4 leading-relaxed">{phase.description}</p>
+                      <h5 className="text-lg font-black text-gray-900 mb-3 leading-tight">{phase.title}</h5>
+                      <p className="text-xs text-gray-500 line-clamp-2 mb-4 leading-relaxed">{phase.description}</p>
                       
-                      <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                      <div className="flex items-center justify-between pt-4 border-t border-gray-50">
                         <div className="flex -space-x-2">
                           {phase.skills.slice(0, 3).map((_, j) => (
-                            <div key={j} className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[8px] font-bold text-slate-500">
+                            <div key={j} className="w-6 h-6 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center text-[8px] font-bold text-gray-400">
                               S{j+1}
                             </div>
                           ))}
                         </div>
-                        <div className="text-[9px] font-black text-indigo-400 uppercase tracking-widest flex items-center gap-1">
+                        <div className="text-[9px] font-black text-primary uppercase tracking-widest flex items-center gap-1">
                           <Clock size={10} />
                           {phase.timeEstimate}
                         </div>
@@ -561,7 +555,7 @@ export default function Dashboard({
                   ))}
                 
                 {roadmap.phases.filter(p => p.status === col.id).length === 0 && (
-                  <div className="h-32 flex items-center justify-center border-2 border-dashed border-white/5 rounded-3xl text-slate-600 text-xs font-bold uppercase tracking-widest">
+                  <div className="h-32 flex items-center justify-center border-2 border-dashed border-gray-200 rounded-3xl text-gray-400 text-xs font-bold uppercase tracking-widest">
                     Empty
                   </div>
                 )}
@@ -577,10 +571,10 @@ export default function Dashboard({
         {/* View Toggle */}
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <h2 className="text-3xl font-black text-white tracking-tight">Career Trajectory</h2>
-            <p className="text-slate-500 text-sm font-medium">Visualize your path to mastery</p>
+            <h2 className="text-3xl font-black text-gray-900 tracking-tight">Career Trajectory</h2>
+            <p className="text-gray-500 text-sm font-medium">Visualize your path to mastery</p>
           </div>
-          <div className="flex p-1.5 bg-white/5 rounded-2xl border border-white/5">
+          <div className="flex p-1.5 bg-gray-50 rounded-2xl border border-gray-100">
             {[
               { id: 'timeline', icon: MapIcon, label: 'Timeline' },
               { id: 'kanban', icon: LayoutDashboard, label: 'Kanban' },
@@ -591,8 +585,8 @@ export default function Dashboard({
                 onClick={() => setRoadmapView(view.id as any)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                   roadmapView === view.id
-                    ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20'
-                    : 'text-slate-500 hover:text-slate-300'
+                    ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                    : 'text-gray-400 hover:text-gray-600'
                 }`}
               >
                 <view.icon size={14} />
@@ -637,30 +631,30 @@ export default function Dashboard({
         key={task.id || i}
         layout
         onClick={() => toggleTask(task.id || `task-${task.type}-${i}`)}
-        className={`p-8 glass-card rounded-[2.5rem] space-y-4 relative overflow-hidden group border-white/5 cursor-pointer transition-all ${
+        className={`p-8 bg-white rounded-[2.5rem] space-y-4 relative overflow-hidden group border border-gray-100 cursor-pointer transition-all shadow-sm hover:shadow-md ${
           completedTasks[task.id || `task-${task.type}-${i}`]
-            ? 'bg-emerald-500/10 border-emerald-500/20 opacity-60'
-            : 'hover:border-indigo-500/20'
+            ? 'bg-emerald-50 border-emerald-100 opacity-60'
+            : 'hover:border-primary/20'
         }`}
       >
         <div className={`absolute top-0 right-0 px-4 py-1 text-[9px] font-black uppercase tracking-widest rounded-bl-xl font-mono ${
-          task.difficulty === 'Hard' ? 'bg-red-500/20 text-red-400' : 
-          task.difficulty === 'Medium' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'
+          task.difficulty === 'Hard' ? 'bg-red-500/10 text-red-500' : 
+          task.difficulty === 'Medium' ? 'bg-amber-500/10 text-amber-500' : 'bg-emerald-500/10 text-emerald-500'
         }`}>
           {task.difficulty}
         </div>
         <div className="flex items-start gap-4">
-          <div className={`mt-1 shrink-0 p-1 rounded-full ${completedTasks[task.id || `task-${task.type}-${i}`] ? 'bg-emerald-500 text-white' : 'border-2 border-slate-700'}`}>
+          <div className={`mt-1 shrink-0 p-1 rounded-full ${completedTasks[task.id || `task-${task.type}-${i}`] ? 'bg-emerald-500 text-white' : 'border-2 border-gray-200'}`}>
             {completedTasks[task.id || `task-${task.type}-${i}`] ? <CheckCircle2 size={14} /> : <div className="w-3.5 h-3.5" />}
           </div>
           <div className="space-y-3">
-            <h4 className={`text-xl font-black text-white leading-tight tracking-tight ${completedTasks[task.id || `task-${task.type}-${i}`] ? 'line-through text-slate-500' : ''}`}>
+            <h4 className={`text-xl font-black text-gray-900 leading-tight tracking-tight ${completedTasks[task.id || `task-${task.type}-${i}`] ? 'line-through text-gray-400' : ''}`}>
               {task.task}
             </h4>
-            <div className="flex flex-wrap items-center gap-4 text-[10px] text-slate-500 font-black uppercase tracking-widest font-mono">
+            <div className="flex flex-wrap items-center gap-4 text-[10px] text-gray-400 font-black uppercase tracking-widest font-mono">
               <span className="flex items-center gap-1.5"><Clock size={12} /> {task.timeRequired}</span>
               <span className="flex items-center gap-1.5"><Target size={12} /> {task.outcome}</span>
-              <span className="px-2 py-0.5 bg-white/5 rounded text-indigo-400">{task.type}</span>
+              <span className="px-2 py-0.5 bg-gray-50 rounded text-primary">{task.type}</span>
             </div>
           </div>
         </div>
@@ -670,28 +664,28 @@ export default function Dashboard({
     const renderColumnsView = () => (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="space-y-8">
-          <div className="flex items-center gap-3 font-black text-white mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
-            <Calendar size={16} className="text-indigo-400" />
+          <div className="flex items-center gap-3 font-black text-gray-900 mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
+            <Calendar size={16} className="text-primary" />
             Daily Rituals
-            <div className="h-[1px] flex-1 bg-white/5" />
+            <div className="h-[1px] flex-1 bg-gray-100" />
           </div>
           {(roadmap.actionPlan?.daily || []).map((task, i) => renderTaskCard({ ...task, type: 'Daily' }, i))}
         </div>
 
         <div className="space-y-8">
-          <div className="flex items-center gap-3 font-black text-white mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
-            <TrendingUp size={16} className="text-purple-400" />
+          <div className="flex items-center gap-3 font-black text-gray-900 mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
+            <TrendingUp size={16} className="text-purple-500" />
             Weekly Sprints
-            <div className="h-[1px] flex-1 bg-white/5" />
+            <div className="h-[1px] flex-1 bg-gray-100" />
           </div>
           {(roadmap.actionPlan?.weekly || []).map((task, i) => renderTaskCard({ ...task, type: 'Weekly' }, i))}
         </div>
 
         <div className="space-y-8">
-          <div className="flex items-center gap-3 font-black text-white mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
-            <Award size={16} className="text-amber-400" />
+          <div className="flex items-center gap-3 font-black text-gray-900 mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
+            <Award size={16} className="text-amber-500" />
             Monthly Milestones
-            <div className="h-[1px] flex-1 bg-white/5" />
+            <div className="h-[1px] flex-1 bg-gray-100" />
           </div>
           {(roadmap.actionPlan?.monthly || []).map((task, i) => renderTaskCard({ ...task, type: 'Monthly' }, i))}
         </div>
@@ -705,16 +699,16 @@ export default function Dashboard({
       return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <div className="space-y-8">
-            <div className="flex items-center gap-3 font-black text-white mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
-              <Circle size={16} className="text-indigo-400" />
+            <div className="flex items-center gap-3 font-black text-gray-900 mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
+              <Circle size={16} className="text-primary" />
               To Do
-              <span className="ml-2 px-2 py-0.5 bg-white/5 rounded text-slate-500">{todoTasks.length}</span>
-              <div className="h-[1px] flex-1 bg-white/5" />
+              <span className="ml-2 px-2 py-0.5 bg-gray-50 rounded text-gray-400">{todoTasks.length}</span>
+              <div className="h-[1px] flex-1 bg-gray-100" />
             </div>
             <div className="space-y-6">
               {todoTasks.map((task, i) => renderTaskCard(task, i))}
               {todoTasks.length === 0 && (
-                <div className="h-40 flex flex-col items-center justify-center border-2 border-dashed border-white/5 rounded-[3rem] text-slate-600">
+                <div className="h-40 flex flex-col items-center justify-center border-2 border-dashed border-gray-100 rounded-[3rem] text-gray-400">
                   <CheckCircle2 size={40} className="mb-4 opacity-20" />
                   <span className="text-xs font-black uppercase tracking-widest">All tasks cleared</span>
                 </div>
@@ -723,16 +717,16 @@ export default function Dashboard({
           </div>
 
           <div className="space-y-8">
-            <div className="flex items-center gap-3 font-black text-white mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
-              <CheckCircle2 size={16} className="text-emerald-400" />
+            <div className="flex items-center gap-3 font-black text-gray-900 mb-6 uppercase tracking-[0.4em] text-[10px] font-mono">
+              <CheckCircle2 size={16} className="text-emerald-500" />
               Completed
-              <span className="ml-2 px-2 py-0.5 bg-white/5 rounded text-slate-500">{doneTasks.length}</span>
-              <div className="h-[1px] flex-1 bg-white/5" />
+              <span className="ml-2 px-2 py-0.5 bg-gray-50 rounded text-gray-400">{doneTasks.length}</span>
+              <div className="h-[1px] flex-1 bg-gray-100" />
             </div>
             <div className="space-y-6">
               {doneTasks.map((task, i) => renderTaskCard(task, i))}
               {doneTasks.length === 0 && (
-                <div className="h-40 flex flex-col items-center justify-center border-2 border-dashed border-white/5 rounded-[3rem] text-slate-600">
+                <div className="h-40 flex flex-col items-center justify-center border-2 border-dashed border-gray-100 rounded-[3rem] text-gray-400">
                   <Loader2 size={40} className="mb-4 opacity-20 animate-spin" />
                   <span className="text-xs font-black uppercase tracking-widest">No tasks completed yet</span>
                 </div>
@@ -747,10 +741,10 @@ export default function Dashboard({
       <div className="space-y-10">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <h2 className="text-3xl font-black text-white tracking-tight">Execution Engine</h2>
-            <p className="text-slate-500 text-sm font-medium">Manage your daily, weekly, and monthly growth</p>
+            <h2 className="text-3xl font-black text-gray-900 tracking-tight">Execution Engine</h2>
+            <p className="text-gray-500 text-sm font-medium">Manage your daily, weekly, and monthly growth</p>
           </div>
-          <div className="flex p-1.5 bg-white/5 rounded-2xl border border-white/5">
+          <div className="flex p-1.5 bg-gray-50 rounded-2xl border border-gray-100">
             {[
               { id: 'columns', icon: ListTodo, label: 'Frequency' },
               { id: 'kanban', icon: LayoutDashboard, label: 'Status' }
@@ -760,8 +754,8 @@ export default function Dashboard({
                 onClick={() => setTaskView(view.id as any)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                   taskView === view.id
-                    ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20'
-                    : 'text-slate-500 hover:text-slate-300'
+                    ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                    : 'text-gray-400 hover:text-gray-600'
                 }`}
               >
                 <view.icon size={14} />
