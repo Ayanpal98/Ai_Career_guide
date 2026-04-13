@@ -91,7 +91,7 @@ export default function Dashboard({
         <div className="p-2 rounded-xl bg-primary shadow-lg shadow-primary/20 text-white">
           <Zap size={24} />
         </div>
-        INOTION
+        CAREERPATH
       </div>
 
       <div className="flex items-center gap-4 p-4 rounded-3xl bg-gray-50 border border-gray-100 mb-4">

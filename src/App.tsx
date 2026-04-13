@@ -141,7 +141,7 @@ export default function App() {
         >
           <h1 className="text-4xl font-black text-gray-900 tracking-tight flex items-center justify-center gap-3 font-display uppercase italic">
             <Zap className="text-primary" fill="currentColor" />
-            INOTION
+            CAREERPATH
           </h1>
           <p className="text-gray-400 text-xs font-black uppercase tracking-[0.4em]">
             Architecting Your Future

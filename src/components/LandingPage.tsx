@@ -30,7 +30,7 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard 
             <div className="p-1.5 rounded-lg bg-primary text-white">
               <Zap size={20} />
             </div>
-            INOTION
+            CAREERPATH
           </div>
           <div className="hidden md:flex items-center gap-10 text-xs font-black text-gray-500 uppercase tracking-[0.2em]">
             <a href="#resources" className="hover:text-primary transition-colors">Resources</a>
@@ -822,7 +822,7 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard 
             <div className="p-1.5 rounded-lg bg-primary text-white">
               <Zap size={20} />
             </div>
-            INOTION
+            CAREERPATH
           </div>
           <div className="flex gap-12 text-sm font-bold text-gray-400 uppercase tracking-widest">
             <a href="#" className="hover:text-primary transition-colors">Privacy</a>
@@ -831,7 +831,7 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard 
             <a href="#" className="hover:text-primary transition-colors">LinkedIn</a>
           </div>
           <div className="text-sm font-bold text-gray-400 uppercase tracking-widest">
-            © 2026 INOTION. All rights reserved.
+            © 2026 CAREERPATH. All rights reserved.
           </div>
         </div>
       </footer>
