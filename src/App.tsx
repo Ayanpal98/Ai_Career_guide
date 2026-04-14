@@ -12,7 +12,8 @@ import { UserProfile, CareerRoadmap, SubscriptionPlan, ConsultationPackage } fro
 import { generateCareerRoadmap } from './services/gemini';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Loader2, Zap } from 'lucide-react';
-import { db } from './lib/firebase';
+import { auth, db } from './lib/firebase';
+import { onAuthStateChanged, signInAnonymously } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { handleFirestoreError, OperationType } from './lib/firestoreErrorHandler';
 
@@ -20,12 +21,48 @@ console.log('App.tsx: Module evaluating...');
 
 export default function App() {
   console.log('App: Component function called');
-  const [user, setUser] = React.useState<any>({ uid: 'guest-user', email: 'guest@example.com' });
-  const [isAuthReady, setIsAuthReady] = React.useState(true);
+  const [user, setUser] = React.useState<any>(null);
+  const [isAuthReady, setIsAuthReady] = React.useState(false);
   
+  // Auth State Listener & Anonymous Sign-in
   React.useEffect(() => {
-    console.log('App: Guest mode active');
+    console.log('App: Initializing auth...');
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        console.log('App: User authenticated:', currentUser.uid);
+        setUser(currentUser);
+        
+        // Load existing data
+        try {
+          const profileDoc = await getDoc(doc(db, 'users', currentUser.uid));
+          const roadmapDoc = await getDoc(doc(db, 'roadmaps', currentUser.uid));
+          
+          if (profileDoc.exists()) {
+            setProfile(profileDoc.data() as UserProfile);
+          }
+          if (roadmapDoc.exists()) {
+            setRoadmap(roadmapDoc.data().roadmap as CareerRoadmap);
+          }
+        } catch (err) {
+          console.error('Error loading user data:', err);
+        }
+        
+        setIsAuthReady(true);
+      } else {
+        console.log('App: No user, signing in anonymously...');
+        try {
+          await signInAnonymously(auth);
+        } catch (err) {
+          console.error('Anonymous sign-in failed:', err);
+          setError('Failed to initialize secure session. Please check your connection.');
+          setIsAuthReady(true);
+        }
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
+
   const [showLanding, setShowLanding] = React.useState(true);
   const [selectedPlan, setSelectedPlan] = React.useState<SubscriptionPlan>('Basic');
   const [showPayment, setShowPayment] = React.useState(false);
@@ -39,12 +76,6 @@ export default function App() {
   const [roadmap, setRoadmap] = React.useState<CareerRoadmap | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
-
-  // Auth State Listener (Bypassed for Guest Mode)
-  React.useEffect(() => {
-    console.log('App: Initializing in guest mode...');
-    setIsAuthReady(true);
-  }, []);
 
   const handleOnboardingComplete = async (userProfile: UserProfile) => {
     if (!user) return;
@@ -311,7 +342,7 @@ export default function App() {
               }} 
             />
           </motion.div>
-        ) : !roadmap ? (
+        ) : (!roadmap || !profile) ? (
           <motion.div
             key="onboarding"
             initial={{ opacity: 0 }}

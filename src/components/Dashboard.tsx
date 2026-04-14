@@ -1054,7 +1054,7 @@ export default function Dashboard({
                         </div>
                         <div className="flex items-center gap-3">
                           <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black text-slate-500 uppercase tracking-widest">
-                            GPT-4o Optimized
+                            Gemini 1.5 Flash Optimized
                           </div>
                         </div>
                       </div>

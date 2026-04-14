@@ -698,7 +698,7 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard 
       </section>
 
       {/* Testimonials */}
-      <section className="py-32 px-6 bg-gray-50/50">
+      <section id="resources" className="py-32 px-6 bg-gray-50/50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-24">
             <h2 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 tracking-tight">Success Stories.</h2>
@@ -816,7 +816,7 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard 
       </section>
 
       {/* Footer */}
-      <footer className="py-20 px-6 bg-white border-t border-gray-100">
+      <footer id="connect" className="py-20 px-6 bg-white border-t border-gray-100">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
           <div className="flex items-center gap-2 text-gray-900 font-black text-2xl tracking-tighter font-display uppercase">
             <div className="p-1.5 rounded-lg bg-primary text-white">
