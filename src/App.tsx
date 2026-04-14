@@ -78,21 +78,29 @@ export default function App() {
   const [error, setError] = React.useState<string | null>(null);
 
   const handleOnboardingComplete = async (userProfile: UserProfile) => {
-    if (!user) return;
+    console.log('App: Onboarding complete, profile:', userProfile);
+    if (!user) {
+      console.error('App: No user found during onboarding completion');
+      setError('Session expired. Please refresh the page.');
+      return;
+    }
     
     const profileWithUid = { ...userProfile, uid: user.uid };
     setProfile(profileWithUid);
     setLoading(true);
     setError(null);
     try {
+      console.log('App: Generating roadmap for:', profileWithUid.careerGoal);
       const apiKey = (process.env as any).GEMINI_API_KEY;
       if (!apiKey || apiKey === "undefined") {
         throw new Error("GEMINI_API_KEY is not configured. Please add it to your environment variables in the Settings menu.");
       }
       const generatedRoadmap = await generateCareerRoadmap(profileWithUid);
+      console.log('App: Roadmap generated successfully');
       
       // Save to Firestore
       try {
+        console.log('App: Saving data to Firestore...');
         await setDoc(doc(db, 'users', user.uid), {
           ...profileWithUid,
           updatedAt: serverTimestamp()
@@ -103,13 +111,15 @@ export default function App() {
           roadmap: generatedRoadmap,
           updatedAt: serverTimestamp()
         });
+        console.log('App: Data saved successfully');
       } catch (err) {
+        console.error('App: Firestore save failed:', err);
         handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}`);
       }
 
       setRoadmap(generatedRoadmap);
     } catch (err) {
-      console.error('Failed to generate roadmap:', err);
+      console.error('App: Failed to generate roadmap:', err);
       setError(err instanceof Error ? err.message : 'Failed to generate your roadmap. Please check your API key and try again.');
     } finally {
       setLoading(false);
@@ -151,6 +161,7 @@ export default function App() {
       setError(err instanceof Error ? err.message : 'Failed to update your roadmap. Please try again.');
     } finally {
       setLoading(false);
+      setShowProfile(false);
     }
   };
 
@@ -353,6 +364,7 @@ export default function App() {
               onComplete={handleOnboardingComplete} 
               onBack={() => setShowLanding(true)}
               initialPlan={selectedPlan}
+              initialProfile={profile}
             />
           </motion.div>
         ) : (
@@ -365,7 +377,20 @@ export default function App() {
             <Dashboard 
               roadmap={roadmap} 
               profile={profile!} 
-              onUpdateRoadmap={(updated) => setRoadmap(prev => ({ ...prev!, ...updated }))} 
+              onUpdateRoadmap={async (updated) => {
+                if (!user || !roadmap) return;
+                const newRoadmap = { ...roadmap, ...updated };
+                setRoadmap(newRoadmap);
+                try {
+                  await setDoc(doc(db, 'roadmaps', user.uid), {
+                    uid: user.uid,
+                    roadmap: newRoadmap,
+                    updatedAt: serverTimestamp()
+                  });
+                } catch (err) {
+                  console.error('Failed to update roadmap in Firestore:', err);
+                }
+              }}
               onUpdateProfile={handleProfileUpdate}
               onBackToLanding={() => {
                 setShowLanding(true);

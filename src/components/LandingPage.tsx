@@ -20,6 +20,15 @@ interface LandingPageProps {
 console.log('LandingPage.tsx: Module evaluating...');
 
 export default function LandingPage({ onStart, onBook, profile, onGoToDashboard }: LandingPageProps) {
+  const [searchQuery, setSearchQuery] = React.useState('');
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      onStart('Basic');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#020617] text-slate-200 font-sans selection:bg-indigo-500/30 overflow-x-hidden">
 
@@ -77,7 +86,7 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard 
               Find the career that will let you pursue your passions
             </h1>
 
-            <div className="relative max-w-xl group">
+            <form onSubmit={handleSearchSubmit} className="relative max-w-xl group">
               <div className="absolute inset-0 bg-primary/10 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative flex items-center p-2 bg-[#F2F1EB] rounded-full border border-gray-100 shadow-sm">
                 <div className="pl-6 text-gray-400">
@@ -86,13 +95,18 @@ export default function LandingPage({ onStart, onBook, profile, onGoToDashboard 
                 <input 
                   type="text" 
                   placeholder="Explore any career"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="flex-1 bg-transparent border-none focus:ring-0 text-lg font-medium text-gray-700 px-4 placeholder:text-gray-400"
                 />
-                <button className="w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/30">
+                <button 
+                  type="submit"
+                  className="w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/30"
+                >
                   <Zap size={28} />
                 </button>
               </div>
-            </div>
+            </form>
           </motion.div>
 
           <motion.div

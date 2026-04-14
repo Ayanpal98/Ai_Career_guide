@@ -76,7 +76,9 @@ export default function Dashboard({
   };
 
   const calculateProgress = () => {
-    const total = roadmap.phases.reduce((acc, phase) => acc + phase.tasks.length, 0);
+    if (!roadmap.phases || roadmap.phases.length === 0) return 0;
+    const total = roadmap.phases.reduce((acc, phase) => acc + (phase.tasks?.length || 0), 0);
+    if (total === 0) return 0;
     const completed = Object.values(completedTasks).filter(Boolean).length;
     return Math.round((completed / total) * 100);
   };

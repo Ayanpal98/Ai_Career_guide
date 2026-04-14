@@ -7,6 +7,7 @@ interface OnboardingProps {
   onComplete: (profile: UserProfile) => void;
   onBack: () => void;
   initialPlan?: SubscriptionPlan;
+  initialProfile?: UserProfile | null;
 }
 
 const steps = [
@@ -20,19 +21,24 @@ const steps = [
   { id: 'plan', title: 'Confirm your plan', icon: Sparkles, description: 'Review your selected tier to unlock your personalized roadmap.' },
 ];
 
-export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }: OnboardingProps) {
+export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic', initialProfile }: OnboardingProps) {
   const [currentStep, setCurrentStep] = React.useState(0);
-  const [formData, setFormData] = React.useState<Partial<UserProfile>>({
-    level: 'Beginner',
-    timeline: '6 months',
-    plan: initialPlan,
+  const [formData, setFormData] = React.useState<Partial<UserProfile>>(() => {
+    if (initialProfile) {
+      return { ...initialProfile };
+    }
+    return {
+      level: 'Beginner',
+      timeline: '6 months',
+      plan: initialPlan,
+    };
   });
 
   React.useEffect(() => {
-    if (initialPlan) {
+    if (initialPlan && !initialProfile) {
       setFormData(prev => ({ ...prev, plan: initialPlan }));
     }
-  }, [initialPlan]);
+  }, [initialPlan, initialProfile]);
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
@@ -65,6 +71,11 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
             placeholder="e.g. Senior Full Stack Developer at a top tech company..."
             value={formData.careerGoal || ''}
             onChange={e => updateField('careerGoal', e.target.value)}
+            onKeyDown={e => {
+              if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && canContinue()) {
+                handleNext();
+              }
+            }}
           />
         );
       case 'level':
@@ -98,6 +109,11 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
             placeholder="e.g. JavaScript, React, Python, Communication..."
             value={formData.currentSkills || ''}
             onChange={e => updateField('currentSkills', e.target.value)}
+            onKeyDown={e => {
+              if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && canContinue()) {
+                handleNext();
+              }
+            }}
           />
         );
       case 'education':
@@ -108,6 +124,11 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
             placeholder="e.g. B.Tech in Computer Science, Self-taught..."
             value={formData.education || ''}
             onChange={e => updateField('education', e.target.value)}
+            onKeyDown={e => {
+              if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && canContinue()) {
+                handleNext();
+              }
+            }}
           />
         );
       case 'availability':
@@ -147,6 +168,11 @@ export default function Onboarding({ onComplete, onBack, initialPlan = 'Basic' }
             placeholder="e.g. Limited budget for courses, working full-time..."
             value={formData.constraints || ''}
             onChange={e => updateField('constraints', e.target.value)}
+            onKeyDown={e => {
+              if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && canContinue()) {
+                handleNext();
+              }
+            }}
           />
         );
       case 'plan':

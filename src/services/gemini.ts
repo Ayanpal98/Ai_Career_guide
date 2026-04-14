@@ -140,7 +140,7 @@ export async function generateCareerRoadmap(profile: UserProfile): Promise<Caree
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-1.5-flash",
       contents: prompt,
       config: {
         responseMimeType: "application/json",
@@ -197,7 +197,7 @@ export async function chatWithCoach(
   `;
 
   const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
+    model: "gemini-1.5-flash",
     contents: [
       ...history.map(h => ({ role: h.role, parts: [{ text: h.text }] })),
       { role: 'user', parts: [{ text: prompt }] }
